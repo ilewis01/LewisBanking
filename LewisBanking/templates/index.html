@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block body %}
+{% load staticfiles %}
+
+<body>
+	<div class="logo-wrapper">
+		<div class="logo-container">
+			<div class="cuny-logo">
+				<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav'>
+			</div>
+
+			<div class="logo-text">
+				<table>
+					<tr>
+						<td>
+							<div class="logo-header">The Lewis Bank of CCNY</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<div class="motto">"Where everyone gets an A+"</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+	</div>
+</body>
+
+{% endblock %}
