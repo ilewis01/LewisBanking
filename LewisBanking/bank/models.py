@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class account(models.Model):
+class profile(models.Model):
 	user 			= models.OneToOneField(User)
 	is_superUser 	= models.BooleanField(default=False, blank=True)
 

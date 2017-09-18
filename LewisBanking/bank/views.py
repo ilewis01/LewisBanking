@@ -17,7 +17,7 @@ from xhtml2pdf import pisa
 from django.core import serializers
 from django.http import FileResponse, Http404
 
-from bank.models import account
+from bank.models import profile
 
 def index(request):
 	content = {}
