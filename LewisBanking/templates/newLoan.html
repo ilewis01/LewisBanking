@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block body %}
+{% load staticfiles %}
+
+<body>
+	<form>
+		<div class="fadeOut" id="z1">
+			<div class="TermsConditions">
+
+				<div>
+					<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div class="new-loan-wrapper">
+		<div class="popHead" style="margin-bottom:5px;">Loan Application</div>
+
+		<form action="" method="" id="loan_form"> {% csrf_token %}
+			<div class="new_input">
+				<input type="text" name="fname" id="fname" placeholder="First Name" class="s_input" required>
+				<input type="text" name="lname" id="lname" placeholder="Last Name" class="s_input" required>
+				<input type="email" name="email" id="email" placeholder="Email" class="s_input" required>
+
+				<div id="mini_notes">*You must open an account to apply for a loan with Lewis Bank.</div>
+
+				<div style="width:85%; margin:auto;">
+					<table>
+						<tr>
+							<td><div class="data_label" >Loan Type:</div></td>
+							<td><div><input type="radio" name="loanType" id="personal" value="personal" style="width:14px;" checked ></div></td>
+							<td><div class="radio_text">Personal</div></td>
+
+							<td><div><input type="radio" name="loanType" id="business" value="business" style="width:14px;"></div></td>
+							<td><div class="radio_text">Business</div></td>
+
+							<td><div><input type="radio" name="loanType" id="student" value="student" style="width:14px;"></div></td>
+							<td><div class="radio_text">Student</div></td>
+						</tr>
+					</table>
+
+					<table style="margin-top:5px;">
+						<tr>
+							<td><div class="data_label" >Account Type:</div></td>
+
+							<td><div><input type="radio" name="acctType" id="checking" value="checking" style="width:14px;" checked></div></td>
+							<td><div class="radio_text">Checking</div></td>
+
+							<td><div><input type="radio" name="acctType" id="savings" value="savings" style="width:14px;"></div></td>
+							<td><div class="radio_text">Savings</div></td>
+						</tr>
+					</table>
+
+					<table style="margin-top:5px;">
+						<tr>
+							<td><div class="data_label" style="margin-right:5px;">Amount Requested: <span>$</span></div></td>
+							<td><input type="number" name="" id="" placeholder="Whole Dollar min $100" required class="dollarAmt"></td>
+						</tr>
+					</table>
+
+					<table style="margin-top:5px;">
+						<tr>
+							<td><div class="data_label" style="margin-right:5px;">Term:</div></td>
+
+							<td>
+								<div>
+									<select name="" id="" style="border-color:gray;">
+										<option value="0">Choose</option>
+										<option value="3">3 months</option>
+										<option value="6">6 months</option>
+										<option value="9">9 months</option>
+										<option value="12">12 months</option>
+										<option value="24">24 months</option>
+										<option value="48">48 months</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+					</table>
+
+					<table style="margin-top:14px; margin-bottom:10px;">
+						<tr>
+							<td><div><input type="checkbox" name="agreement" id="agreement" value="False"></div></td>
+							<td><div id="term_a">By clicking "Submit" you agree to the <a href="javascript: visibility(1, 'show');">terms</a> of the loan.</div></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<div class="button90">
+				<button type="submit" onCLick="javascript: load_page('/complete_loan/', 'loan_form');">Submit</button>
+				<button type="buttton" onCLick="javascript: load_page('/index/', 'loan_form');">Cancel</button>
+			</div>
+		</form>
+	</div>
+</body>
+
+{% endblock %}

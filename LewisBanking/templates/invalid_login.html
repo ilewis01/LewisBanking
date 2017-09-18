@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+{% load staticfiles %}
+
+<body>
+	<form action='/index' method='get' id="empty">
+		<div class="fadeIn" id="z1" style="z-index:1;">
+			<div class="invalid_login">
+				<button type="submit">Return to Login</button>
+			</div>
+		</div>
+	</form>
+
+	<div class="new-account-wrapper-blank">
+		
+	</div>
+</body>
+
+{% endblock %}

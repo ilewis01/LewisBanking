@@ -17,6 +17,28 @@
 	text-shadow:1px 1px black;
 }
 
+.fadeOut {
+	width:100%;
+	margin:auto;
+	height:100%;
+	position: absolute;
+	z-index: auto;
+	transition: visibility 0s linear 0.2s, opacity .2s linear;
+	opacity: 0.0;
+	visibility: hidden;
+}
+
+.fadeIn {
+	width:100%;
+	margin:auto;
+	height:100%;
+	position: absolute;
+	transition: visibility 0s linear 0.2s, opacity .2s linear;
+	transition-delay:0s;
+	opacity: 1.0;
+	visibility: visible;
+}
+
 .logo-wrapper {
 	width:430px;
 	height:120px;
@@ -84,13 +106,12 @@
 	background-color: #f3d22f;
 	margin:auto;
 	margin-left: 56%;
-	opacity:0.7;
+	opacity:0.75;
 	margin-top: 30px;
 	border: 1px solid black;
 	border-radius: 8px;
 	box-shadow: 2px 2px 5px black;
 	color:#240b5f;
-	/*color:#f3d22f;*/
 }
 
 #login-text {
@@ -135,12 +156,200 @@
 	color:white;
 }
 
+.button90 button {
+	width:42.5%;
+	border-radius: 5px;
+	font-weight: bold;
+	color:#482092;
+	background-color: #9583b6;
+	border-top:2px solid #c7bfd7;
+	border-left:2px solid gray;
+}
+
+.button90 button:hover {
+	background-color:#66b3ff;
+	border-top: 2px solid #a1bad3;
+	border-left:1px solid gray;
+	border-bottom:2px solid gray;
+	border-right:2px solid gray;
+	color:white;
+}
+
+.popHead {
+	font-size: 30px;
+	font-family: Impact;
+	margin-top:2%;
+}
+
 #OR {
 	margin-top:3px;
 	margin-bottom:3px;
 	font-weight: bold;
 	font-style: italic;
 }
+
+.student_info {
+	width:100%;
+	color: black;
+	position:absolute;
+	bottom:0;
+	font-size: 11.5px;
+}
+
+.student_info span {
+	font-style: italic;
+	color:#1a8cff;
+}
+
+.new-account-wrapper {
+	width:350px;
+	height:440px;
+	margin:auto;
+	background-color: black;
+	border: 1px solid black;
+	border-radius: 8px;
+	opacity: 0.7;
+	margin-top: 5%;
+	background-color: #f3d22f;
+	box-shadow: 2px 2px 5px black;
+	margin-left:60%;
+}
+
+.new-account-wrapper-blank {
+	width:350px;
+	height:440px;
+	margin:auto;
+	margin-top: 5%;
+	margin-left:60%;
+}
+
+.new-loan-wrapper {
+	width:400px;
+	height:400px;
+	margin:auto;
+	background-color: black;
+	border: 1px solid gray;
+	border-radius: 8px;
+	opacity: 0.7;
+	margin-top: 6%;
+	background-color: #f3d22f;
+	box-shadow: 2px 2px 5px black;
+	margin-left:57%;
+}
+
+#mini_notes {
+	font-size: 11px;
+	color:red;
+	font-weight: bold;
+	font-style: italic;
+	width:85%;
+	margin: auto;
+	text-align: center;
+	margin-top:20px;
+	margin-bottom:15px;
+}
+
+.s_input {
+	width:85%;
+	font-size: 14px;
+	padding-left: 7px;
+	border-radius: 5px;
+	margin-top: 5px;
+}
+
+.data_entry {
+	width: 85%;
+	margin: auto;
+}
+
+.data_entry table {
+	width: 85%;
+}
+
+.data_entry  input{
+	width:60px;
+	padding: none;
+	padding-right: 0px;
+	border-radius: 5px;
+	margin-top: 5px;
+}
+
+#initDep {
+	width: 105px;
+}
+
+#deposit {
+	width: 160px;
+	
+}
+
+.data_label {
+	text-align: left;
+	margin-top:2px;
+	font-weight: bold;
+	color:#472388;
+}
+
+.radio_text {
+	margin-right:15px;
+	margin-left:2px;
+	margin-top: 2px;
+	font-style: italic;
+	color:#1a75ff;
+	font-weight: bold;
+}
+
+#term_a {
+	font-size: 12px;
+	margin-top:4px;
+	margin-left:4px;
+}
+
+.dollarAmt {
+	border-radius: 5px;
+	padding-left: 7px;
+	width:180px;
+}
+
+.passwordRecovery {
+	width:300px;
+	height:200px;
+	background: url('/static/images/gray_grad.png');
+	background-size: cover;
+	margin: auto;
+	box-shadow: 2px 2px 5px black;
+	border-radius: 8px;
+	border: 1px solid gray;
+	margin-top:15%;
+}
+
+.TermsConditions {
+	width:300px;
+	height:200px;
+	background: url('/static/images/gray_grad.png');
+	background-size: cover;
+	margin: auto;
+	box-shadow: 2px 2px 5px black;
+	border-radius: 8px;
+	border: 1px solid gray;
+	margin-top:15%;
+}
+
+.invalid_login {
+	width:500px;
+	height:200px;
+	background: url('/static/images/gray_grad.png');
+	background-size: cover;
+	margin: auto;
+	box-shadow: 2px 2px 5px black;
+	border-radius: 8px;
+	border: 1px solid gray;
+	margin-top:8%;
+	margin-left:50%;
+}
+
+
+
 
 
 

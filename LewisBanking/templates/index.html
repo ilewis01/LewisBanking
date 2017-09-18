@@ -3,6 +3,14 @@
 {% load staticfiles %}
 
 <body>
+	<form>
+		<div class="fadeOut" id="z1">
+			<div class="passwordRecovery">
+				<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
+			</div>
+		</div>
+	</form>
+
 	<div class="logo-wrapper">
 		<div class="logo-container">
 			<div class="cuny-logo">
@@ -30,19 +38,21 @@
 	<div class="login-wrapper">
 		<div id="login-text">Login</div>
 
-		<div class="login-input">
-			<input type="email" placeholder="Email" name="username" id="username">
-			<input type="password" placeholder="Password" name="password" id="password">
-			<button type="submit">Login</button>
-		</div>
+		<form action="/auth_view/" method="/post/" id="auth_form"> {% csrf_token %}
+		    <div class="login-input">
+			    <input type="email" placeholder="Email" name="username" id="username" required>
+			    <input type="password" placeholder="Password" name="password" id="password" required>
+			    <button type="submit">Login</button>
+		    </div>
+		</form>
 
 		<div id="OR">-OR-</div>
 
 		<div class="half-buttons">
-			<button type="button">Open New Account</button>
-			<button type="button">Loan Application</button>
+			<button type="button" onClick="javascript: load_page('/newAccount/', 'auth_form');">Open New Account</button>
+			<button type="button" onClick="javascript: load_page('/newLoan/', 'auth_form');">Loan Application</button>
 
-			<div style="margin-top:5px;"><a href="javascript: "><b>Forgot Password</b></a></div>
+			<div style="margin-top:5px;"><a href="javascript: visibility(1, 'show');"><b>Forgot Password</b></a></div>
 		</div>
 	</div>
 </body>

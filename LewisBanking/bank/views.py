@@ -24,3 +24,69 @@ def index(request):
 	content['title'] = "Lewis Bank of CCNY"
 	content.update(csrf(request))
 	return render_to_response('index.html', content)
+
+def auth_view(request):
+    username = request.POST.get('username', '')
+    password = request.POST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
+
+    if user is not None:
+        auth.login(request, user)
+        profile = getAccount(user)
+
+        if user.is_active == False:
+        	return HttpResponseRedirect('/validationRequired/')
+        else:
+	        return HttpResponseRedirect('/home/')
+    else:
+        return HttpResponseRedirect('/invalid_login')
+
+def newAccount(request):
+	content = {}
+	content.update(csrf(request))
+	content['title'] = "Lewis Bank | New Account"
+	return render_to_response('newAccount.html', content)
+
+def create_account(request):
+	content = {}
+	content.update(csrf(request))
+	content['title'] = "Lewis Bank | New Account"
+	return render_to_response('create_account.html', content)
+
+def newLoan(request):
+	content = {}
+	content.update(csrf(request))
+	content['title'] = "Lewis Bank | New Loan Application"
+	return render_to_response('newLoan.html', content)
+
+def complete_loan(request):
+	content = {}
+	content.update(csrf(request))
+	content['title'] = "Lewis Bank | New Account"
+	return render_to_response('complete_loan.html', content)
+
+def validationRequired(request):
+	content = {}
+	content.update(csrf(request))
+	content['title'] = "Lewis Bank | Account Validation Required"
+	return render_to_response('validationRequired.html')
+
+def invalid_login(request):
+	content = {}
+	content.update(csrf(request))
+	content['title'] = "Lewis Bank | Invalid Login"
+	return render_to_response('invalid_login.html')
+
+@login_required(login_url='/index')
+def logout(request):
+	auth.logout(request)
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('logout.html', content)
+
+
+
+
+
+
+
