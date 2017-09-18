@@ -9,6 +9,14 @@
 	background-repeat: no-repeat;
 }
 
+.main-body button:hover {
+	background-color: #666666;
+	border-color: black;
+	color:#dfd7ef;
+	/*color:#ccb3e6;*/
+	text-shadow:1px 1px black;
+}
+
 .logo-wrapper {
 	width:430px;
 	height:120px;
@@ -114,13 +122,24 @@
 	font-weight: bold;
 	color:#482092;
 	background-color: #9583b6;
-	border-color: #2f1166;
+	border-top:2px solid #c7bfd7;
+	border-left:2px solid gray;
+}
+
+.half-buttons button:hover {
+	background-color:#66b3ff;
+	border-top: 2px solid #a1bad3;
+	border-left:1px solid gray;
+	border-bottom:2px solid gray;
+	border-right:2px solid gray;
+	color:white;
 }
 
 #OR {
 	margin-top:3px;
 	margin-bottom:3px;
 	font-weight: bold;
+	font-style: italic;
 }
 
 
