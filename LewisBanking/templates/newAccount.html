@@ -71,6 +71,12 @@
 								</select>
 							</td>
 						</tr>
+
+						<tr>
+							<td>
+								<input type='text' name='answer1' id='answer1' placeholder="Security Answer 1" style="width:300px; padding-left:7px; margin-bottom:7px;" required>
+							</td>
+						</tr>
 					</table>
 
 						<tr>
@@ -84,8 +90,23 @@
 								</select>
 							</td>
 						</tr>
+
+						<tr>
+							<td>
+								<input type='text' name='answer2' id='answer2' placeholder="Security Answer 2" style="width:300px; padding-left:7px;" required>
+							</td>
+						</tr>
+					</table>
+
+					<table style="margin-top:5px; margin-bottom:10px;">
+						<tr>
+							<td><div><input type="checkbox" name="agreement" id="agreement" value="False"></div></td>
+							<td><div id="term_a">By clicking "Submit" you agree to the <a href="javascript: visibility(1, 'show');">terms</a> of Lewis Bank.</div></td>
+						</tr>
 					</table>
 				</div>
+
+
 
 				<div class="half-buttons" style="margin-top:15px;">
 					<button type="submit" onClick="javascript: load_page('/create_account/', 'new_account');">Submit</button>
