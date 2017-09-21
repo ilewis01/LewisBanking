@@ -4,8 +4,16 @@
 
 <body>
 	<form>
-		<div class="fadeOut" id="z1" style="z-index:1;">
-			<div class="passwordRecovery">
+		<div class="fadeOut" id="z1">
+			<div class="messageWindow" id="messageWindow">
+				<div class="messageNav">
+					<a href="javascript: visibility(1, 'hide');">
+						<i class="fa fa-window-close-o" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageContent" id="messageContent"></div>
+
 				<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
 			</div>
 		</div>
@@ -14,31 +22,34 @@
 	<div class="new-account-wrapper">
 		<div class="popHead">New Account</div>
 
-		<form action="" method="post" id="new_account"> {% csrf_token %}
+		<form action="/create_account/" method="post" id="new_account"> {% csrf_token %}
 			<div class="new_input">
-				<input type="text" name="fname" id="fname" class="s_input" placeholder="First Name" required>
-				<input type="text" name="lname" id="lname" class="s_input"placeholder="Last Name" required>
-				<input type="email" name="email" id="email" class="s_input" placeholder="Email" required>
+				<input type="text" name="fname" id="fname" class="s_input" placeholder="First Name" required oninput="javascript: entry_error(fname, 'text'); switchAccountSubmit();">
+				<input type="text" name="lname" id="lname" class="s_input"placeholder="Last Name" required oninput="javascript: entry_error(lname, 'text'); switchAccountSubmit();">
+				<input type="email" name="email" id="email" class="s_input" placeholder="Email" required oninput="javascript: switchAccountSubmit();">
+				<input type="email" name="email2" id="email2" class="s_input" placeholder="Verify Email" required oninput="javascript: switchAccountSubmit();">
 
 				<div class="data_entry">
 					<table>
 						<tr>
 							<td><div class="data_label" style="margin-top:7px;">Phone:</div></td>
-							<td><input type="text" name="areaCode" id="areaCode" placeholder="123" required></td>
-							<td><input type="text" name="prefix" id="prefix" placeholder="456" required></td>
-							<td><input type="text" name="postfix" id="postfix" placeholder="7890" required></td>
+							<td><input type="text" name="areaCode" id="areaCode" placeholder="123" required oninput="javascript: entry_error(areaCode, 'number', 3);  switchAccountSubmit();"></td>
+
+							<td><input type="text" name="phone2" id="phone2" placeholder="456" required oninput="javascript: entry_error(phone2, 'number', 3);  switchAccountSubmit();"></td>
+
+							<td><input type="text" name="postfix" id="postfix" placeholder="7890" required oninput="javascript: entry_error(postfix, 'number', 4);  switchAccountSubmit();"></td>
 						</tr>
 					</table>
 				</div>
 
-				<input type="password" name="password1" id="password1" class="s_input" placeholder="Create Password" required>
-				<input type="password" name="password2" id="password2" class="s_input" placeholder="Verify Password" required>
+				<input type="password" name="password1" id="password1" class="s_input" placeholder="Create Password" required oninput="javascript: switchAccountSubmit();">
+				<input type="password" name="password2" id="password2" class="s_input" placeholder="Verify Password" required oninput="javascript: switchAccountSubmit();">
 
 				<div class="data_entry">
 					<table>
 						<tr>
 							<td><div id="initDep" class="data_label" style="margin-top:7px; width:113px;">Initial Deposit:&nbsp<span>$</span></div></td>
-							<td><input type="number" name="deposit" id='deposit' placeholder="Minimum $5" style="padding-left:7px;"></td>
+							<td><input type="number" name="deposit" id='deposit' placeholder="Whole values only" style="padding-left:7px;" min="1" required oninput="entry_error(deposit, 'number', 7); switchAccountSubmit();"></td>
 						</tr>
 					</table>
 
@@ -67,14 +78,16 @@
 						<tr>
 							<td>
 								<select name="security1" id="security1" style="width:300px; border-color:gray; font-size:12px;">
-									<option value="0">Choose</option>
+									{% for q1 in questions1 %}
+									<option value="{{q1.index}}">{{q1.question}}</option>
+									{% endfor %}
 								</select>
 							</td>
 						</tr>
 
 						<tr>
 							<td>
-								<input type='text' name='answer1' id='answer1' placeholder="Security Answer 1" style="width:300px; padding-left:7px; margin-bottom:7px;" required>
+								<input type='text' name='answer1' id='answer1' placeholder="Security Answer 1" style="width:300px; padding-left:7px; margin-bottom:7px;" required oninput="javascript: switchAccountSubmit();">
 							</td>
 						</tr>
 					</table>
@@ -86,30 +99,34 @@
 						<tr>
 							<td>
 								<select name="security2" id="security2" style="width:300px; border-color:gray; font-size:12px;">
-									<option value="0">Choose</option>
+									{% for q2 in questions2 %}
+									<option value="{{q2.index}}">{{q2.question}}</option>
+									{% endfor %}
 								</select>
 							</td>
 						</tr>
 
 						<tr>
 							<td>
-								<input type='text' name='answer2' id='answer2' placeholder="Security Answer 2" style="width:300px; padding-left:7px;" required>
+								<input type='text' name='answer2' id='answer2' placeholder="Security Answer 2" style="width:300px; padding-left:7px;" required oninput="javascript: switchAccountSubmit();">
 							</td>
 						</tr>
 					</table>
 
-					<table style="margin-top:5px; margin-bottom:10px;">
-						<tr>
-							<td><div><input type="checkbox" name="agreement" id="agreement" value="False"></div></td>
-							<td><div id="term_a">By clicking "Submit" you agree to the <a href="javascript: visibility(1, 'show');">terms</a> of Lewis Bank.</div></td>
-						</tr>
-					</table>
+					<div class="agreeContainer">
+						<div class="term_check">
+							<input type="checkbox" id="agree" required>
+						</div>
+						<div class="term_b">
+							By clicking submit, you agree to the <a href="javascript: load_popWin(z1, 1, messageWindow, '350px', '250px', 'terms');">terms</a> service
+						</div>
+					</div>
 				</div>
 
 
 
 				<div class="half-buttons" style="margin-top:15px;">
-					<button type="submit" onClick="javascript: load_page('/create_account/', 'new_account');">Submit</button>
+					<button type="submit" id="creBtn">Submit</button>
 					<button type="button" onClick="javascript: load_page('/index/', 'new_account');">Cancel</button>
 				</div>
 			</div>

@@ -17,6 +17,8 @@ from xhtml2pdf import pisa
 from django.core import serializers
 from django.http import FileResponse, Http404
 
+from bank.functions import fetchSecurityQuestions1, fetchSecurityQuestions2
+
 from bank.models import profile, Account, Loan
 
 def index(request):
@@ -45,6 +47,8 @@ def newAccount(request):
 	content = {}
 	content.update(csrf(request))
 	content['title'] = "Lewis Bank | New Account"
+	content['questions1'] = fetchSecurityQuestions1()
+	content['questions2'] = fetchSecurityQuestions2()
 	return render_to_response('newAccount.html', content)
 
 def create_account(request):
