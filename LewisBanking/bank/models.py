@@ -28,9 +28,12 @@ class Loan(models.Model):
 	user_id 		= models.IntegerField(default=0)
 	account_number 	= models.CharField(max_length=8, default=None, blank=True, null=True)
 	loan_amount	 	= models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+	balance		 	= models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
 	rate		 	= models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
 	loan_type 		= models.IntegerField(default=0)
 	term 			= models.IntegerField(default=0)
+	start_date 		= models.DateField(default=None, blank=True, null=True)
+	end_date 		= models.DateField(default=None, blank=True, null=True)
 
 	def __unicode__(self):
 		return str(self.account_number) + " - " + str(self.loan_amount)

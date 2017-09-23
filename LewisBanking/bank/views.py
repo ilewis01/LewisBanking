@@ -62,7 +62,6 @@ def newLoan(request):
 def complete_loan(request):
 	content = {}
 	content.update(csrf(request))
-	content['title'] = "Lewis Bank | New Account"
 	return render_to_response('complete_loan.html', content)
 
 def validationRequired(request):

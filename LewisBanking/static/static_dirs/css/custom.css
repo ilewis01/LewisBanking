@@ -242,11 +242,10 @@
 	color:red;
 	font-weight: bold;
 	font-style: italic;
-	width:85%;
+	width:100%;
 	margin: auto;
 	text-align: center;
-	margin-top:20px;
-	margin-bottom:15px;
+	margin-bottom:10px;
 }
 
 .termAgree {
@@ -311,8 +310,8 @@
 
 .dollarAmt {
 	border-radius: 5px;
-	padding-left: 7px;
-	width:180px;
+	width:90px;
+	text-align: right;
 }
 
 .messageWindow {
@@ -358,6 +357,19 @@
 	border-radius: 8px;
 	border: 1px solid gray;
 	margin-top:15%;
+}
+
+.phone_input {
+	width:85%;
+	margin:auto;
+	margin-top: 6px;
+	margin-bottom: 5px;
+}
+
+.phone_input input {
+	border-radius: 5px;
+	text-align: center;
+	padding-right: 3px;
 }
 
 .invalid_login {

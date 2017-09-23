@@ -51,6 +51,35 @@ def userExist(email):
 
 	return exist
 
+def full_user_match_request(request):
+	fname = str(request.POST.get('fname'))
+	lname = str(request.POST.get('lname'))
+	email = str(request.POST.get('email'))
+	phone = decodePhone(request)
+
+	users = User.objects.all()
+	test = {}
+	test['exist'] = False
+	test['user'] = None
+
+	for u in users:
+		pfile = getUserProfile(u)
+		if str(u.first_name)==fname and str(u.last_name)==lname and str(u.email)==email and str(pfile.phone)==phone:
+			test['exist'] = True
+			test['user'] = u
+			break
+	return test
+
+def getUserProfile(user):
+	pfile = None
+	profiles = profile.objects.all()
+
+	for p in profiles:
+		if p.user == user:
+			pfile = p
+			break
+	return pfile
+
 def newUser_account(request):
 	content = {}
 	content['created'] = False
@@ -80,6 +109,51 @@ def newUser_account(request):
 		content['account'] = account
 
 	return content
+
+def newLoanDecision(request):
+	content = {}
+	content['title'] = "Lewis Bank | Loans"
+	content['approved'] = False
+	decision = loanDecision()
+
+	if decision['decision'] == True:
+		if full_user_match_request(request) == False:
+			rate				= decision['interest']
+			amount 				= decoderCurrency(request, "dollars", "cents")
+			term 				= request.POST.get("loanTerm")
+			l_type			 	= request.POST.get("loanType")
+			content['amount'] 	= amount
+			content['rate'] 	= rate
+			content['term'] 	= term
+			content['type'] 	= l_type
+			content['header1'] 	= "Congratulations!"
+			content['header2'] 	= "Your loan has been approved. Here are the details:"
+			content['message1'] = generateLoanTermHTML(rate, amount, l_type, term)
+			content['btn1'] 	= "Accept"
+			content['btn2'] 	= "Decline"
+			content['approved'] = True
+			content['total'] 	= amount * rate
+			content['width'] 	= "500px";
+			content['height'] 	= "500px";
+		else:
+			content['header1'] 	= "Existing Account"
+			content['message1'] = "If this is an error, please contact the administrator"
+			content['message2'] = "Please login to your account to submit a loan application"
+			content['button'] 	= "Login"
+			content['width'] 	= "500px";
+			content['height'] 	= "500px";
+	else:
+		content['header1'] 		= "Loan Declined"
+		content['message1'] 	= "The decision was generated randomly. Please try again..."
+		content['btn1'] 		= "Retry"
+		content['btn2'] 		= "Home"
+		content['width'] 		= "500px";
+		content['height'] 		= "500px";
+	return content
+
+def generateLoanTermHTML(rate, amount, loan_type, term):
+	html = ""
+	return html
 
 def newProfile(request, user):
 	pfile = profile()
@@ -116,9 +190,9 @@ def decoderCurrency(request, dollar_id, cents_id):
 
 
 def decodePhone(request):
-	phone1 = str(request.POST.get("areaCode"))
+	phone1 = str(request.POST.get("phone1"))
 	phone2 = str(request.POST.get("phone2"))
-	phone3 = str(request.POST.get("postfix"))
+	phone3 = str(request.POST.get("phone3"))
 	return "(" + phone1 + ") " + phone2 + "-" + phone3
 
 def generateRandom(size, allowText, allowNumbers):

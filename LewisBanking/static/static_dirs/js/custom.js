@@ -157,9 +157,9 @@ function switchAccountSubmit()
 	data.push(String(grab('email2').value));
 	data.push(String(grab('password1').value));
 	data.push(String(grab('password2').value));	
-	data.push(String(grab('areaCode').value));
+	data.push(String(grab('phone1').value));
 	data.push(String(grab('phone2').value));
-	data.push(String(grab('postfix').value));
+	data.push(String(grab('phone3').value));
 	data.push(String(grab('deposit').value));
 	data.push(String(grab('answer1').value));
 	data.push(String(grab('answer2').value));
@@ -177,6 +177,42 @@ function switchAccountSubmit()
 	{
 		button.setAttribute('type', 'button');
 		button.setAttribute('onClick', "javascript: field_validation_account();")
+	}
+
+	else
+	{
+		button.setAttribute('type', 'submit');
+		button.removeAttribute('onClick');
+	}
+}
+
+function switchALoanSubmit()
+{
+	var data = [];
+	var button = grab('creBtn');
+	var proceed = true;
+
+	data.push(String(grab('fname').value));
+	data.push(String(grab('lname').value));
+	data.push(String(grab('email').value));
+	data.push(String(grab('phone1').value));
+	data.push(String(grab('phone2').value));
+	data.push(String(grab('phone3').value));
+	data.push(String(grab('dollars').value));
+
+	for (var i = 0; i < data.length; i++)
+	{
+		if (data[i].length === 0)
+		{
+			proceed = false;
+			break;
+		}
+	}
+
+	if (proceed === true)
+	{
+		button.setAttribute('type', 'button');
+		button.setAttribute('onClick', "javascript: field_validation_loan();")
 	}
 
 	else
@@ -209,10 +245,49 @@ function field_validation_account()
 		data.push("The email addresses do not match");
 	}
 
-	if (Number(depos.value) < 1)
+	if (Number(depos.value) < 5)
 	{
 		proceed = false;
-		data.push("The initial deposit amount must be at least $1.00")
+		data.push("The initial deposit amount must be at least $5.00")
+	}
+
+	if (proceed === true)
+	{
+		if (String(cents.value).length === 0)
+		{
+			cents.value = "00";
+		}
+
+		var button = grab('creBtn');
+		button.setAttribute('type', 'submit');
+		button.removeAttribute('onClick');
+		button.click();
+	}
+	else
+	{
+		grab('messageContent').innerHTML = get_error_html(data);
+		load_popWin(grab("z1"), 1, grab("messageWindow"), "400px", "200px", "errors");
+	}
+}
+
+function field_validation_loan()
+{
+	var data = [];
+	var proceed = true;
+	var select = grab("loanTerm");
+	var dollars = grab('dollars');
+	var cents = grab('cents');
+	
+	if (select.selectedIndex === 0)
+	{
+		proceed = false;
+		data.push("You must choose a loan term");
+	}
+
+	if (Number(dollars.value) < 100)
+	{
+		proceed = false;
+		data.push("You must request at least $100.00")
 	}
 
 	if (proceed === true)
