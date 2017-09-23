@@ -249,6 +249,10 @@
 	margin-bottom:15px;
 }
 
+.termAgree {
+
+}
+
 .s_input {
 	width:85%;
 	font-size: 14px;
@@ -336,6 +340,12 @@
 	text-align: left;
 	font-size: 170%;
 	padding-left: 10px;
+}
+
+.messageContent {
+	text-align: left;
+	width:85%;
+	margin:auto;
 }
 
 .TermsConditions {

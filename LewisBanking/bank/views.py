@@ -17,7 +17,7 @@ from xhtml2pdf import pisa
 from django.core import serializers
 from django.http import FileResponse, Http404
 
-from bank.functions import fetchSecurityQuestions1, fetchSecurityQuestions2
+from bank.functions import fetch_content
 
 from bank.models import profile, Account, Loan
 
@@ -44,17 +44,13 @@ def auth_view(request):
         return HttpResponseRedirect('/invalid_login')
 
 def newAccount(request):
-	content = {}
+	content = fetch_content(request, "newAccount_0")
 	content.update(csrf(request))
-	content['title'] = "Lewis Bank | New Account"
-	content['questions1'] = fetchSecurityQuestions1()
-	content['questions2'] = fetchSecurityQuestions2()
 	return render_to_response('newAccount.html', content)
 
 def create_account(request):
-	content = {}
+	content = fetch_content(request, "newAccount_1")
 	content.update(csrf(request))
-	content['title'] = "Lewis Bank | New Account"
 	return render_to_response('create_account.html', content)
 
 def newLoan(request):

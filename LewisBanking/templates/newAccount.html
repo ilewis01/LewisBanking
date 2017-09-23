@@ -33,11 +33,11 @@
 					<table>
 						<tr>
 							<td><div class="data_label" style="margin-top:7px;">Phone:</div></td>
-							<td><input type="text" name="areaCode" id="areaCode" placeholder="123" required oninput="javascript: entry_error(areaCode, 'number', 3);  switchAccountSubmit();"></td>
+							<td><input type="text" name="areaCode" id="areaCode" style="text-align:center; padding-right:3px;" placeholder="123" required oninput="javascript: entry_error(areaCode, 'number', 3);  switchAccountSubmit();"></td>
 
-							<td><input type="text" name="phone2" id="phone2" placeholder="456" required oninput="javascript: entry_error(phone2, 'number', 3);  switchAccountSubmit();"></td>
+							<td><input type="text" name="phone2" id="phone2" style="text-align:center; padding-right:3px;" placeholder="456" required oninput="javascript: entry_error(phone2, 'number', 3);  switchAccountSubmit();"></td>
 
-							<td><input type="text" name="postfix" id="postfix" placeholder="7890" required oninput="javascript: entry_error(postfix, 'number', 4);  switchAccountSubmit();"></td>
+							<td><input type="text" name="postfix" id="postfix" style="text-align:center; padding-right:3px;" placeholder="7890" required oninput="javascript: entry_error(postfix, 'number', 4);  switchAccountSubmit();"></td>
 						</tr>
 					</table>
 				</div>
@@ -49,7 +49,15 @@
 					<table>
 						<tr>
 							<td><div id="initDep" class="data_label" style="margin-top:7px; width:113px;">Initial Deposit:&nbsp<span>$</span></div></td>
-							<td><input type="number" name="deposit" id='deposit' placeholder="Whole values only" style="padding-left:7px;" min="1" required oninput="entry_error(deposit, 'number', 7); switchAccountSubmit();"></td>
+							<td>
+								<input type="text" name="dollars" id='deposit' placeholder="5000" style="padding-left:7px; width:90px; text-align:right;" min="1" required oninput="entry_error(deposit, 'number', 7); switchAccountSubmit();">
+							</td>
+
+							<td>.</td>
+
+							<td>
+								<input type="text" name="cents" id="cents" placeholder="00" style="width:30px; text-align:center;" oninput="entry_error(cents, 'number', 2);">
+							</td>
 						</tr>
 					</table>
 

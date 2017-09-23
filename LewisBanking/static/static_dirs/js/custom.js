@@ -40,9 +40,6 @@ function load_popWin(z_div, index, target, width, height, message_type)
 	target.style.width = width;
 	target.style.height = height;
 
-	z_div.style.zIndex = index;
-	z_div.className = "fadeIn";
-
 	if (message_type === 'terms')
 	{
 		load_terms_html();
@@ -52,11 +49,21 @@ function load_popWin(z_div, index, target, width, height, message_type)
 	{
 		load_error_html();
 	}
+
+	z_div.style.zIndex = index;
+	z_div.className = "fadeIn";
 }
 
 function load_terms_html()
 {
-	grab('fname').value = "Loading Terms";
+	var html = "<span class=\"termAgree\">You agree to the following:</span>";
+	html += "<ul>";
+	html += "<li>This is not a real bank</li>";
+	html += "<li>We will not receive any money from you</li>";
+	html += "<li>You will not receive any money from us</li>";
+	html += "<li>This is only a Python coding project</li>";
+	html += "</ul>";
+	grab('messageContent').innerHTML = html;
 }
 
 function load_error_html()
@@ -232,6 +239,11 @@ function get_error_html(error_list)
 
 	html += "</ul>";
 	return html;
+}
+
+function runTest()
+{
+	
 }
 
 

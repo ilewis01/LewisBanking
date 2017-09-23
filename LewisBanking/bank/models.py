@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class profile(models.Model):
 	user 			= models.OneToOneField(User)
+	accounts		= models.CharField(max_length=100000, default=0, blank=True, null=True)
 	phone 			= models.CharField(max_length=16, default=0, blank=True, null=True)
 	recoveryCode 	= models.CharField(max_length=30, default=None, blank=True, null=True)
 	question1 		= models.IntegerField(default=0)
@@ -25,10 +26,11 @@ class Account(models.Model):
 
 class Loan(models.Model):
 	user_id 		= models.IntegerField(default=0)
-	loan_id 		= models.CharField(max_length=8, default=None, blank=True, null=True)
+	account_number 	= models.CharField(max_length=8, default=None, blank=True, null=True)
 	loan_amount	 	= models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+	rate		 	= models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
 	loan_type 		= models.IntegerField(default=0)
 	term 			= models.IntegerField(default=0)
 
 	def __unicode__(self):
-		return str(self.loan_id) + " - " + str(self.loan_amount)
+		return str(self.account_number) + " - " + str(self.loan_amount)
