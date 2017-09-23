@@ -10,7 +10,7 @@ class profile(models.Model):
 	question2 		= models.IntegerField(default=0)
 	answer1 		= models.CharField(max_length=100, default=None, blank=True, null=True)
 	answer2 		= models.CharField(max_length=100, default=None, blank=True, null=True)
-	is_superUser 	= models.BooleanField(default=False, blank=True)
+	is_active	 	= models.BooleanField(default=False, blank=True)
 
 	def __unicode__(self):
 		return self.user.username

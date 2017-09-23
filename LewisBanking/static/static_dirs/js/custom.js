@@ -195,6 +195,7 @@ function field_validation_account()
 	var pass1 = grab('password1');
 	var pass2 = grab('password2');
 	var depos = grab('deposit');
+	var cents = grab('cents');
 	
 	if (String(pass1.value) !== String(pass2.value))
 	{
@@ -216,6 +217,11 @@ function field_validation_account()
 
 	if (proceed === true)
 	{
+		if (String(cents.value).length === 0)
+		{
+			cents.value = "00";
+		}
+
 		var button = grab('creBtn');
 		button.setAttribute('type', 'submit');
 		button.removeAttribute('onClick');
@@ -241,9 +247,14 @@ function get_error_html(error_list)
 	return html;
 }
 
+function initialize_newAccount(accountCreated)
+{
+
+}
+
 function runTest()
 {
-	
+
 }
 
 

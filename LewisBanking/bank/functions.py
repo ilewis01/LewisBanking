@@ -82,15 +82,15 @@ def newUser_account(request):
 	return content
 
 def newProfile(request, user):
-	profile = profile()
-	profile.user = user
-	profile.phone = decodePhone(request)
-	profile.recoveryCode = generateRandom(6, True, True)
-	profile.question1 = request.POST.get("security1")
-	profile.question2 = request.POST.get("security2")
-	profile.answer1 = request.POST.get("answer1")
-	profile.answer2 = request.POST.get("answer2")
-	return profile
+	pfile = profile()
+	pfile.user = user
+	pfile.phone = decodePhone(request)
+	pfile.recoveryCode = generateRandom(6, True, True)
+	pfile.question1 = request.POST.get("security1")
+	pfile.question2 = request.POST.get("security2")
+	pfile.answer1 = request.POST.get("answer1")
+	pfile.answer2 = request.POST.get("answer2")
+	return pfile
 
 def newAccount(request, user_id):
 	account = Account(user_id=user_id)
@@ -108,9 +108,12 @@ def pythonBool(value):
 	return value
 
 def decoderCurrency(request, dollar_id, cents_id):
+	result = None
 	dollars = float(request.POST.get(dollar_id))
-	cents = float(request.POST.get(cents_id))
+	cents = "0." + str(request.POST.get(cents_id))
+	cents = float(cents)
 	return dollars + cents
+
 
 def decodePhone(request):
 	phone1 = str(request.POST.get("areaCode"))
@@ -143,7 +146,7 @@ def verifyAccountNumber(account_number, m_type):
 	elif m_type == "loan":
 		m_list = Loan.objects.all()
 
-	for t in m_type:
+	for t in m_list:
 		if str(t.account_number) == account_number:
 			exist = True
 			break

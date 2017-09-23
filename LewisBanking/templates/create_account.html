@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body>
+<body onLoad="initialize_newAccount('{{created}}');">
 	<form>
 		<div class="fadeOut" id="z1">
 			<div class="passwordRecovery">
@@ -40,7 +40,7 @@
 
 		<form action="/auth_view/" method="/post/" id="auth_form"> {% csrf_token %}
 		    <div class="login-input">
-			    <input type="email" placeholder="Email" name="username" id="username" required>
+			    <input type="email" placeholder="Email" name="username" id="username" value="{{user.email}}" required>
 			    <input type="password" placeholder="Password" name="password" id="password" required>
 			    <button type="submit">Login</button>
 		    </div>
