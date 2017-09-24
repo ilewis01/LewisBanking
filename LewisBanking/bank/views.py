@@ -71,6 +71,12 @@ def complete_loan(request):
 	elif status == -1:
 		return render_to_response('complete_loan_denied.html', content)
 
+def loanCreated(request):
+	content = {}
+	content.update(csrf(request))
+	content['title'] = "Lewis Bank | New Loan Application"
+	return render_to_response('loan_created.html', content)
+
 def validationRequired(request):
 	content = {}
 	content.update(csrf(request))

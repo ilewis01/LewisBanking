@@ -95,6 +95,11 @@
 	height:93px;
 }
 
+.logo-nav-small {
+	width:73px;
+	height:73px;
+}
+
 .logo-header {
 	font-size: 35px;
 	font-weight: bold;
@@ -169,6 +174,22 @@
 .button90 button:hover {
 	background-color:#66b3ff;
 	border-top: 2px solid #a1bad3;
+	border-left:1px solid gray;
+	border-bottom:2px solid gray;
+	border-right:2px solid gray;
+	color:white;
+}
+
+.button90_gray button {
+	width:42.5%;
+	border-radius: 5px;
+	font-weight: bold;
+	margin-top:15px;
+}
+
+.button90_gray button:hover {
+	background-color:gray;
+	border-top: 2px solid #5b5660;
 	border-left:1px solid gray;
 	border-bottom:2px solid gray;
 	border-right:2px solid gray;
@@ -341,6 +362,15 @@
 	padding-left: 10px;
 }
 
+.messageNav-short {
+	width:100%;
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	text-align: left;
+	font-size: 170%;
+	padding-left: 10px;
+}
+
 .messageContent {
 	text-align: left;
 	width:85%;
@@ -456,6 +486,105 @@
 	font-style: italic;
 }
 
+.veriLoan {
+	width: 90%;
+	margin:auto;
+}
+
+.veriLoan input {
+	border-radius: 5px;
+	width:100%;
+	margin-bottom:6px;
+	padding-left: 7px;
+}
+
+.loanWindow {
+	width:350px;
+	height: 480px;
+	background: url('/static/images/gray_grad.png');
+	background-size: 100% 100%;
+	margin: auto;
+	box-shadow: 2px 2px 5px black;
+	border-radius: 8px;
+	border: 1px solid gray;
+	margin-top:5%;
+}
+
+.loanWindow select {
+	width:50%;
+	border-color: gray;
+	font-size: 13px;
+}
+
+.select_left{
+	text-align: left;
+}
+
+.radioLable2 {
+	margin-left: 10px;
+}
+
+.s1loan select {
+	width:100%;
+	border-color: gray;
+	font-size: 13px;
+}
+
+.field_label {
+	text-align: left;
+	font-weight: bold;
+	font-style: italic;
+	margin-left:2px;
+	margin-top:8px;
+}
+
+.newAcctLHead {
+	font-size: 24px;
+	font-family: impact;
+	margin-bottom:8px;
+	color:#4e2c70;
+}
+
+.approvalContainer {
+	width:300px;
+	height:320px;
+	background: url('/static/images/gray_grad.png');
+	background-size: 100% 100%;
+	margin: auto;
+	box-shadow: 2px 2px 5px black;
+	border-radius: 8px;
+	border: 1px solid gray;
+	margin-top:5%;
+}
+
+.approvalContainer button {
+	width:85%;
+	border-radius: 5px;
+	font-weight: bold;
+}
+
+.approvalMessage {
+	width: 85%;
+	margin: auto;
+}
+
+.approvalMessage h1 {
+	font-size: 20px;
+	color:#4e2c70;
+	text-align: center;
+}
+
+.approvalMessage {
+	text-align: justify;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+.cuny-logo2 {
+	text-align: center;
+	margin-bottom:10px;
+}
 
 
 

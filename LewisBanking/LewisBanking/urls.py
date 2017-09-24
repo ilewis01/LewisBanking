@@ -13,4 +13,5 @@ urlpatterns = patterns('',
     url(r'^newLoan/$', 'bank.views.newLoan'),
     url(r'^create_account/$', 'bank.views.create_account'),
     url(r'^complete_loan/$', 'bank.views.complete_loan'),
+    url(r'^loanCreated/$', 'bank.views.loanCreated'),
 )

@@ -149,6 +149,9 @@ def newLoanDecision(request):
 			content['lname'] 	= request.POST.get("lname")
 			content['phone']	= decodePhone(request)
 			content['dates']	= loanDates_newLoan(term)
+
+			content['security1'] = fetchSecurityQuestions1()
+			content['security2'] = fetchSecurityQuestions2()
 		else:
 			content['status'] 	= 0
 	else:
@@ -263,7 +266,7 @@ def creditCheck():
 
 def loanDates_newLoan(term):
 	data = {}
-	term = int(term)
+	term = int(term) + 1
 	start_date = datetime.now()
 	end_date = start_date + relativedelta(months=+term)
 	start_date = start_date.date()

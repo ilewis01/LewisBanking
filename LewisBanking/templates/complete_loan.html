@@ -3,21 +3,83 @@
 {% load staticfiles %}
 
 <body>
-	<form>
+	<form action="/loanCreated/" method="post" id="loan_form"> {% csrf_token %}
 		<div class="fadeOut" id="z1">
-			<div class="messageWindow" id="messageWindow">
-				<div class="messageNav">
+			<div class="loanWindow" id="loanWindow">
+				<div class="messageNav-short">
 					<a href="javascript: visibility(1, 'hide');">
 						<i class="fa fa-window-close-o" aria-hidden="true"></i>
 					</a>
 				</div>
 
-				<div class="messageContent" id="messageContent"></div>
+				<div class="veriLoan" id="veriLoan">
+					<div class="newAcctLHead">New Account</div>
+					<input type="email" name="email2" id="email2" placeholder="Verify Email" required oninput="javascript: switchALoanSubmit2();">
+					<input type="password" name="password1" id="password1" placeholder="Create Password" required oninput="javascript: switchALoanSubmit2();">
+					<input type="password" name="password2" id="password2" placeholder="Verify Password" required oninput="javascript: switchALoanSubmit2();">
 
-				<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
+					<div class="select_left">
+						<select name="account_type" id="account_type">
+							<option value="Select">Type of Account</option>
+							<option value="False">Checking</option>
+							<option value="True">Savings</option>
+						</select>
+					</div>
+
+					<div class="field_label">Security Question 1:</div>
+					<div class="s1loan">
+						<select name="security1" id="security1">
+							{% for s1 in security1 %}
+							<option value="{{s1.index}}">{{s1.question}}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="field_label">Answer 1:</div>
+
+					<div>
+						<input type="text" name="answer1" id="answer1" required oninput="javascript: switchALoanSubmit2();">
+					</div>
+
+					<div class="field_label">Security Question 2:</div>
+					<div class="s1loan">
+						<select name="security2" id="security2">
+							{% for s2 in security2 %}
+							<option value="{{s2.index}}">{{s2.question}}</option>
+							{% endfor %}
+						</select>
+					</div>
+
+					<div class="field_label">Answer 2:</div>
+
+					<div>
+						<input type="text" name="answer2" id="answer2" required oninput="javascript: switchALoanSubmit2();">
+					</div>
+				</div>
+
+				
+				<div class="button90_gray">
+					<button type="submit" id="creBtn">Submit</button>
+					<button type="button" onCLick="javascript: visibility(1, 'hide');">Cancel</button>
+				</div>
 			</div>
 		</div>
 	</form>
+
+
+	<div class="fadeOut" id="z2">
+		<div class="messageWindow" id="messageWindow">
+			<div class="messageNav">
+				<a href="javascript: visibility(2, 'hide');">
+					<i class="fa fa-window-close-o" aria-hidden="true"></i>
+				</a>
+			</div>
+
+			<div class="messageContent" id="messageContent"></div>
+
+			<button type="button" onClick="javascript: visibility(2, 'hide');">Close</button>
+		</div>
+	</div>
 
 	<input type="hidden" name="fname" id="fname" value="{{fname}}">
 	<input type="hidden" name="lname" id="lname" value="{{lname}}">
@@ -74,12 +136,11 @@
 				By clicking "Accept" you agree to open a checking or savings account with Lewis Bank of CCNY
 			</div>
 
-			<form action="/complete_loan/" method="post" id="loan_form"> {% csrf_token %}
-				<div class="button90">
-					<button type="button" id="creBtn" onClick="visibility(1, 'show');">Accept</button>
-					<button type="buttton" onCLick="javascript: load_page('/index/', 'loan_form');">Decline</button>
-				</div>
-			</form>
+			
+			<div class="button90">
+				<button type="button" onClick="visibility(1, 'show');">Accept</button>
+				<button type="button" onCLick="javascript: load_page('/index/', 'loan_form');">Decline</button>
+			</div>
 		</div>
 	</div>
 </body>

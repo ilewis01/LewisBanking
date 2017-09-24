@@ -222,6 +222,40 @@ function switchALoanSubmit()
 	}
 }
 
+function switchALoanSubmit2()
+{
+	var data = [];
+	var button = grab('creBtn');
+	var proceed = true;
+
+	data.push(String(grab('email2').value));
+	data.push(String(grab('password1').value));
+	data.push(String(grab('password2').value));
+	data.push(String(grab('answer1').value));
+	data.push(String(grab('answer2').value));
+
+	for (var i = 0; i < data.length; i++)
+	{
+		if (data[i].length === 0)
+		{
+			proceed = false;
+			break;
+		}
+	}
+
+	if (proceed === true)
+	{
+		button.setAttribute('type', 'button');
+		button.setAttribute('onClick', "javascript: field_validation_loan2();")
+	}
+
+	else
+	{
+		button.setAttribute('type', 'submit');
+		button.removeAttribute('onClick');
+	}
+}
+
 function field_validation_account()
 {
 	var data = [];
@@ -309,6 +343,48 @@ function field_validation_loan()
 	}
 }
 
+function field_validation_loan2()
+{
+	var data = [];
+	var proceed 	= true;
+	var select 		= grab("account_type");
+	var email1 		= grab('email');
+	var email2 		= grab('email2');
+	var password1 	= grab('password1');
+	var password2 	= grab('password2');
+	
+	if (select.selectedIndex === 0)
+	{
+		proceed = false;
+		data.push("You must an account type");
+	}
+
+	if (String(password1.value) !== String(password2.value))
+	{
+		proceed = false;
+		data.push("The passwords do not match");
+	}
+
+	if (String(email1.value) !== String(email2.value))
+	{
+		proceed = false;
+		data.push("The email addresses do not match");
+	}
+
+	if (proceed === true)
+	{
+		var button = grab('creBtn');
+		button.setAttribute('type', 'submit');
+		button.removeAttribute('onClick');
+		button.click();
+	}
+	else
+	{
+		grab('messageContent').innerHTML = get_error_html(data);
+		load_popWin(grab("z2"), 2, grab("messageWindow"), "400px", "200px", "errors");
+	}
+}
+
 function get_error_html(error_list)
 {
 	var html = "<ul>";
@@ -320,11 +396,6 @@ function get_error_html(error_list)
 
 	html += "</ul>";
 	return html;
-}
-
-function initialize_newAccount(accountCreated)
-{
-
 }
 
 function runTest()
