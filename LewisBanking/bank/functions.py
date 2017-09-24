@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from datetime import datetime
 from datetime import date
+from dateutil.relativedelta import relativedelta
 import random
 import json
 import json as simplejson
@@ -112,43 +113,46 @@ def newUser_account(request):
 
 def newLoanDecision(request):
 	content = {}
-	content['title'] = "Lewis Bank | Loans"
-	content['approved'] = False
-	decision = loanDecision()
+	content['title'] 	= "Lewis Bank | Loans"
+	content['fname'] 	= request.POST.get("fname")
+	principal 			= decoderCurrency(request, "dollars", "cents")
+	content['amount'] 	= principal
+	decision 			= creditCheck()
 
 	if decision['decision'] == True:
-		if full_user_match_request(request) == False:
+		content['email'] 	= request.POST.get("email")
+		if full_user_match_request(request)['exist'] == False:
+			term 				= str(request.POST.get("loanTerm"))
+			term 				= float(term)
 			rate				= decision['interest']
-			amount 				= decoderCurrency(request, "dollars", "cents")
-			term 				= request.POST.get("loanTerm")
-			l_type			 	= request.POST.get("loanType")
-			content['amount'] 	= amount
-			content['rate'] 	= rate
-			content['term'] 	= term
-			content['type'] 	= l_type
-			content['header1'] 	= "Congratulations!"
-			content['header2'] 	= "Your loan has been approved. Here are the details:"
-			content['message1'] = generateLoanTermHTML(rate, amount, l_type, term)
-			content['btn1'] 	= "Accept"
-			content['btn2'] 	= "Decline"
-			content['approved'] = True
-			content['total'] 	= amount * rate
-			content['width'] 	= "500px";
-			content['height'] 	= "500px";
+			monthly_payment		= calculatePayments(rate, term, principal)
+			monthly_interest 	= monthly_payment - (principal/term)
+			total_interest		= monthly_interest * term
+			total 				= principal + total_interest
+
+			monthly_payment		= format(monthly_payment, '.2f')
+			monthly_interest	= format(monthly_interest, '.2f')
+			total_interest		= format(total_interest, '.2f')
+			total				= format(total, '.2f')
+			term 				= int(term)
+			rate 				= int(rate * 100)
+
+			content['status'] 		= 1
+			content['rate'] 		= rate
+			content['term'] 		= term
+			content['principal']	= principal
+			content['payments'] 	= monthly_payment
+			content['interest']		= total_interest
+			content['total']		= total
+
+			content['type'] 	= request.POST.get("loanType")
+			content['lname'] 	= request.POST.get("lname")
+			content['phone']	= decodePhone(request)
+			content['dates']	= loanDates_newLoan(term)
 		else:
-			content['header1'] 	= "Existing Account"
-			content['message1'] = "If this is an error, please contact the administrator"
-			content['message2'] = "Please login to your account to submit a loan application"
-			content['button'] 	= "Login"
-			content['width'] 	= "500px";
-			content['height'] 	= "500px";
+			content['status'] 	= 0
 	else:
-		content['header1'] 		= "Loan Declined"
-		content['message1'] 	= "The decision was generated randomly. Please try again..."
-		content['btn1'] 		= "Retry"
-		content['btn2'] 		= "Home"
-		content['width'] 		= "500px";
-		content['height'] 		= "500px";
+		content['status'] 		= -1
 	return content
 
 def generateLoanTermHTML(rate, amount, loan_type, term):
@@ -183,7 +187,8 @@ def pythonBool(value):
 
 def decoderCurrency(request, dollar_id, cents_id):
 	result = None
-	dollars = float(request.POST.get(dollar_id))
+	dollars = str(request.POST.get(dollar_id))
+	dollars = float(dollars)
 	cents = "0." + str(request.POST.get(cents_id))
 	cents = float(cents)
 	return dollars + cents
@@ -236,7 +241,7 @@ def fetchAccountNumber(size, allowText, allowNumbers, m_type):
 
 	return account_number
 
-def loanDecision():
+def creditCheck():
 	loan = {}
 	loan['decision'] = False
 	loan['interest'] = 0
@@ -256,6 +261,26 @@ def loanDecision():
 
 	return loan
 
+def loanDates_newLoan(term):
+	data = {}
+	term = int(term)
+	start_date = datetime.now()
+	end_date = start_date + relativedelta(months=+term)
+	start_date = start_date.date()
+	end_date = end_date.date()
+	data['start'] = start_date
+	data['end'] = end_date
+	return data
+
+def calculatePayments(rate, term, principal):
+	x1 = (1 + rate)**term
+	numerator = x1 * rate
+	denominator = x1 - 1
+	division = numerator / denominator
+	payments = principal * division
+	return payments
+
+
 def fetch_content(request, url):
 	content = {}
 
@@ -267,6 +292,9 @@ def fetch_content(request, url):
 	elif url == "newAccount_1":
 		content = newUser_account(request)
 		content['title'] = "Lewis Bank | New Account"
+
+	elif url == "newLoan_0":
+		content = newLoanDecision(request)
 
 	return content
 	

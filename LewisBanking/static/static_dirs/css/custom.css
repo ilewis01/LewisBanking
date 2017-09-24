@@ -406,6 +406,55 @@
 	padding-top: 3px;
 }
 
+.margin85 {
+	width:85%;
+	margin: auto;
+	text-align: center;
+}
+
+.head2 {
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.loan_details {
+	text-align: left;
+	font-size:12px;
+	font-weight: bold;
+
+}
+
+.loan_details span {
+	margin-left: 5px;
+	color:#095e54;
+}
+
+.totals {
+	font-size: 15px;
+	font-weight: bold;
+	margin-top:3px;
+}
+
+.totals span {
+	color: #4c0707;
+}
+
+.loanAcceptMessage {
+	font-size:14px;
+	margin-bottom: 20px;
+	margin-top:20px;
+}
+
+.denied_message1 {
+	text-align: justify;
+	font-size: 14px;
+	font-weight: bold;
+	margin-top: 45px;
+	margin-bottom: 65px;
+	font-style: italic;
+}
 
 
 

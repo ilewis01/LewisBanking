@@ -3,7 +3,85 @@
 {% load staticfiles %}
 
 <body>
-	<h1>Complete Loan</h1>
+	<form>
+		<div class="fadeOut" id="z1">
+			<div class="messageWindow" id="messageWindow">
+				<div class="messageNav">
+					<a href="javascript: visibility(1, 'hide');">
+						<i class="fa fa-window-close-o" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageContent" id="messageContent"></div>
+
+				<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
+			</div>
+		</div>
+	</form>
+
+	<input type="hidden" name="fname" id="fname" value="{{fname}}">
+	<input type="hidden" name="lname" id="lname" value="{{lname}}">
+	<input type="hidden" name="phone" id="phone" value="{{phone}}">
+	<input type="hidden" name="email" id="email" value="{{email}}">
+	<input type="hidden" name="ltype" id="ltype" value="{{type}}">
+	<input type="hidden" name="rate" id="rate" value="{{rate}}">
+	<input type="hidden" name="term" id="term" value="{{term}}">
+	<input type="hidden" name="principal" id="principal" value="{{principal}}">
+	<input type="hidden" name="total" id="total" value="{{total}}">
+	<input type="hidden" name="interest" id="interest" value="{{interest}}">
+	<input type="hidden" name="start" id="start" value="{{dates.start}}">
+	<input type="hidden" name="end" id="end" value="{{dates.end}}">
+	<input type="hidden" name="payments" id="payments" value="{{payments}}">
+
+	<div class="new-loan-wrapper">
+		<div class="margin85">
+			<div class="popHead" style="margin-top:15px;"><em>Congratulations, {{fname}}!</em></div>
+			<div class="head2">Your loan has been approved</div>
+			<div style="text-align:left; margin-top:30px;margin-bottom:10px;">Here are the details:</div>
+
+			<div class="loan_details">
+				<ul>
+					<table>
+						<tr>
+							<td><li><em>Principal Balance:</em></li></td>
+							<td><span>${{principal}}</span></td>
+						</tr>
+
+						<tr>
+							<td><li><em>Interest Rate:</em></li></td>
+							<td><span>{{rate}}%</span></td>
+						</tr>
+
+						<tr>
+							<td><li><em>Term:</div></em></td>
+							<td><span>{{dates.start}} - {{dates.end}}</span></td>
+						</tr>
+
+						<tr>
+							<td><li><em>Monthly Payments:</em></li></td>
+							<td><span>${{payments}} for {{term}} months</span></td>
+						</tr>
+
+						<tr>
+							<td><li><div class="totals">Total Loan:</div></li></td>
+							<td><div class="totals"><span>${{total}}</span></div></td>
+						</tr>
+					</table>
+				</ul>
+			</div>
+
+			<div class="loanAcceptMessage">
+				By clicking "Accept" you agree to open a checking or savings account with Lewis Bank of CCNY
+			</div>
+
+			<form action="/complete_loan/" method="post" id="loan_form"> {% csrf_token %}
+				<div class="button90">
+					<button type="button" id="creBtn" onClick="visibility(1, 'show');">Accept</button>
+					<button type="buttton" onCLick="javascript: load_page('/index/', 'loan_form');">Decline</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </body>
 
 {% endblock %}

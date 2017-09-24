@@ -60,9 +60,16 @@ def newLoan(request):
 	return render_to_response('newLoan.html', content)
 
 def complete_loan(request):
-	content = {}
+	content = fetch_content(request, "newLoan_0")
 	content.update(csrf(request))
-	return render_to_response('complete_loan.html', content)
+	status = content['status']
+
+	if status == 1:
+		return render_to_response('complete_loan.html', content)
+	elif status == 0:
+		return render_to_response('complete_loan_exist.html', content)
+	elif status == -1:
+		return render_to_response('complete_loan_denied.html', content)
 
 def validationRequired(request):
 	content = {}

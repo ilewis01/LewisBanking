@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block body %}
+{% load staticfiles %}
+
+<body>
+	<form>
+		<div class="fadeOut" id="z1">
+			<div class="messageWindow" id="messageWindow">
+				<div class="messageNav">
+					<a href="javascript: visibility(1, 'hide');">
+						<i class="fa fa-window-close-o" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageContent" id="messageContent"></div>
+
+				<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
+			</div>
+		</div>
+	</form>
+
+	<div class="new-loan-wrapper">
+		<div class="margin85">
+			<div class="popHead" style="margin-top:15px;"><em>Denied!</em></div>
+
+			<div class="denied_message1">
+				Sorry {{fname}},<br><br>
+				Unfortunately, we were not able to apporove your loan application at this time. The good news is that this is not a real bank and the decision was made totally at random. You can either keep refreshing this page until you are approved, or you can click "Retry" to return to the loan application.
+			</div>
+
+			<form action="/complete_loan/" method="post" id="loan_form"> {% csrf_token %}
+				<div class="button90">
+					<button type="button" id="creBtn" onClick="load_page('/newLoan/', 'loan_form');">Retry</button>
+					<button type="button" onCLick="javascript: load_page('/index/', 'loan_form');">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+{% endblock %}
