@@ -4,6 +4,20 @@
 
 <body>
 	<form action="/loanCreated/" method="post" id="loan_form"> {% csrf_token %}
+		<input type="hidden" name="fname" id="fname" value="{{fname}}">
+		<input type="hidden" name="lname" id="lname" value="{{lname}}">
+		<input type="hidden" name="phone" id="phone" value="{{phone}}">
+		<input type="hidden" name="email" id="email" value="{{email}}">
+		<input type="hidden" name="ltype" id="ltype" value="{{type}}">
+		<input type="hidden" name="rate" id="rate" value="{{rate}}">
+		<input type="hidden" name="term" id="term" value="{{term}}">
+		<input type="hidden" name="principal" id="principal" value="{{principal}}">
+		<input type="hidden" name="total" id="total" value="{{total}}">
+		<input type="hidden" name="interest" id="interest" value="{{interest}}">
+		<input type="hidden" name="start" id="start" value="{{dates.start}}">
+		<input type="hidden" name="end" id="end" value="{{dates.end}}">
+		<input type="hidden" name="payments" id="payments" value="{{payments}}">
+	
 		<div class="fadeOut" id="z1">
 			<div class="loanWindow" id="loanWindow">
 				<div class="messageNav-short">
@@ -80,20 +94,6 @@
 			<button type="button" onClick="javascript: visibility(2, 'hide');">Close</button>
 		</div>
 	</div>
-
-	<input type="hidden" name="fname" id="fname" value="{{fname}}">
-	<input type="hidden" name="lname" id="lname" value="{{lname}}">
-	<input type="hidden" name="phone" id="phone" value="{{phone}}">
-	<input type="hidden" name="email" id="email" value="{{email}}">
-	<input type="hidden" name="ltype" id="ltype" value="{{type}}">
-	<input type="hidden" name="rate" id="rate" value="{{rate}}">
-	<input type="hidden" name="term" id="term" value="{{term}}">
-	<input type="hidden" name="principal" id="principal" value="{{principal}}">
-	<input type="hidden" name="total" id="total" value="{{total}}">
-	<input type="hidden" name="interest" id="interest" value="{{interest}}">
-	<input type="hidden" name="start" id="start" value="{{dates.start}}">
-	<input type="hidden" name="end" id="end" value="{{dates.end}}">
-	<input type="hidden" name="payments" id="payments" value="{{payments}}">
 
 	<div class="new-loan-wrapper">
 		<div class="margin85">

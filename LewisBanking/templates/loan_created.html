@@ -3,6 +3,20 @@
 {% load staticfiles %}
 
 <body>
+	<input type="hidden" name="fname" id="fname" value="{{fname}}">
+	<input type="hidden" name="lname" id="lname" value="{{lname}}">
+	<input type="hidden" name="phone" id="phone" value="{{phone}}">
+	<input type="hidden" name="email" id="email" value="{{email}}">
+	<input type="hidden" name="principal" id="principal" value="{{principal}}">
+	<input type="hidden" name="total" id="total" value="{{total}}">
+	<input type="hidden" name="interest" id="interest" value="{{interest}}">
+	<input type="hidden" name="start" id="start" value="{{dates.start}}">
+	<input type="hidden" name="end" id="end" value="{{dates.end}}">
+	<input type="hidden" name="payments" id="payments" value="{{payments}}">
+	<input type="hidden" name="loan_type" id="loan_type" value="{{type}}">
+	<input type="hidden" name="rate" id="rate" value="{{rate}}">
+	<input type="hidden" name="term" id="term" value="{{term}}">
+
 	<form>
 		<div class="fadeOut" id="z1">
 			<div class="passwordRecovery">
@@ -66,7 +80,7 @@
 
 		<form action="/auth_view/" method="/post/" id="auth_form"> {% csrf_token %}
 		    <div class="login-input">
-			    <input type="email" placeholder="Email" name="username" id="username" required>
+			    <input type="email" placeholder="Email" name="username" id="username" value="{{user.email}}" required>
 			    <input type="password" placeholder="Password" name="password" id="password" required>
 			    <button type="submit">Login</button>
 		    </div>

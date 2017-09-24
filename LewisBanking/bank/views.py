@@ -72,9 +72,8 @@ def complete_loan(request):
 		return render_to_response('complete_loan_denied.html', content)
 
 def loanCreated(request):
-	content = {}
+	content = fetch_content(request, "newLoan_1")
 	content.update(csrf(request))
-	content['title'] = "Lewis Bank | New Loan Application"
 	return render_to_response('loan_created.html', content)
 
 def validationRequired(request):

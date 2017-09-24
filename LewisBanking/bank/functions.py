@@ -111,6 +111,75 @@ def newUser_account(request):
 
 	return content
 
+def buildLoan_init(request):
+	content = {}
+	content['title'] 	= "Lewis Bank | New Loan Application"
+
+	fname = request.POST.get('fname')
+	lname = request.POST.get('lname')
+	email = request.POST.get('email')
+	passw = request.POST.get('password1')
+	term  = request.POST.get("term")
+	dates = loanDates_newLoan(term)
+	loan_type = str(request.POST.get("ltype"))
+	rate = str(request.POST.get("rate"))
+	rate = float(rate)
+	rate /= 100
+
+	principal = str(request.POST.get("principal"))
+	interest = str(request.POST.get("interest"))
+	payment = str(request.POST.get("payments"))
+	principal = float(principal)
+	interest = float(interest)
+	payment = float(payment)
+	total = principal + interest
+
+	user = User()
+	user.first_name = fname
+	user.last_name = lname
+	user.email = email
+	user.username = email
+	user.set_password(passw)
+	user.save()
+
+	pfile = profile(user=user)
+	pfile.phone 		= request.POST.get("phone")
+	pfile.question1 	= request.POST.get("security1")
+	pfile.question2 	= request.POST.get("security2")
+	pfile.answer1 		= request.POST.get("answer1")
+	pfile.answer2 		= request.POST.get("answer2")
+	pfile.recoveryCode 	= generateRandom(6, True, True)
+	pfile.is_active 	= True
+
+	loan = Loan(user_id=user.id)
+	loan.account_number = fetchAccountNumber(8, True, True, "loan")
+	loan.loan_amount 	= principal
+	loan.balance 		= request.POST.get("total")
+	loan.rate 			= rate
+	loan.total_interest = interest
+	loan.loan_type 		= enumerateLoanType(loan_type)
+	loan.payment 		= payment
+	loan.term 			= term
+	loan.start_date 	= dates['start']
+	loan.end_date 		= dates['end']
+	loan.save()
+
+	account = Account(user_id=user.id)
+	account.account_number 	= fetchAccountNumber(8, False, True, "account")
+	account.isSavings 		= pythonBool(request.POST.get("account_type"))
+	account.balance 		= request.POST.get("principal")
+	account.save()
+
+	encode = str(account.id) + "~" + str(loan.id) + "~"
+	pfile.accounts = encode
+	pfile.save()
+
+	content['user'] = user
+	content['profile'] = profile
+	content['account'] = account
+	content['loan'] = loan
+	return content
+
 def newLoanDecision(request):
 	content = {}
 	content['title'] 	= "Lewis Bank | Loans"
@@ -275,6 +344,18 @@ def loanDates_newLoan(term):
 	data['end'] = end_date
 	return data
 
+def enumerateLoanType(loan_type):
+	result = 0;
+
+	if loan_type == "Personal":
+		result = 1
+	elif loan_type == "Business":
+		result = 2
+	elif loan_type == "Student":
+		result == 3
+
+	return result
+
 def calculatePayments(rate, term, principal):
 	x1 = (1 + rate)**term
 	numerator = x1 * rate
@@ -298,6 +379,9 @@ def fetch_content(request, url):
 
 	elif url == "newLoan_0":
 		content = newLoanDecision(request)
+
+	elif url == "newLoan_1":
+		content = buildLoan_init(request)
 
 	return content
 	
