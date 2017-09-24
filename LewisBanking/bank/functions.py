@@ -118,13 +118,15 @@ def buildLoan_init(request):
 	fname = request.POST.get('fname')
 	lname = request.POST.get('lname')
 	email = request.POST.get('email')
-	passw = request.POST.get('password1')
+	passw = str(request.POST.get('password1'))
 	term  = request.POST.get("term")
 	dates = loanDates_newLoan(term)
 	loan_type = str(request.POST.get("ltype"))
 	rate = str(request.POST.get("rate"))
 	rate = float(rate)
 	rate /= 100
+
+	print "PASSWORD: " + str(passw)
 
 	principal = str(request.POST.get("principal"))
 	interest = str(request.POST.get("interest"))

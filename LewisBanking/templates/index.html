@@ -38,7 +38,7 @@
 	<div class="login-wrapper">
 		<div id="login-text">Login</div>
 
-		<form action="/auth_view/" method="/post/" id="auth_form"> {% csrf_token %}
+		<form action="/auth_view/" method="post" id="auth_form"> {% csrf_token %}
 		    <div class="login-input">
 			    <input type="email" placeholder="Email" name="username" id="username" required>
 			    <input type="password" placeholder="Password" name="password" id="password" required>

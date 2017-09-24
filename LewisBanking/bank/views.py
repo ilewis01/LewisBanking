@@ -17,7 +17,7 @@ from xhtml2pdf import pisa
 from django.core import serializers
 from django.http import FileResponse, Http404
 
-from bank.functions import fetch_content
+from bank.functions import getUserProfile, fetch_content
 
 from bank.models import profile, Account, Loan
 
@@ -28,13 +28,16 @@ def index(request):
 	return render_to_response('index.html', content)
 
 def auth_view(request):
-    username = request.POST.get('username', '')
-    password = request.POST.get('password', '')
+    username = request.POST.get('username')
+    password = request.POST.get('password')
     user = auth.authenticate(username=username, password=password)
+
+    print "USERNAME: " + username
+    print "PASSWORD: " + password
 
     if user is not None:
         auth.login(request, user)
-        profile = getAccount(user)
+        profile = getUserProfile(user)
 
         if user.is_active == False:
         	return HttpResponseRedirect('/validationRequired/')
@@ -94,6 +97,12 @@ def logout(request):
 	content = {}
 	content.update(csrf(request))
 	return render_to_response('logout.html', content)
+
+@login_required(login_url='/index')
+def home(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('home.html', content)
 
 
 
