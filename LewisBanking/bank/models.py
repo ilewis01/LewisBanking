@@ -39,3 +39,12 @@ class Loan(models.Model):
 
 	def __unicode__(self):
 		return str(self.account_number) + " - " + str(self.loan_amount)
+
+class History(models.Model):
+	account_number 	= models.CharField(max_length=8, default=None, blank=True, null=True)
+	description 	= models.CharField(max_length=200, default=None, blank=True, null=True)
+	balance		 	= models.DecimalField(default=0.00, max_digits=15, decimal_places=2)
+	date 			= models.DateField(default=None, blank=True, null=True)
+
+	def __unicode__(self):
+		return str(self.account_number)

@@ -6,7 +6,7 @@ import random
 import json
 import json as simplejson
 
-from bank.models import profile, Account, Loan
+from bank.models import profile, Account, Loan, History
 
 
 def fetchSecurityQuestions1():

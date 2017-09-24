@@ -19,7 +19,7 @@ from django.http import FileResponse, Http404
 
 from bank.functions import getUserProfile, fetch_content
 
-from bank.models import profile, Account, Loan
+from bank.models import profile, Account, Loan, History
 
 def index(request):
 	content = {}
