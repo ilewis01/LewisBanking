@@ -20,6 +20,7 @@ class Account(models.Model):
 	account_number 	= models.CharField(max_length=8, default=None, blank=True, null=True)
 	isSavings 		= models.BooleanField(default=False, blank=True)
 	balance 		= models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
+	date 	 		= models.DateField(default=None, blank=True, null=True)
 
 	def __unicode__(self):
 		return self.account_number
