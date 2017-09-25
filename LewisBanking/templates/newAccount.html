@@ -6,13 +6,25 @@
 	<form>
 		<div class="fadeOut" id="z1">
 			<div class="messageWindow" id="messageWindow">
-				<div class="messageNav">
+				<div class="messageNav-short">
 					<a href="javascript: visibility(1, 'hide');">
 						<i class="fa fa-window-close-o" aria-hidden="true"></i>
 					</a>
 				</div>
 
-				<div class="messageContent" id="messageContent"></div>
+				<div class="messageHeader" id="messageHeader"></div>
+
+				<div class="hold_logo">
+					<div class="class_left">
+						<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-small'>
+						<div class="sm-logo-text">Lewis Bank</div>
+					</div>
+
+					<div class="vertical_divider"></div>
+
+					<div class="message_text" id="messageContent">
+					</div>
+				</div>
 
 				<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
 			</div>
@@ -126,7 +138,7 @@
 							<input type="checkbox" id="agree" required>
 						</div>
 						<div class="term_b">
-							By clicking submit, you agree to the <a href="javascript: load_popWin(z1, 1, messageWindow, '350px', '250px', 'terms');">terms</a> service
+							By clicking submit, you agree to the <a href="javascript: load_popWin(z1, 1, messageWindow, '450px', '250px', 'terms');">terms</a> of service
 						</div>
 					</div>
 				</div>

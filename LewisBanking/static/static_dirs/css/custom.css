@@ -269,10 +269,6 @@
 	margin-bottom:10px;
 }
 
-.termAgree {
-
-}
-
 .s_input {
 	width:85%;
 	font-size: 14px;
@@ -327,6 +323,7 @@
 	font-size: 12px;
 	margin-top:4px;
 	margin-left:4px;
+	font-weight: bold;
 }
 
 .dollarAmt {
@@ -369,6 +366,82 @@
 	text-align: left;
 	font-size: 170%;
 	padding-left: 10px;
+	border-bottom: 1px solid gray;
+}
+
+.hold_logo {
+	width:90%;
+	height:120px;
+	margin: auto;
+}
+
+.class_left {
+	width: 23%;
+	height:70%;
+	padding-top: 1%;
+	position: relative;
+	top: 40%;
+	transform: perspective(1px) translateY(-50%);
+	float:left;
+}
+
+.vertical_divider {
+	width: 2px;
+	height:90%;
+	/*background-color: black;*/
+	position: relative;
+	top: 50%;
+	transform: perspective(1px) translateY(-50%);
+	float:left;
+}
+
+.message_text {
+	width:74%;
+	height:80%;
+	position: relative;
+	top: 50%;
+	transform: perspective(1px) translateY(-50%);
+	float:left;
+	margin-left:2%;
+	text-align: left;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 12px;
+}
+
+.termAgree2 {
+	font-size: 16px;
+	margin-left: 15px;
+	color:#4c3977;
+}
+
+.messageHeader {
+	width:86%;
+	margin:auto;
+	text-align: left;
+	font-size: 24px;
+	font-family: Impact;
+	font-style: italic;
+	color:#291063;
+	margin-top: 2%;
+}
+
+.messageHeader span {
+	color:#442624;
+}
+
+.sm-logo-text {
+	font-family: Impact;
+	font-size: 16px;
+	color:#3e3e3f;
+	margin-top: 2%;
+	text-align: center;
+}
+
+.message_logo_div {
+	width:100%;
+	height:150px;
+	background-color: red;
 }
 
 .messageContent {
@@ -429,11 +502,12 @@
 }
 
 .term_b {
-	font-size: 12px;
+	font-size: 10.5px;
 	width:280px;
 	position: relative;
 	float:left;
 	padding-top: 3px;
+	font-weight: bold;
 }
 
 .margin85 {

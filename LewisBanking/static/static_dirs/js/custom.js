@@ -56,7 +56,7 @@ function load_popWin(z_div, index, target, width, height, message_type)
 
 function load_terms_html()
 {
-	var html = "<span class=\"termAgree\">You agree to the following:</span>";
+	var html = "<div class=\"termAgree2\">You agree to the following:</div>";
 	html += "<ul>";
 	html += "<li>This is not a real bank</li>";
 	html += "<li>We will not receive any money from you</li>";
@@ -64,11 +64,13 @@ function load_terms_html()
 	html += "<li>This is only a Python coding project</li>";
 	html += "</ul>";
 	grab('messageContent').innerHTML = html;
+
+	grab("messageHeader").innerHTML = "Terms of Service"
 }
 
 function load_error_html()
 {
-	grab('fname').value = "Loading Errors";
+	// grab('fname').value = "Loading Errors";
 }
 
 function entry_error(target, mode, max_length)
@@ -300,7 +302,8 @@ function field_validation_account()
 	else
 	{
 		grab('messageContent').innerHTML = get_error_html(data);
-		load_popWin(grab("z1"), 1, grab("messageWindow"), "400px", "200px", "errors");
+		grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		load_popWin(grab("z1"), 1, grab("messageWindow"), "400px", "250px", "errors");
 	}
 }
 
@@ -339,7 +342,8 @@ function field_validation_loan()
 	else
 	{
 		grab('messageContent').innerHTML = get_error_html(data);
-		load_popWin(grab("z1"), 1, grab("messageWindow"), "400px", "200px", "errors");
+		grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		load_popWin(grab("z1"), 1, grab("messageWindow"), "400px", "250px", "errors");
 	}
 }
 
@@ -381,7 +385,8 @@ function field_validation_loan2()
 	else
 	{
 		grab('messageContent').innerHTML = get_error_html(data);
-		load_popWin(grab("z2"), 2, grab("messageWindow"), "400px", "200px", "errors");
+		grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		load_popWin(grab("z2"), 2, grab("messageWindow"), "400px", "250px", "errors");
 	}
 }
 
