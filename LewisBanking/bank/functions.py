@@ -96,14 +96,20 @@ def newUser_account(request):
 		user.email = email
 		user.username = email
 		user.set_password(request.POST.get('password1'))
+		user.save()
 
 		profile = newProfile(request, user)
 		account = newAccount(request, user.id)
 
-		# profile.accounts = str(account.id) + "~"
-		# user.save()
-		# profile.save()
-		# account.save()
+		history = History(account_number=account.account_number)
+		history.balance = account.balance
+		history.date = datetime.now().date()
+		history.description = "Account Opened"
+
+		profile.accounts = str(account.id) + "~"
+		profile.save()
+		account.save()
+		history.save()
 
 		content['user'] = user
 		content['profile'] = profile
@@ -267,6 +273,7 @@ def newAccount(request, user_id):
 	account.account_number = fetchAccountNumber(8, False, True, "account")
 	account.isSavings = pythonBool(request.POST.get("accountType"))
 	account.balance = decoderCurrency(request, "dollars", "cents")
+	account.date = datetime.now().date()
 	return account
 
 
