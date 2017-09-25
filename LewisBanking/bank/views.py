@@ -54,7 +54,11 @@ def newAccount(request):
 def create_account(request):
 	content = fetch_content(request, "newAccount_1")
 	content.update(csrf(request))
-	return render_to_response('create_account.html', content)
+
+	if content['created'] == True:
+		return render_to_response('create_account.html', content)
+	else:
+		return render_to_response('complete_loan_exist.html', content)
 
 def newLoan(request):
 	content = {}

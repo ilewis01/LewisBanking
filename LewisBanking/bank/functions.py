@@ -86,6 +86,7 @@ def newUser_account(request):
 	content['created'] = False
 
 	email = str(request.POST.get('email'))
+	content['email'] = email
 
 	if userExist(email) == False:
 		content['created'] = True
@@ -107,6 +108,7 @@ def newUser_account(request):
 		history.description = "Account Opened"
 
 		profile.accounts = str(account.id) + "~"
+		profile.is_active = True
 		profile.save()
 		account.save()
 		history.save()
@@ -131,6 +133,8 @@ def buildLoan_init(request):
 	rate = str(request.POST.get("rate"))
 	rate = float(rate)
 	rate /= 100
+
+	content['loan_type'] = loan_type
 
 	principal = str(request.POST.get("principal"))
 	interest = str(request.POST.get("interest"))
@@ -215,8 +219,10 @@ def newLoanDecision(request):
 	decision 			= creditCheck()
 
 	if decision['decision'] == True:
-		content['email'] 	= request.POST.get("email")
-		if full_user_match_request(request)['exist'] == False:
+		email = request.POST.get("email")
+		content['email'] = email
+		
+		if userExist(email) == False:
 			term 				= str(request.POST.get("loanTerm"))
 			term 				= float(term)
 			rate				= decision['interest']

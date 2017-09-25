@@ -4,6 +4,10 @@
 
 <body>
 	<h1>Home Page</h1>
+	
+	<form action="/logout/" method="post"> {% csrf_token %}
+		<button type="submit">LOGOUT HERE!</button>
+	</form>
 </body>
 
 {% endblock %}
