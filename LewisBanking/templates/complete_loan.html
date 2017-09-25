@@ -82,17 +82,29 @@
 
 
 	<div class="fadeOut" id="z2">
-		<div class="messageWindow" id="messageWindow">
-			<div class="messageNav">
-				<a href="javascript: visibility(2, 'hide');">
-					<i class="fa fa-window-close-o" aria-hidden="true"></i>
-				</a>
+			<div class="messageWindow" id="messageWindow">
+				<div class="messageNav-short">
+					<a href="javascript: visibility(2, 'hide');">
+						<i class="fa fa-window-close-o" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageHeader" id="messageHeader"></div>
+
+				<div class="hold_logo">
+					<div class="class_left">
+						<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-small'>
+						<div class="sm-logo-text">Lewis Bank</div>
+					</div>
+
+					<div class="vertical_divider"></div>
+
+					<div class="message_text" id="messageContent">
+					</div>
+				</div>
+
+				<button type="button" onClick="javascript: visibility(2, 'hide');">Close</button>
 			</div>
-
-			<div class="messageContent" id="messageContent"></div>
-
-			<button type="button" onClick="javascript: visibility(2, 'hide');">Close</button>
-		</div>
 	</div>
 
 	<div class="new-loan-wrapper">

@@ -360,7 +360,7 @@ function field_validation_loan2()
 	if (select.selectedIndex === 0)
 	{
 		proceed = false;
-		data.push("You must an account type");
+		data.push("You must select an account type");
 	}
 
 	if (String(password1.value) !== String(password2.value))
