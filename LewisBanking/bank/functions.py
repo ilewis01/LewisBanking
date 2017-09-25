@@ -126,8 +126,6 @@ def buildLoan_init(request):
 	rate = float(rate)
 	rate /= 100
 
-	print "PASSWORD: " + str(passw)
-
 	principal = str(request.POST.get("principal"))
 	interest = str(request.POST.get("interest"))
 	payment = str(request.POST.get("payments"))
@@ -170,11 +168,31 @@ def buildLoan_init(request):
 	account.account_number 	= fetchAccountNumber(8, False, True, "account")
 	account.isSavings 		= pythonBool(request.POST.get("account_type"))
 	account.balance 		= request.POST.get("principal")
+	account.date 			= dates['start']
 	account.save()
 
 	encode = str(account.id) + "~" + str(loan.id) + "~"
 	pfile.accounts = encode
 	pfile.save()
+
+	history_account 				= History()
+	history_account.date 			= dates['start']
+	history_account.description 	= "Account Opened"
+	history_account.account_number	= account.account_number
+	history_account.balance 		= account.balance
+	history_account.save()
+
+	a_type = "Checking"
+
+	if account.isSavings == True:
+		a_type = "Savings"
+
+	history_loan 	 				= History()
+	history_loan.date 				= dates['start']
+	history_loan.description 		= "Loan Approved and deposited into " + a_type + ": " + str(account.account_number)
+	history_loan.account_number		= loan.account_number
+	history_loan.balance 			= loan.balance
+	history_loan.save()
 
 	content['user'] = user
 	content['profile'] = profile
@@ -355,6 +373,18 @@ def enumerateLoanType(loan_type):
 		result = 2
 	elif loan_type == "Student":
 		result == 3
+
+	return result
+
+def denumerateLoanType(loan_type):
+	result = ""
+
+	if loan_type == 1:
+		result = "Personal"
+	elif loan_type == 2:
+		result = "Business"
+	elif loan_type == 3:
+		result = "Student"
 
 	return result
 
