@@ -457,6 +457,14 @@ function selectBtn(url)
 		text2.style.borderRight = "1px solid #999999";
 		text3.style.borderRight = "1px solid #999999";
 	}
+
+	else if (url === "welcome") 
+	{
+		text1.style.borderRight = "1px solid #999999";
+		text2.style.borderRight = "1px solid #999999";
+		text3.style.borderRight = "1px solid #999999";
+		text4.style.borderRight = "1px solid #999999";
+	}
 }
 
 function toggle_dropdown()
