@@ -94,6 +94,12 @@
 	float:left;
 }
 
+.cuny-logo-welcome {
+	width:100%;
+	height:100%;
+	margin-top: 5%;
+}
+
 .cuny-logo-base2 {
 	width:55px;
 	height:55px;
@@ -144,7 +150,7 @@
 	border:1px solid #666666;
 	border-radius: 10px;
 	background-color: #333333;
-	opacity: 0.7;
+	opacity: 0.8;
 	box-shadow: 2px 2px 5px black;
 }
 
@@ -954,6 +960,107 @@
 	border-radius: 5px;
 	font-weight: bold;
 	margin-top: 6%;
+}
+
+.welcome_holder {
+	width:50%;
+	height:10vh;
+	margin:auto;
+	background-color: #7965a3;
+	opacity:0.9;
+	border:1px solid black;
+	border-radius: 20px;
+	box-shadow: 2px 2px 5px black;
+	color:#e0d6f4;
+	text-align: center;
+	font-size: 40px;
+	font-family: Impact;
+	font-style: italic;
+	text-shadow: 1px 1px black;
+	line-height: 70px;
+	margin-top:12%;
+}
+
+.welcome_msg {
+	font-size: 40px;
+	font-weight: bold;
+	font-style: italic;
+	margin-top: 1%;
+	color:#cccccc;
+	text-shadow:1px 1px black;
+}
+
+.data-wrap {
+	width:80%;
+	height:80vh;
+	margin:auto;
+	border:1px solid black;
+	border-radius: 20px;
+	background: url('/static/images/gray_grad.png');
+	background-size:100% 100%;
+	opacity: 0.9;
+	box-shadow: 2px 2px 5px black;
+}
+
+.url-wrap {
+	width:100%;
+	height:12%;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	background-color: #7965a3;
+	border-bottom: 2px solid black;
+	text-align: left;
+	font-size: 30px;
+	font-weight:bold;
+	font-style: italic;
+	font-family: Impact;
+	color:#e0d6f4;
+	text-shadow: 1px 1px black;
+	padding-left: 3%;
+	line-height: 65px;
+}
+
+.summary-boxes {
+	position: relative;
+	border: 1px solid black;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px black;
+	margin-top: 3.5%;
+	background-color: #666666;
+}
+
+.summary-content {
+	width:570px;
+	height:465px;
+	float:left;
+	margin-left: 5%;
+}
+
+.summary-selected-data {
+	width:320px;
+	height:465px;
+	float:right;
+	margin-right: 5%;
+}
+
+.overview-nav {
+	width:100%;
+	height:13%;
+	border-bottom: 2px solid black;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+.overview-content {
+	width:100%;
+	height:80%;
+	background-color: white;
+	border-bottom: 2px solid black;
+	/*overflow-y: scroll;*/
+}
+
+.list_frame_body {
+	background-color: white;
 }
 
 

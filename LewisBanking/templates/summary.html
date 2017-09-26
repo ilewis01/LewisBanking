@@ -3,10 +3,24 @@
 {% load staticfiles %}
 
 <body onLoad="javascript: selectBtn('summary');">
-	<h1>Summary</h1>
 	
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
-		
+		<div class="data-wrap">
+			<div class="url-wrap">Overview | Banking Summary</div>
+
+			<div class="summary-boxes summary-content">
+				<div class="overview-nav"></div>
+
+				<div class="overview-content">
+					<iframe src="/load_sorted/" id="list_frame" class="list_frame" style="width:568px; height:369px;">
+					</iframe>
+				</div>
+			</div>
+
+			<div class="summary-boxes summary-selected-data">
+				
+			</div>
+		</div>
 	</form>
 </body>
 

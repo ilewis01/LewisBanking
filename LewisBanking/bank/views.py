@@ -32,9 +32,6 @@ def auth_view(request):
     password = request.POST.get('password')
     user = auth.authenticate(username=username, password=password)
 
-    print "USERNAME: " + username
-    print "PASSWORD: " + password
-
     if user is not None:
         auth.login(request, user)
         profile = getUserProfile(user)
@@ -149,6 +146,18 @@ def deleteAccount(request):
 	content = fetch_content(request, "delete")
 	content.update(csrf(request))
 	return render_to_response('deleteAccount.html', content)
+
+@login_required(login_url='/index')
+def load_sorted(request):
+	content = fetch_content(request, "sorted")
+	content.update(csrf(request))
+	return render_to_response('load_sorted.html', content)
+
+@login_required(login_url='/index')
+def load_sorted2(request):
+	content = fetch_content(request, "sorted")
+	content.update(csrf(request))
+	return render_to_response('load_sorted2.html', content)
 
 
 

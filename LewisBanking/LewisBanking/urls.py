@@ -23,4 +23,5 @@ urlpatterns = patterns('',
     url(r'^profile/$', 'bank.views.profile'),
     url(r'^updatePassword/$', 'bank.views.updatePassword'),
     url(r'^deleteAccount/$', 'bank.views.deleteAccount'),
+    url(r'^load_sorted/$', 'bank.views.load_sorted'),
 )

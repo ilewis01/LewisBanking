@@ -21,6 +21,7 @@ class Account(models.Model):
 	isSavings 		= models.BooleanField(default=False, blank=True)
 	balance 		= models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
 	date 	 		= models.DateField(default=None, blank=True, null=True)
+	serializer 		= models.CharField(max_length=20, default="Account", blank=True, null=True)
 
 	def __unicode__(self):
 		return self.account_number
@@ -37,15 +38,18 @@ class Loan(models.Model):
 	term 			= models.IntegerField(default=0)
 	start_date 		= models.DateField(default=None, blank=True, null=True)
 	end_date 		= models.DateField(default=None, blank=True, null=True)
+	serializer 		= models.CharField(max_length=20, default="Loan", blank=True, null=True)
 
 	def __unicode__(self):
 		return str(self.account_number) + " - " + str(self.loan_amount)
 
 class History(models.Model):
+	user_id 		= models.IntegerField(default=0)
 	account_number 	= models.CharField(max_length=8, default=None, blank=True, null=True)
 	description 	= models.CharField(max_length=200, default=None, blank=True, null=True)
 	balance		 	= models.DecimalField(default=0.00, max_digits=15, decimal_places=2)
 	date 			= models.DateField(default=None, blank=True, null=True)
+	account_type 	= models.CharField(max_length=20, default=None, blank=True, null=True)
 
 	def __unicode__(self):
 		return str(self.account_number)

@@ -3,10 +3,10 @@
 {% load staticfiles %}
 
 <body onLoad="javascript: selectBtn('welcome');">
-	<h1>Welcome Page</h1>
-	
 	<form action="" method="post" id="bank_form"> {% csrf_token %}
-		
+		<div class="welcome_holder">
+			Welcome Back, {{user.first_name}}!
+		</div>
 	</form>
 </body>
 

@@ -3,10 +3,10 @@
 {% load staticfiles %}
 
 <body onLoad="javascript: selectBtn('accounts');">
-	<h1>Accounts</h1>
-	
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
-		
+		<div class="data-wrap">
+			<div class="url-wrap">Account Management</div>
+		</div>
 	</form>
 </body>
 
