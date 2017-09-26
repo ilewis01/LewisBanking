@@ -104,9 +104,52 @@ def logout(request):
 
 @login_required(login_url='/index')
 def home(request):
-	content = {}
+	content = fetch_content(request, "home")
 	content.update(csrf(request))
 	return render_to_response('home.html', content)
+
+@login_required(login_url='/index')
+def summary(request):
+	content = fetch_content(request, "summary")
+	content.update(csrf(request))
+	return render_to_response('summary.html', content)
+
+@login_required(login_url='/index')
+def accounts(request):
+	content = fetch_content(request, "accounts")
+	content.update(csrf(request))
+	return render_to_response('accounts.html', content)
+
+@login_required(login_url='/index')
+def loans(request):
+	content = fetch_content(request, "loans")
+	content.update(csrf(request))
+	return render_to_response('loans.html', content)
+
+@login_required(login_url='/index')
+def transactions(request):
+	content = fetch_content(request, "transactions")
+	content.update(csrf(request))
+	return render_to_response('transactions.html', content)
+
+@login_required(login_url='/index')
+def profile(request):
+	content = fetch_content(request, "profile")
+	content.update(csrf(request))
+	return render_to_response('profile.html', content)
+
+@login_required(login_url='/index')
+def updatePassword(request):
+	content = fetch_content(request, "password")
+	content.update(csrf(request))
+	return render_to_response('updatePassword.html', content)
+
+@login_required(login_url='/index')
+def deleteAccount(request):
+	content = fetch_content(request, "delete")
+	content.update(csrf(request))
+	return render_to_response('deleteAccount.html', content)
+
 
 
 

@@ -2,8 +2,8 @@
 {% block body %}
 {% load staticfiles %}
 
-<body>
-	<h1>Welcome Page</h1>
+<body onLoad="javascript: selectBtn('tools');">
+	<h1>Delete Account</h1>
 	
 	<form action="" method="post" id="bank_form"> {% csrf_token %}
 		

@@ -403,10 +403,108 @@ function get_error_html(error_list)
 	return html;
 }
 
-function runTest()
+function selectBtn(url)
 {
+	var btn1 = grab("btn1");
+	var btn2 = grab("btn2");
+	var btn3 = grab("btn3");
+	var btn4 = grab("btn4");
+	var btn5 = grab("btn5");
+	var text1 = grab('text1');
+	var text2 = grab('text2');
+	var text3 = grab('text3');
+	var text4 = grab('text4');
+	var text5 = grab('text5');
 
+	if (url === "summary")
+	{
+		btn1.className = "btn-selected";
+		text1.className = "btn-selected-text";
+		text2.style.borderRight = "1px solid #999999";
+		text3.style.borderRight = "1px solid #999999";
+		text4.style.borderRight = "1px solid #999999";
+	}
+
+	else if (url === "accounts")
+	{
+		btn2.className = "btn-selected";
+		text2.className = "btn-selected-text";
+		text3.style.borderRight = "1px solid #999999";
+		text4.style.borderRight = "1px solid #999999";
+	}
+
+	else if (url === "loans")
+	{
+		btn3.className = "btn-selected";
+		text3.className = "btn-selected-text";
+		text1.style.borderRight = "1px solid #999999";
+		text4.style.borderRight = "1px solid #999999";
+	}
+
+	else if (url === "transactions")
+	{
+		btn4.className = "btn-selected";
+		text4.className = "btn-selected-text";
+		text1.style.borderRight = "1px solid #999999";
+		text2.style.borderRight = "1px solid #999999";
+	}
+
+	else if (url === "tools")
+	{
+		btn5.className = "btn-selected";
+		text5.className = "btn-selected-text";
+		text1.style.borderRight = "1px solid #999999";
+		text2.style.borderRight = "1px solid #999999";
+		text3.style.borderRight = "1px solid #999999";
+	}
 }
+
+function toggle_dropdown()
+{
+	var menu = grab("drop_menu");
+	var current = String(menu.className);
+	var on_state = "dropdown-on";
+	var off_state = "dropdown-off";
+
+	if (current === on_state)
+	{
+		menu.className = off_state;
+	}
+
+	else if (current === off_state)
+	{
+		menu.className = on_state;
+	}
+}
+
+function load_url(url)
+{
+	var form = grab("bank_form");
+	form.action = url;
+	form.submit();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -3,11 +3,47 @@
 {% load staticfiles %}
 
 <body>
-	<h1>Logout</h1>
-
-	<form action="/index/" method="get">
-		<button type="submit">RETURN TO LOGIN</button>
+	<form>
+		<div class="fadeOut" id="z1">
+			<div class="passwordRecovery">
+				<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
+			</div>
+		</div>
 	</form>
+
+	<div class="logo-wrapper">
+		<div class="logo-container">
+			<div class="cuny-logo">
+				<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav'>
+			</div>
+
+			<div class="logo-text">
+				<table>
+					<tr>
+						<td>
+							<div class="logo-header">Lewis Bank of CCNY</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<div class="motto">"Where everyone gets an A+"</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="logout-wrapper">
+		<div id="login-text">Logout Success</div>
+
+		<form action="/index/" method="get">
+			<div class="logoutBtn">
+				<button type="subnit">Return to Login</button>
+			</div>
+		</form>
+	</div>
 </body>
 
 {% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base2.html" %}
+{% block body %}
+{% load staticfiles %}
+
+<body onLoad="javascript: selectBtn('transactions');">
+	<h1>Transactions</h1>
+	
+	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
+		
+	</form>
+</body>
+
+{% endblock %}

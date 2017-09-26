@@ -221,7 +221,7 @@ def newLoanDecision(request):
 	if decision['decision'] == True:
 		email = request.POST.get("email")
 		content['email'] = email
-		
+
 		if userExist(email) == False:
 			term 				= str(request.POST.get("loanTerm"))
 			term 				= float(term)
@@ -257,6 +257,95 @@ def newLoanDecision(request):
 			content['status'] 	= 0
 	else:
 		content['status'] 		= -1
+	return content
+
+def name_abv(user):
+	name = str(user.first_name)
+	name = name[0] + ". " + str(user.last_name)
+	return name
+
+def welcome_content(request):
+	content= {}
+	user = request.user
+	name = name_abv(user)
+	content['name'] = name
+	return content
+
+def fetchAccountSummary(request):
+	content = {}
+	user = request.user
+	profile = getUserProfile(user)
+	name = name_abv(user)
+
+	content['name'] = name
+	content['user'] = user
+	content['profile'] = profile
+	return content
+
+def fetchAccountContent(request):
+	content = {}
+	user = request.user
+	profile = getUserProfile(user)
+	name = name_abv(user)
+
+	content['name'] = name
+	content['user'] = user
+	content['profile'] = profile
+	return content
+
+def fetchLoansContent(request):
+	content = {}
+	user = request.user
+	profile = getUserProfile(user)
+	name = name_abv(user)
+
+	content['name'] = name
+	content['user'] = user
+	content['profile'] = profile
+	return content
+
+def fetchTransactionsContent(request):
+	content = {}
+	user = request.user
+	profile = getUserProfile(user)
+	name = name_abv(user)
+
+	content['name'] = name
+	content['user'] = user
+	content['profile'] = profile
+	return content
+
+def fetchProfileContent(request):
+	content = {}
+	user = request.user
+	profile = getUserProfile(user)
+	name = name_abv(user)
+
+	content['name'] = name
+	content['user'] = user
+	content['profile'] = profile
+	return content
+
+def fetchPasswordContent(request):
+	content = {}
+	user = request.user
+	profile = getUserProfile(user)
+	name = name_abv(user)
+
+	content['name'] = name
+	content['user'] = user
+	content['profile'] = profile
+	return content
+
+def fetchDeleteContent(request):
+	content = {}
+	user = request.user
+	profile = getUserProfile(user)
+	name = name_abv(user)
+
+	content['name'] = name
+	content['user'] = user
+	content['profile'] = profile
 	return content
 
 def generateLoanTermHTML(rate, amount, loan_type, term):
@@ -428,7 +517,32 @@ def fetch_content(request, url):
 	elif url == "newLoan_1":
 		content = buildLoan_init(request)
 
+	elif url == "home":
+		content = welcome_content(request)
+
+	elif url == "summary":
+		content = fetchAccountSummary(request)
+
+	elif url == "accounts":
+		content = fetchAccountContent(request)
+
+	elif url == "loans":
+		content = fetchLoansContent(request)
+
+	elif url == "transactions":
+		content = fetchTransactionsContent(request)
+
+	elif url == "profile":
+		content = fetchProfileContent(request)
+
+	elif url == "password":
+		content = fetchPasswordContent(request)
+
+	elif url == "delete":
+		content = fetchDeleteContent(request)
+
 	return content
+
 	
 
 
