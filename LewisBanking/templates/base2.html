@@ -21,52 +21,54 @@
 </head>
 
 <body class="login-body">
-    <nav>
-        <div class="main-nav-div">
-            <div class="cuny-logo-base2">
-                <img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-base2'>
+    <a href="javascript: load_url('/home/');">
+        <nav>
+            <div class="main-nav-div">
+                <div class="cuny-logo-base2">
+                    <img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-base2'>
+                </div>
+
+                <div class="cuny-logo-text-base2">
+                    Lewis Bank of CCNY
+                </div>
+
+                <div class="nav-btn-container">
+                    <div class="btn-not-selected" id="btn1">
+                        <div class="btn-not-selected-text" id='text1'>
+                            <a href="javascript: load_url('/summary/');">Summary</a>
+                        </div>
+                    </div>
+
+                    <div class="btn-not-selected" id="btn2">
+                        <div class="btn-not-selected-text" id='text2'>
+                            <a href="javascript: load_url('/accounts/');">Accounts</a>
+                        </div>
+                    </div>
+
+                    <div class="btn-not-selected" id="btn3">
+                        <div class="btn-not-selected-text" id='text3'>
+                            <a href="javascript: load_url('/loans/');">Loans</a>
+                        </div>
+                    </div>
+
+                    <div class="btn-not-selected" id="btn4">
+                        <div class="btn-not-selected-text" id='text4'>
+                            <a href="javascript: load_url('/transactions/');">Transactions</a>
+                        </div>
+                    </div>
+
+                    <div class="btn-not-selected" id="btn5">
+                        <div class="btn-not-selected-text" id='text5'>
+                            <a href="javascript: toggle_dropdown();">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                {{name}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="cuny-logo-text-base2">
-                Lewis Bank of CCNY
-            </div>
-
-            <div class="nav-btn-container">
-                <div class="btn-not-selected" id="btn1">
-                    <div class="btn-not-selected-text" id='text1'>
-                        <a href="javascript: load_url('/summary/');">Summary</a>
-                    </div>
-                </div>
-
-                <div class="btn-not-selected" id="btn2">
-                    <div class="btn-not-selected-text" id='text2'>
-                        <a href="javascript: load_url('/accounts/');">Accounts</a>
-                    </div>
-                </div>
-
-                <div class="btn-not-selected" id="btn3">
-                    <div class="btn-not-selected-text" id='text3'>
-                        <a href="javascript: load_url('/loans/');">Loans</a>
-                    </div>
-                </div>
-
-                <div class="btn-not-selected" id="btn4">
-                    <div class="btn-not-selected-text" id='text4'>
-                        <a href="javascript: load_url('/transactions/');">Transactions</a>
-                    </div>
-                </div>
-
-                <div class="btn-not-selected" id="btn5">
-                    <div class="btn-not-selected-text" id='text5'>
-                        <a href="javascript: toggle_dropdown();">
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                            {{name}}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+        </nav>
+    </a>
 
     <div class="dropdown-off" id="drop_menu">
         <div class="dropdown-wrapper">

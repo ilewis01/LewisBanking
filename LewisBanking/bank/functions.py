@@ -269,6 +269,7 @@ def welcome_content(request):
 	user = request.user
 	name = name_abv(user)
 	content['name'] = name
+	content['title'] = "Welcome to Lewis Bank"
 	return content
 
 def fetchAccountSummary(request):
@@ -280,6 +281,7 @@ def fetchAccountSummary(request):
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
+	content['title'] = "Lewis Bank | Summary"
 	return content
 
 def fetchAccountContent(request):
@@ -291,6 +293,7 @@ def fetchAccountContent(request):
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
+	content['title'] = "Lewis Bank | Manage Accounts"
 	return content
 
 def fetchLoansContent(request):
@@ -302,6 +305,7 @@ def fetchLoansContent(request):
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
+	content['title'] = "Lewis Bank | Manage Loans"
 	return content
 
 def fetchTransactionsContent(request):
@@ -313,6 +317,7 @@ def fetchTransactionsContent(request):
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
+	content['title'] = "Lewis Bank | Transaction History"
 	return content
 
 def fetchProfileContent(request):
@@ -324,6 +329,7 @@ def fetchProfileContent(request):
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
+	content['title'] = "Lewis Bank | Edit Profile"
 	return content
 
 def fetchPasswordContent(request):
@@ -335,6 +341,7 @@ def fetchPasswordContent(request):
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
+	content['title'] = "Lewis Bank | Update Password"
 	return content
 
 def fetchDeleteContent(request):
@@ -346,6 +353,7 @@ def fetchDeleteContent(request):
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
+	content['title'] = "Lewis Bank | Delete Account"
 	return content
 
 def generateLoanTermHTML(rate, amount, loan_type, term):
