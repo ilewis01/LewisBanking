@@ -18,25 +18,22 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
 
-    <title>{{title}}</title>
+    <title></title>
 </head>
 
 <body class="list_frame_body">
-	<form action="/load_sorted/" method="post" id="frame_form"> {% csrf_token %}
-		<div class="li_head_wrapper">
-			<div class="li_header" style="padding-left:14px;">Transaction Date</div>
-			<div class="li_header" style="padding-left:9px;">Account Type</div>
-			<div class="li_header" style="padding-left:6px;">Account Number</div>
-			<div class="li_header" style="padding-left:14px;">Balance</div>
-		</div>
+	<form action="/load_account_list/" method="post" id="frame_form"> {% csrf_token %}
+		<!-- <div class="li_head_wrapper">
+			
+		</div> -->
 
 		<ul>
 			{% for s in sorted_list %}
 			<li>
-				<a href="javascript: load_list_item('{{item_id}}');">
+				<a href="javascript: load_list_item('{{s.item_id}}');">
 					<div class="{{s.class}}">
 						<div class="li_date">{{s.history.date}}</div>
-						<div class="li_type">{{s.history.account_type}}</div>
+						<div class="li_type">{{s.type}}</div>
 						<div class="li_account">{{s.history.account_number}}</div>
 						<div class="li_balance">${{s.history.balance}}</div>
 					</div>

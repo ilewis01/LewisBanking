@@ -492,6 +492,11 @@ function load_url(url)
 	form.submit();
 }
 
+function load_list_item(item_id)
+{
+
+}
+
 
 
 

@@ -6,6 +6,38 @@
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
 		<div class="data-wrap">
 			<div class="url-wrap">Account Management</div>
+
+			<div class="summary-boxes summary-content">
+				<div class="overview-nav"></div>
+
+				<div class="overview-content">
+					<iframe src="/load_account_list/" id="list_frame" class="list_frame" style="width:568px; height:369px;">
+					</iframe>
+				</div>
+			</div>
+
+			<div class="summary-boxes2 summary-selected-data">
+				<div class="a_page_selected">
+				</div>
+
+				<div class="a_page_search">
+					<div class="avd_search">
+						<a href="#">Advanced Search</a>
+					</div>
+					<input type="search" placeholder="Search" id="search">
+				</div>
+
+				<div class="a_page_buttons">
+					<button type="button" class="a-button-top">Withdrawal</button>
+					<button type="button">Deposit</button>
+					<button type="button">Transfer</button>
+					<button type="button">Delete Account</button>
+					<button type="button" class="a-button-bottom">Open New Account</button>
+				</div>
+
+				<div class="a_right_btm">
+				</div>
+			</div>
 		</div>
 	</form>
 </body>

@@ -154,10 +154,10 @@ def load_sorted(request):
 	return render_to_response('load_sorted.html', content)
 
 @login_required(login_url='/index')
-def load_sorted2(request):
-	content = fetch_content(request, "sorted")
+def load_account_list(request):
+	content = fetch_content(request, "account_list")
 	content.update(csrf(request))
-	return render_to_response('load_sorted2.html', content)
+	return render_to_response('account_list.html', content)
 
 
 

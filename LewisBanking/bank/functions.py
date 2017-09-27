@@ -81,290 +81,6 @@ def getUserProfile(user):
 			break
 	return pfile
 
-def fetchSortedAccounts(user):
-	accounts = {}
-	du_list = []
-	dd_list = []
-	bu_list = []
-	bd_list = []
-	tu_list = []
-	td_list = []
-	au_list = []
-	ad_list = []
-	user_id = str(user.id)
-
-	date_up = Account.objects.all().order_by('date')
-	date_dn = Account.objects.all().order_by('-date')
-	bal_up = Account.objects.all().order_by('balance')
-	bal_dn = Account.objects.all().order_by('-balance')
-	type_up = Account.objects.all().order_by('isSavings')
-	type_dn = Account.objects.all().order_by('isSavings')
-	account_up = Account.objects.all().order_by('account_number')
-	account_dn = Account.objects.all().order_by('-account_number')
-
-
-	for du in date_up:
-		if str(du.user_id) == user_id:
-			du_list.append(du)
-
-	for dd in date_dn:
-		if str(dd.user_id) == user_id:
-			dd_list.append(dd)
-
-	for bu in bal_up:
-		if str(bu.user_id) == user_id:
-			bu_list.append(bu)
-
-	for bd in bal_dn:
-		if str(bd.user_id) == user_id:
-			bd_list.append(bd)
-
-	for tu in type_up:
-		if str(tu.user_id) == user_id:
-			tu_list.append(tu)
-
-	for td in type_dn:
-		if str(td.user_id) == user_id:
-			td_list.append(td)
-
-	for au in account_up:
-		if str(au.user_id) == user_id:
-			au_list.append(au)
-
-	for ad in account_dn:
-		if str(ad.user_id) == user_id:
-			ad_list.append(ad)
-
-
-	accounts['date_up'] = link_history_to_account(du_list)
-	accounts['date_down'] = link_history_to_account(dd_list)
-	accounts['balance_up'] = link_history_to_account(bu_list)
-	accounts['balance_down'] = link_history_to_account(bd_list)
-	accounts['type_up'] = link_history_to_account(tu_list)
-	accounts['type_down'] = link_history_to_account(td_list)
-	accounts['account_number_up'] = link_history_to_account(au_list)
-	accounts['account_number_down'] = link_history_to_account(ad_list)
-
-	return accounts
-
-
-
-def fetchSortedLoans(user):
-	loans = {}
-	user_id = str(user.id)
-
-	bu_list = []
-	bd_list = []
-	pu_list = []
-	pd_list = []
-	ru_list = []
-	rd_list = []
-	du_list = []
-	dd_list = []
-	tyu_list = []
-	tyd_list = []
-	tmu_list = []
-	tmd_list = []
-	au_list = []
-	ad_list = []
-
-	balance_up = Loan.objects.all().order_by('balance')
-	balance_dn = Loan.objects.all().order_by('-balance')
-
-	principal_up = Loan.objects.all().order_by('loan_amount')
-	principal_dn = Loan.objects.all().order_by('-loan_amount')
-
-	type_up = Loan.objects.all().order_by('loan_type')
-	type_dn = Loan.objects.all().order_by('-loan_type')
-
-	term_up = Loan.objects.all().order_by('term')
-	term_dn = Loan.objects.all().order_by('-term')
-
-	rate_up = Loan.objects.all().order_by('rate')
-	rate_dn = Loan.objects.all().order_by('-rate')
-
-	date_up = Loan.objects.all().order_by('start_date')
-	date_dn = Loan.objects.all().order_by('-start_date')
-
-	account_up = Loan.objects.all().order_by('account_number')
-	account_dn = Loan.objects.all().order_by('-account_number')
-
-	for bu in balance_up:
-		if str(bu.user_id) == user_id:
-			bu_list.append(bu)
-
-	for bd in balance_dn:
-		if str(bd.user_id) == user_id:
-			bd_list.append(bd)
-
-	for pu in principal_up:
-		if str(pu.user_id) == user_id:
-			pu_list.append(pu)
-
-	for pd in principal_dn:
-		if str(pd.user_id) == user_id:
-			pd_list.append(pd)
-
-	for tyu in type_up:
-		if str(tyu.user_id) == user_id:
-			tyu_list.append(tyu)
-
-	for tyd in type_dn:
-		if str(tyd.user_id) == user_id:
-			tyd_list.append(tyd)
-
-	for tmu in term_up:
-		if str(tmu.user_id) == user_id:
-			tmu_list.append(tmu)
-
-	for tmu in term_dn:
-		if str(tmu.user_id) == user_id:
-			tmu_list.append(tmu)
-
-	for ru in rate_up:
-		if str(ru.user_id) == user_id:
-			ru_list.append(ru)
-
-	for rd in rate_dn:
-		if str(rd.user_id) == user_id:
-			rd_list.append(rd)
-
-	for du in date_up:
-		if str(du.user_id) == user_id:
-			du_list.append(du)
-
-	for dd in date_dn:
-		if str(dd.user_id) == user_id:
-			dd_list.append(dd)
-
-	for au in account_up:
-		if str(au.user_id) == user_id:
-			au_list.append(au)
-
-	for ad in account_dn:
-		if str(ad.user_id) == user_id:
-			ad_list.append(ad)
-
-	loans['balance_up'] = link_history_to_account(bu_list)
-	loans['principal_up'] = link_history_to_account(pu_list)
-	loans['type_up'] = link_history_to_account(tyu_list)
-	loans['term_up'] = link_history_to_account(tmu_list)
-	loans['rate_up'] = link_history_to_account(ru_list)
-	loans['date_up'] = link_history_to_account(du_list)
-	loans['balance_down'] = link_history_to_account(bd_list)
-	loans['principal_down'] = link_history_to_account(pd_list)
-	loans['type_down'] = link_history_to_account(tyd_list)
-	loans['term_down'] = link_history_to_account(tmd_list)
-	loans['rate_down'] = link_history_to_account(rd_list)
-	loans['date_down'] = link_history_to_account(dd_list)
-	loans['account_number_up'] = link_history_to_account(au_list)
-	loans['account_number_down'] = link_history_to_account(ad_list)
-
-	return loans
-
-def fetchSortedHistory(user):
-	history = {}
-	du_list = []
-	dd_list = []
-	bu_list = []
-	bd_list = []
-	tu_list = []
-	td_list = []
-	au_list = []
-	ad_list = []
-	user_id = str(user.id)
-
-	date_up = History.objects.all().order_by('date')
-	date_dn = History.objects.all().order_by('-date')
-	bal_up = History.objects.all().order_by('balance')
-	bal_dn = History.objects.all().order_by('-balance')
-	type_up = History.objects.all().order_by('account_type')
-	type_dn = History.objects.all().order_by('-account_type')
-	account_up = History.objects.all().order_by('account_number')
-	account_dn = History.objects.all().order_by('-account_number')
-
-	for du in date_up:
-		if str(du.user_id) == user_id:
-			du_list.append(du)
-
-	for dd in date_dn:
-		if str(dd.user_id) == user_id:
-			dd_list.append(dd)
-
-	for bu in bal_up:
-		if str(bu.user_id) == user_id:
-			bu_list.append(bu)
-
-	for bd in bal_dn:
-		if str(bd.user_id) == user_id:
-			bd_list.append(bd)
-
-	for tu in type_up:
-		if str(tu.user_id) == user_id:
-			tu_list.append(tu)
-
-	for td in type_dn:
-		if str(td.user_id) == user_id:
-			td_list.append(td)
-
-	for au in account_up:
-		if str(au.user_id) == user_id:
-			au_list.append(au)
-
-	for ad in account_dn:
-		if str(ad.user_id) == user_id:
-			ad_list.append(ad)
-
-	history['date_up'] = link_account_to_history(du_list)
-	history['date_down'] = link_account_to_history(dd_list)
-	history['balance_up'] = link_account_to_history(bu_list)
-	history['balance_down'] = link_account_to_history(bd_list)
-	history['type_up'] = link_account_to_history(tu_list)
-	history['type_down'] = link_account_to_history(td_list)
-	history['account_number_up'] = link_account_to_history(au_list)
-	history['account_number_down'] = link_account_to_history(ad_list)
-
-	return history
-
-def link_history_to_account(account_list):
-	c_list = []
-	history_list = History.objects.all()
-
-	for a in account_list:
-		data = {}
-		data['account'] = a
-
-		for h in history_list:
-			if str(a.account_number) == str(h.account_number):
-				data['history'] = h
-				break
-		c_list.append(data)
-	return c_list
-
-def link_account_to_history(history_list):
-	c_list = []
-	account_list = Account.objects.all()
-	loan_list = Loan.objects.all()
-
-	for h in history_list:
-		data = {}
-		data['history'] = h
-		data_type = str(h.account_type)
-		m_list = None
-
-		if data_type == "Account":
-			m_list = account_list
-		else:
-			m_list = loan_list
-
-		for m in m_list:
-			if str(m.account_number) == str(h.account_number):
-				data['account'] = m
-				break
-		c_list.append(data)
-	return c_list
-
-
 def newUser_account(request):
 	content = {}
 	content['created'] = False
@@ -875,6 +591,9 @@ def fetch_content(request, url):
 	elif url == "sorted":
 		content = fetch_sorted_content(request)
 
+	elif url == "account_list":
+		content = fetch_account_List(request)
+
 	return content
 
 def serialize_json(model, m_type):
@@ -949,26 +668,6 @@ def mega_account_link(h_list):
 		data.append(d)
 	return data
 
-def mega_account_link_raw(h_list):
-	data = []
-	a_list = None
-
-	for h in h_list:
-		d = {}
-		d['history'] = h
-		a_type = str(h.account_type)
-
-		if a_type == "Account":
-			a_list = Account.objects.all()
-		elif a_type == "Loan":
-			a_list = Loan.objects.all()
-
-		for a in a_list:
-			if str(a.account_number) == str(h.account_number):
-				d['account'] = a
-				break
-		data.append(d)
-	return data
 
 def mega_history_link(m_list):
 	data = []
@@ -1007,6 +706,16 @@ def mega_account_sort(user, sort, direction, m_type):
 	sorted_list = mega_history_link(account_list)
 	return sorted_list
 
+def mega_sort(user, sort, direction, m_type):
+	sorted_list = []
+
+	if m_type == "Account" or m_type == "Loan":
+		sorted_list = mega_account_sort(user, sort, direction, m_type)
+	elif m_type == "History":
+		sorted_list = mega_history_sort(user, sort, direction)
+
+	return sorted_list
+
 def mega_history_sort(user, sort, direction):
 	data = []
 	user_id = str(user.id)
@@ -1039,15 +748,98 @@ def full_sort(user, sort, direction):
 	sorted_list = mega_account_link_raw(data)
 	return sorted_list
 
-def mega_sort(user, sort, direction, m_type):
+def single_history_link(account):
+	history = None
+	h_list = History.objects.all()
+
+	for h in h_list:
+		if str(h.account_number) == str(account.account_number):
+			history = h
+			break;
+	return history
+
+def full_account(user, sort, direction):
+	user_id = str(user.id)
 	sorted_list = []
+	count = 0
+	class1 = "li_clear"
+	class2 = "li_shade"
 
-	if m_type == "Account" or m_type == "Loan":
-		sorted_list = mega_account_sort(user, sort, direction, m_type)
-	elif m_type == "History":
-		sorted_list = mega_history_sort(user, sort, direction)
+	if direction == "descend":
+		sort = "-" + sort
 
+	a_list = Account.objects.all().order_by(sort)
+
+	for a in a_list:
+		if str(a.user_id) == user_id:
+			d = {}
+			d['account'] = a
+			d['history'] = single_history_link(a)
+			d['type'] = 'Savings'
+
+			if a.isSavings == False:
+				d['type'] = 'Checking'
+
+			if count % 2 == 0:
+				d['class'] = class1
+			else:
+				d['class'] = class2
+
+			d['item_id'] = 'li_' + str(count)
+			count += 1
+			sorted_list.append(d)
+			
 	return sorted_list
+
+def mega_account_link_raw(h_list):
+	data = []
+	a_list = None
+	count = 0
+	class1 = "li_clear"
+	class2 = "li_shade"
+
+	for h in h_list:
+		d = {}
+		a_type = str(h.account_type)
+		item_id = "li_" + str(count)
+		d['history'] = h
+
+		if count % 2 == 0:
+			d['class'] = class1
+		else:
+			d['class'] = class2
+		count += 1
+
+		if a_type == "Account":
+			a_list = Account.objects.all()
+		elif a_type == "Loan":
+			a_list = Loan.objects.all()
+
+		for a in a_list:
+			if str(a.account_number) == str(h.account_number):
+				d['account'] = a
+				break
+		data.append(d)
+	return data
+
+def fetch_account_List(request):
+	content = {}
+	user = request.user
+	sort = request.POST.get('sort')
+	direction = None
+
+	if sort == None:
+		sort = "date"
+		direction = "descend"
+	else:
+		sort = str(sort)
+		direction = str(request.POST.get('direction'))
+
+	sorted_list = full_account(user, sort, direction)
+	content['sorted_list'] = sorted_list
+	return content
+
+
 
 
 		
