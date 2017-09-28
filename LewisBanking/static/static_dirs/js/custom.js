@@ -13,6 +13,11 @@ function frame(frame_id)
 	return window.frames[frame_id]
 }
 
+function pframe(element)
+{
+	return parent.window.frames[0];
+}
+
 function load_page(url, form_name)
 {
 	form = grab(form_name);
@@ -36,6 +41,26 @@ function visibility(z_index, mode)
 	else if (mode === "hide")
 	{
 		div.className = "fadeOut";
+	}
+
+}
+
+function visibility2(z_index, mode)
+{
+	z_index = String(z_index);
+	mode = String(mode)
+	var name = "z" + z_index;
+	var div = grab(name);
+
+	if (mode === 'show')
+	{
+		div.className = "fadeIn2";
+		div.style.zIndex = z_index;
+	}
+
+	else if (mode === "hide")
+	{
+		div.className = "fadeOut2";
 	}
 
 }
@@ -408,67 +433,72 @@ function get_error_html(error_list)
 	return html;
 }
 
-function selectBtn(url)
+function initialize_accounts()
 {
-	var btn1 = grab("btn1");
-	var btn2 = grab("btn2");
-	var btn3 = grab("btn3");
-	var btn4 = grab("btn4");
-	var btn5 = grab("btn5");
-	var text1 = grab('text1');
-	var text2 = grab('text2');
-	var text3 = grab('text3');
-	var text4 = grab('text4');
-	var text5 = grab('text5');
+	var win = frame('iframe_list');
+	var sort = String(win.grab('sort').value);
+	var hidden = win.grab('direction');
+	var direction = String(hidden.value);
+	var select = grab('sort_parent');
+	var dir_text = grab('dir_text');
+	var icon = grab('icon');
 
-	if (url === "summary")
+	set_sort_select(select, sort);
+	set_direction(icon, dir_text, hidden, direction);
+
+	var acct_no = win.grab('li0_account_number').value;
+	var balance = win.grab('li0_balance').value;
+	var date = win.grab('li0_date').value;
+	var type = win.grab('li0_type').value;
+
+	grab('selected_account_number').value = acct_no;
+	grab('selected_date').value = date;
+	grab('selected_balance').value = balance;
+	grab('selected_type').value = type;
+
+	grab('selAcct').innerHTML = acct_no;
+	grab('selBaln').innerHTML = balance;
+	grab('selDate').innerHTML = date;
+	grab('selType').innerHTML = type;
+}
+
+function set_sort_select(select, sort)
+{
+	if (sort === "account_number")
 	{
-		btn1.className = "btn-selected";
-		text1.className = "btn-selected-text";
-		text2.style.borderRight = "1px solid #999999";
-		text3.style.borderRight = "1px solid #999999";
-		text4.style.borderRight = "1px solid #999999";
+		select.selectedIndex = 0;
 	}
 
-	else if (url === "accounts")
+	else if (sort === "isSavings")
 	{
-		btn2.className = "btn-selected";
-		text2.className = "btn-selected-text";
-		text3.style.borderRight = "1px solid #999999";
-		text4.style.borderRight = "1px solid #999999";
+		select.selectedIndex = 1;
 	}
 
-	else if (url === "loans")
+	else if (sort === "balance")
 	{
-		btn3.className = "btn-selected";
-		text3.className = "btn-selected-text";
-		text1.style.borderRight = "1px solid #999999";
-		text4.style.borderRight = "1px solid #999999";
+		select.selectedIndex = 2;
 	}
 
-	else if (url === "transactions")
+	else if (sort === "date")
 	{
-		btn4.className = "btn-selected";
-		text4.className = "btn-selected-text";
-		text1.style.borderRight = "1px solid #999999";
-		text2.style.borderRight = "1px solid #999999";
+		select.selectedIndex = 3;
+	}
+}
+
+function set_direction(icon, header, hidden, direction)
+{
+	if (direction === "descend")
+	{
+		hidden.value = "descend";
+		header.innerHTML = "Descending";
+		icon.innerHTML = "<i class=\"fa fa-chevron-circle-down\" aria-hidden=\"true\"></i>";
 	}
 
-	else if (url === "tools")
+	else if (direction === "ascend")
 	{
-		btn5.className = "btn-selected";
-		text5.className = "btn-selected-text";
-		text1.style.borderRight = "1px solid #999999";
-		text2.style.borderRight = "1px solid #999999";
-		text3.style.borderRight = "1px solid #999999";
-	}
-
-	else if (url === "welcome") 
-	{
-		text1.style.borderRight = "1px solid #999999";
-		text2.style.borderRight = "1px solid #999999";
-		text3.style.borderRight = "1px solid #999999";
-		text4.style.borderRight = "1px solid #999999";
+		hidden.value = "ascend";
+		header.innerHTML = "Ascending";
+		icon.innerHTML = "<i class=\"fa fa-chevron-circle-up\" aria-hidden=\"true\"></i>";
 	}
 }
 
@@ -499,7 +529,47 @@ function load_url(url)
 
 function load_list_item(item_id)
 {
+	// clearSelectedLI_child();
 
+	var acct_name = item_id + "account_number";
+	var date_name = item_id + "date";
+	var balance_name = item_id + "balance";
+	var type_name = item_id + "type";
+	var div_name = item_id + "change_class";
+
+	var account_number = grab(acct_name).value;
+	var date = grab(date_name).value;
+	var balance = grab(balance_name).value;
+	var m_type = grab(type_name).value;
+
+	var hid_acct = parent.grab('selected_account_number');
+	var hid_date = parent.grab('selected_date');
+	var hid_baln = parent.grab('selected_balance');
+	var hid_type = parent.grab('selected_type');
+
+	hid_acct.value = account_number;
+	hid_date.value = date;
+	hid_type.value = m_type;
+	hid_baln.value = balance;
+
+	parent.grab('selAcct').innerHTML = account_number;
+	parent.grab('selBaln').innerHTML = balance;
+	parent.grab('selDate').innerHTML = date;
+	parent.grab('selType').innerHTML = m_type;
+
+	// div = grab(div_name);
+	// div.style.backgroundColor = "yellow";
+	// grab('return_class').value = div.className;
+	// var cng = item_id + "change_class";
+	// grab('selected_li').value = cng;
+	
+}
+
+function clearSelectedLI_child()
+{
+	var current_id = grab('selected_li').value;
+	var div = grab(current_id);
+	div.removeAttribute('backgroundColor');
 }
 
 function toggle_carat()
@@ -536,9 +606,66 @@ function set_frame_list()
 	win.grab('frame_form').submit();
 }
 
-function test_js()
+function load_frame(action)
 {
-	grab('test2').value = "Testing JS";
+	grab('frame1').setAttribute('src', action);
+	visibility(1, "show");
+}
+
+function win_visibility(z_index, mode)
+{
+	z_index = String(z_index);
+	mode = String(mode)
+	var name = "z" + z_index;
+	var div = parent.grab(name);
+
+	if (mode === 'show')
+	{
+		div.className = "fadeIn";
+		div.style.zIndex = z_index;
+	}
+
+	else if (mode === "hide")
+	{
+		div.className = "fadeOut";
+	}
+}
+
+function init_withdrawal()
+{
+	var account_number = parent.grab('selected_account_number').value;
+	var w_type = parent.grab('selected_type').value;
+
+	grab('w_acct').innerHTML = account_number;
+	grab('w_types').innerHTML = w_type;
+}
+
+function w_error()
+{
+	var dollars = String(grab('dollars').value);
+	var balance = Number(parent.grab('selected_balance').value);
+	
+	if (dollars.length === 0)
+	{
+		parent.grab('messageContent').innerHTML = "You must enter a withdrawal amount";
+		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		var e_win = parent.grab('messageWindow');
+		e_win.style.height = "260px";
+		win_visibility(2, "show");
+	}
+
+	else if (Number(dollars) > balance)
+	{
+		parent.grab('messageContent').innerHTML = "You do have sufficient funds to proceed with this transaction. Please choose a lower amount.";
+		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		var e_win = parent.grab('messageWindow');
+		e_win.style.height = "260px";
+		win_visibility(2, "show");
+	}
+
+	else {
+		grab('bank_form').submit();
+	}
 }
 
 

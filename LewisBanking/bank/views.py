@@ -189,6 +189,36 @@ def delete_account(request):
 	content.update(csrf(request))
 	return render_to_response('delete_account.html', content)
 
+@login_required(login_url='/index')
+def withdraw0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('withdraw0.html', content)
+
+@login_required(login_url='/index')
+def deposit0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('deposit0.html', content)
+
+@login_required(login_url='/index')
+def transfer0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('transfer0.html', content)
+
+@login_required(login_url='/index')
+def add_account0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('add_account0.html', content)
+
+@login_required(login_url='/index')
+def delete_account0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('delete_account0.html', content)
+
 
 
 

@@ -744,8 +744,15 @@ def full_account(user, sort, direction):
 			else:
 				d['class'] = class2
 
-			d['item_id'] = 'li_' + str(count)
+			item_id = 'li' + str(count) + "_"
+
+			d['item_id'] = item_id
+			d['account_no_id'] = item_id + "account_number"
+			d['date_id'] = item_id + "date"
+			d['balance_id'] = item_id + "balance"
+			d['type_id'] = item_id + "type"
 			count += 1
+
 			sorted_list.append(d)
 
 	return sorted_list
@@ -796,15 +803,16 @@ def fetch_account_List(request):
 
 	sorted_list = full_account(user, sort, direction)
 	content['sorted_list'] = sorted_list
+	content['sort'] = sort;
+	content['direction'] = direction;
 	return content
 
 def Withdrawal(request):
 	data = {}
-	withdraw = str(request.POST.get("withdraw"))
+	withdraw = decoderCurrency(request, "dollars", "cents")
 	acct_no = str(request.POST.get('account_number'))
 	account = locate_account(acct_no)
 	current_bal = float(account.balance)
-	withdraw = float(withdraw)
 	data['account'] = account
 	data['status'] = 1
 
