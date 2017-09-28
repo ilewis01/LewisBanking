@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 import random
 import json
 import json as simplejson
+from decimal import Decimal
 
 from bank.models import profile, Account, Loan, History
 
@@ -439,9 +440,9 @@ def pythonBool(value):
 def decoderCurrency(request, dollar_id, cents_id):
 	result = None
 	dollars = str(request.POST.get(dollar_id))
-	dollars = float(dollars)
+	dollars = Decimal(dollars)
 	cents = "0." + str(request.POST.get(cents_id))
-	cents = float(cents)
+	cents = Decimal(cents)
 	return dollars + cents
 
 
@@ -717,6 +718,15 @@ def single_history_link(account):
 			break;
 	return history
 
+def get_all_history(account):
+	history = []
+	h_list = History.objects.all()
+
+	for h in h_list:
+		if str(h.account_number) == str(account.account_number):
+			history.append(h)
+	return history
+
 def full_account(user, sort, direction):
 	user_id = str(user.id)
 	sorted_list = []
@@ -733,7 +743,7 @@ def full_account(user, sort, direction):
 		if str(a.user_id) == user_id:
 			d = {}
 			d['account'] = a
-			d['history'] = single_history_link(a)
+			d['history'] = get_all_history(a)
 			d['type'] = 'Savings'
 
 			if a.isSavings == False:
@@ -808,37 +818,43 @@ def fetch_account_List(request):
 	return content
 
 def Withdrawal(request):
-	data = {}
+	content = {}
 	withdraw = decoderCurrency(request, "dollars", "cents")
 	acct_no = str(request.POST.get('account_number'))
 	account = locate_account(acct_no)
-	current_bal = float(account.balance)
-	data['account'] = account
-	data['status'] = 1
+	current_bal = Decimal(account.balance)
+	d_type = request.POST.get('d_type')
+	prev = account.balance
 
-	if withdraw > current_bal:
-		data['status'] = -1
-	else:
-		new_bal = current_bal - withdraw
-		account.balance = new_bal
-		account.save()
+	new_bal = current_bal - withdraw
+	account.balance = new_bal
+	account.save()
 
-		history = History(account_number=account.account_number)
-		history.user_id = int(account.user_id)
-		history.date = datetime.now().date()
-		history.balance = new_bal
-		history.account_type = "Account"
-		history.description = "Withdrawal: $" + str(withdraw)
-		history.save()
-		data['history'] = history
-	return data
+	history = History(account_number=account.account_number)
+	history.user_id = int(account.user_id)
+	history.date = datetime.now().date()
+	history.balance = new_bal
+	history.account_type = "Account"
+	history.description = "Withdrawal: $" + str(withdraw)
+	history.save()
+
+	content['history'] = history
+	content['account'] = account
+	content['previous'] = prev
+	content['type'] = d_type
+	return content
 
 def Deposit(request):
-	deposit = str(request.POST.get('deposit'))
+	content = {}
+	deposit = decoderCurrency(request, "dollars_w", "cents_w")
 	acct_no = str(request.POST.get('account_number'))
 	account = locate_account(acct_no)
+	previous = account.balance
+	m_type = request.POST.get('d_type')
 
-	account.balance = float(deposit) + float(account.balance)
+	account.balance = deposit + Decimal(account.balance)
+	print "Previous:" + str(previous)
+	print "BALANCE: " + str(account.balance)
 	account.save()
 
 	history = History(account_number=account.account_number)
@@ -849,10 +865,10 @@ def Deposit(request):
 	history.description = "Deopsit: $" + str(deposit)
 	history.save()
 
-	data = {}
-	data['account'] = account
-	data['history'] = history
-	return data
+	content['account'] = account
+	content['history'] = history
+	content['type'] = m_type
+	return content
 
 def Transfer(request):
 	data = {}
@@ -907,6 +923,7 @@ def Delete_Account(request):
 	account = locate_account(account_number)
 	account.delete()
 	content['account'] = account
+	content['type'] = request.POST.get('d_type')
 	content['status'] = 1
 	return content
 
@@ -914,7 +931,7 @@ def New_Account_Active_User(request):
 	content = {}
 	user = request.user
 	isSavings = pythonBool(request.POST.get('isSavings'))
-	balance = decoderCurrency(request, "dollars", "cents")
+	balance = decoderCurrency(request, 'dollars_w', 'cents_w')
 	date = datetime.now().date()
 
 	act_type_text = "Savings"
@@ -938,6 +955,7 @@ def New_Account_Active_User(request):
 
 	content['account'] = account
 	content['history'] = history
+	content['type'] = act_type_text
 	return content
 
 def fetch_content(request, url):
@@ -988,11 +1006,11 @@ def fetch_content(request, url):
 	elif url == "account_list":
 		content = fetch_account_List(request)
 
-	elif url == "withdrawal":
+	elif url == "withdraw":
 		content = Withdrawal(request)
 
 	elif url == "deposit":
-		content = Deopsit(request)
+		content = Deposit(request)
 
 	elif url == "transfer":
 		content = Transfer(request)

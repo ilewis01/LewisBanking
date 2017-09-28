@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
 </head>
 
-<body class="window_sub_body" onload="init_withdrawal();">
+<body class="window_sub_body" onload="init_delete_W();">
 
 		<div class="sub_wrapper">
 			<div class="sub_win_close">
@@ -30,42 +30,44 @@
 				Withdrawal From <span id="w_types"></span> <span id="w_acct"></span>
 			</div>
 			
-			<div class="w_amount">
-				<table>
-					<tr>
-						<td>
-							<div class="w_sub_label">Enter Amount:</div>
-						</td>
-					</tr>
-				</table>
-
-				<table>
-					<tr>
-						<td><div class="w_sub_label">$</div></td>
-						<td>
-							<div class="w_dollars">
-								<input type="text" name="dollars" id="dollars" required oninput="javascript: entry_error(dollars, 'number', 10);">
-							</div>
-						</td>
-
-						<td>.</td>
-
-						<td>
-							<div class="w_cents">
-								<input type="text" name="cents" id="cents" required placeholder="00" oninput="javascript: entry_error(cents, 'number', 2);">
-							</div>
-						</td>
-					</tr>
-				</table>
-			</div>
-
 			<form action="/withdraw/" method="post" id="bank_form"> {% csrf_token %}
-			</form>
+				<input type="hidden" name="account_number" id="account_number" value="">
+				<input type="hidden" name="d_type" id="d_type" value="">
+				
+				<div class="w_amount">
+					<table>
+						<tr>
+							<td>
+								<div class="w_sub_label">Enter Amount:</div>
+							</td>
+						</tr>
+					</table>
 
-			<div class="w_btns">
-				<button type="button" onCLick="javascript: w_error();">Proceed</button>
-				<button type="button" onCLick="javascript: win_visibility(1, 'hide');">Cancel</button>
-			</div>
+					<table>
+						<tr>
+							<td><div class="w_sub_label">$</div></td>
+							<td>
+								<div class="w_dollars">
+									<input type="text" name="dollars" id="dollars" required oninput="javascript: entry_error(dollars, 'number', 10);">
+								</div>
+							</td>
+
+							<td>.</td>
+
+							<td>
+								<div class="w_cents">
+									<input type="text" name="cents" id="cents" required placeholder="00" oninput="javascript: entry_error(cents, 'number', 2);">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="w_btns">
+					<button type="button" onCLick="javascript: w_error();">Proceed</button>
+					<button type="button" onCLick="javascript: win_visibility(1, 'hide');">Cancel</button>
+				</div>
+			</form>				
 		</div>
 
 	<!-- Custom JS -->

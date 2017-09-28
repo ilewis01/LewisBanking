@@ -637,7 +637,20 @@ function init_withdrawal()
 	var w_type = parent.grab('selected_type').value;
 
 	grab('w_acct').innerHTML = account_number;
+	grab('type').innerHTML = w_type;
+	grab('account_number').value = account_number;
+	grab('d_type').value = w_type;
+}
+
+function init_delete_W()
+{
+	var account_number = parent.grab('selected_account_number').value;
+	var w_type = parent.grab('selected_type').value;
+
+	grab('w_acct').innerHTML = account_number;
 	grab('w_types').innerHTML = w_type;
+	grab('account_number').value = account_number;
+	grab('d_type').value = w_type;
 }
 
 function w_error()
@@ -667,6 +680,38 @@ function w_error()
 		grab('bank_form').submit();
 	}
 }
+
+function w_error_add()
+{
+	var dollars = String(grab('dollars_w').value);
+	
+	if (dollars.length === 0)
+	{
+		parent.grab('messageContent').innerHTML = "You must enter a deposit amount";
+		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		var e_win = parent.grab('messageWindow');
+		e_win.style.height = "260px";
+		win_visibility(2, "show");
+	}
+
+	else {
+		var cents = String(grab('cents_w').value);
+
+		if (cents.length === 0)
+		{
+			grab('cents_w').value = "00";
+		}
+		grab('bank_form').submit();
+	}
+}
+
+function reload_li_list()
+{
+	var win = parent.window.frames['iframe_list'];
+	win.grab('frame_form').submit();
+	win_visibility(1, 'hide');
+}
+
 
 
 

@@ -85,7 +85,14 @@
 					<iframe src="/load_account_list/" id="iframe_list"></iframe>
 				</div>
 
-				<div class="a_right_btm" style="width:100%;"></div>
+				<div class="a_right_btm" style="width:100%;">
+					<div class="a_right_btm_wrap">
+						<button type="button" onCLick="javascript: load_frame('/add_account0/');">
+							<i class="fa fa-plus" aria-hidden="true"></i>
+							New Account
+						</button>
+					</div>
+				</div>
 			</div>
 
 			<div class="summary-boxes2 summary-selected-data">
@@ -110,14 +117,13 @@
 
 				<div class="a_page_buttons">
 					<button type="button" class="a-button-top" onCLick="javascript: load_frame('/withdraw0/');">Withdrawal</button>
-					<button type="button" onCLick="javascript: load_frame('/deposit/');">Deposit</button>
-					<button type="button" onCLick="javascript: load_frame('/transfer/');">Transfer</button>
+					<button type="button" onCLick="javascript: load_frame('/deposit0/');">Deposit</button>
+					<button type="button" onCLick="javascript: load_frame('/transfer0/');">Transfer</button>
 					<button type="button" onCLick="javascript: load_frame('/delete_account/');">View History</button>
 					<button type="button" class="a-button-bottom" onCLick="javascript: load_frame('/delete_account0/');">Delete Account</button>
 				</div>
 
-				<div class="a_right_btm">
-				</div>
+				<div class="a_right_btm"></div>
 			</div>
 		</div>
 	</form>

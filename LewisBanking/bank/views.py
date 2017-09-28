@@ -15,6 +15,7 @@ import json
 import json as simplejson
 from xhtml2pdf import pisa
 from django.core import serializers
+from decimal import Decimal
 from django.http import FileResponse, Http404
 
 from bank.functions import getUserProfile, fetch_content
@@ -161,31 +162,31 @@ def load_account_list(request):
 
 @login_required(login_url='/index')
 def withdraw(request):
-	content = fetch_content(request, "profile")
+	content = fetch_content(request, "withdraw")
 	content.update(csrf(request))
 	return render_to_response('withdraw.html', content)
 
 @login_required(login_url='/index')
 def deposit(request):
-	content = fetch_content(request, "password")
+	content = fetch_content(request, "deposit")
 	content.update(csrf(request))
 	return render_to_response('deposit.html', content)
 
 @login_required(login_url='/index')
 def transfer(request):
-	content = fetch_content(request, "delete")
+	content = fetch_content(request, "transfer")
 	content.update(csrf(request))
 	return render_to_response('transfer.html', content)
 
 @login_required(login_url='/index')
 def add_account(request):
-	content = fetch_content(request, "sorted")
+	content = fetch_content(request, "add_account")
 	content.update(csrf(request))
 	return render_to_response('add_account.html', content)
 
 @login_required(login_url='/index')
 def delete_account(request):
-	content = fetch_content(request, "account_list")
+	content = fetch_content(request, "delete_account")
 	content.update(csrf(request))
 	return render_to_response('delete_account.html', content)
 
