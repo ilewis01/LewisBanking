@@ -21,24 +21,9 @@
     <title></title>
 </head>
 
-<body class="list_frame_body">
-	<form action="/load_account_list/" method="post" id="frame_form"> {% csrf_token %}
-		<input type="hidden" name="sort" id="sort" value="{{sort}}">
-		<input type="hidden" name="direction" id="direction" value="{{direction}}">
-		<ul>
-			{% for s in sorted_list %}
-			<li>
-				<a href="javascript: load_list_item('{{s.item_id}}');">
-					<div class="{{s.class}}">
-						<div class="li_date">{{s.history.date}}</div>
-						<div class="li_type">{{s.type}}</div>
-						<div class="li_account">{{s.history.account_number}}</div>
-						<div class="li_balance">${{s.history.balance}}</div>
-					</div>
-				</a>
-			</li>
-			{% endfor %}
-		</ul>
+<body class="selected_frame">
+	<form action="" method="post" id="tv_form"> {% csrf_token %}
+		This is the window
 	</form>
 
 	<script src="{% static 'js/jquery.min.js' %}" type="text/javascript"></script>

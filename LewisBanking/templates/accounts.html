@@ -4,20 +4,64 @@
 
 <body onLoad="javascript: selectBtn('accounts');">
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
-		<div class="data-wrap">
+		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
+
+		<div class="data-wrap-solid">
 			<div class="url-wrap">Account Management</div>
 
-			<div class="summary-boxes summary-content">
-				<div class="overview-nav"></div>
+			<div class="summary-boxes">
+				<div class='item-list-nav'>
+					<div class='item-list-nav-inner'>
+						<div class="tri-edge">
+							<table>
+								<tr>
+									<td><div class="sortBy1">Sort By:</div></td>
 
-				<div class="overview-content">
-					<iframe src="/load_account_list/" id="list_frame" class="list_frame" style="width:568px; height:369px;">
-					</iframe>
+									<td>
+										<div>
+											<select name="sort_parent" id="sort_parent" onChange="javascript: set_frame_list();">
+												<option value="account_number">Account Type</option>
+												<option value="isSavings">Account Number</option>
+												<option value="balance">Balance</option>
+												<option value="date">Date Opened</option>
+											</select>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div class="tri-center"></div>
+
+						<div class="tri-edge" id="carat">
+							<a href="javascript: toggle_carat(); set_frame_list();">
+								<div class="direction-holder">
+									<div class="carat-holder" id="icon"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></div>
+									<div class="dir_text" id="dir_text">Descending</div>
+								</div>
+							</a>
+						</div>
+					</div>
 				</div>
+
+				<div class="mega-list-holder">
+					<iframe src="/load_account_list/" id="iframe_list"></iframe>
+				</div>
+
+				<div class="a_right_btm" style="width:100%;"></div>
 			</div>
 
 			<div class="summary-boxes2 summary-selected-data">
 				<div class="a_page_selected">
+					<div class="selected-item-wrap">
+						<div class="Selcted_Item">Selected Item:</div>
+						<div class="si1 inner_class">Account Type<span id="selType"></span></div>
+						<div class="si2 inner_class">Account #: <span id="selAcct"></span></div>
+						<div class="si3 inner_class">Active Since <span id="selDate"></span></div>
+						<div class="si4 inner_class">Balance: <span id="selBaln"></span></div>
+
+						<div class="selected-item-content"></div>
+					</div>
 				</div>
 
 				<div class="a_page_search">

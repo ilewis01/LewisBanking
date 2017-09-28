@@ -159,6 +159,36 @@ def load_account_list(request):
 	content.update(csrf(request))
 	return render_to_response('account_list.html', content)
 
+@login_required(login_url='/index')
+def withdraw(request):
+	content = fetch_content(request, "profile")
+	content.update(csrf(request))
+	return render_to_response('withdraw.html', content)
+
+@login_required(login_url='/index')
+def deposit(request):
+	content = fetch_content(request, "password")
+	content.update(csrf(request))
+	return render_to_response('deposit.html', content)
+
+@login_required(login_url='/index')
+def transfer(request):
+	content = fetch_content(request, "delete")
+	content.update(csrf(request))
+	return render_to_response('transfer.html', content)
+
+@login_required(login_url='/index')
+def add_account(request):
+	content = fetch_content(request, "sorted")
+	content.update(csrf(request))
+	return render_to_response('add_account.html', content)
+
+@login_required(login_url='/index')
+def delete_account(request):
+	content = fetch_content(request, "account_list")
+	content.update(csrf(request))
+	return render_to_response('delete_account.html', content)
+
 
 
 

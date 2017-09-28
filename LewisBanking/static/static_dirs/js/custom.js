@@ -8,6 +8,11 @@ function grab(data)
 	return element;
 }
 
+function frame(frame_id)
+{
+	return window.frames[frame_id]
+}
+
 function load_page(url, form_name)
 {
 	form = grab(form_name);
@@ -496,6 +501,46 @@ function load_list_item(item_id)
 {
 
 }
+
+function toggle_carat()
+{
+	var icon = grab('icon');
+	var title = grab('dir_text');
+	var hidden = grab('direction_parent')
+	var current = String(hidden.value);
+
+	if (current === "descend")
+	{
+		title.innerHTML = "Ascending";
+		icon.innerHTML = "<i class=\"fa fa-chevron-circle-up\" aria-hidden=\"true\"></i>"
+		hidden.value = "ascend";
+	}
+
+	else if (current === "ascend")
+	{
+		title.innerHTML = "Descending";
+		icon.innerHTML = "<i class=\"fa fa-chevron-circle-down\" aria-hidden=\"true\"></i>";
+		hidden.value = "descend";
+	}
+}
+
+function set_frame_list()
+{
+	var win = frame('iframe_list');
+	var sort = win.grab('sort');
+	var direction = win.grab('direction');
+
+	sort.value = grab('sort_parent').value;
+	direction.value = grab('direction_parent').value;
+
+	win.grab('frame_form').submit();
+}
+
+function test_js()
+{
+	grab('test2').value = "Testing JS";
+}
+
 
 
 

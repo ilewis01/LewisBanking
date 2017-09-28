@@ -81,6 +81,16 @@ def getUserProfile(user):
 			break
 	return pfile
 
+def locate_account(account_number):
+	account = None
+	a_list  = Account.objects.all()
+
+	for a in a_list:
+		if str(a.account_number) == account_number:
+			account = a
+			break
+	return account
+
 def newUser_account(request):
 	content = {}
 	content['created'] = False
@@ -545,57 +555,6 @@ def calculatePayments(rate, term, principal):
 	payments = principal * division
 	return payments
 
-
-def fetch_content(request, url):
-	content = {}
-
-	if url == "newAccount_0":
-		content['title'] = "Lewis Bank | New Account"
-		content['questions1'] = fetchSecurityQuestions1()
-		content['questions2'] = fetchSecurityQuestions2()
-
-	elif url == "newAccount_1":
-		content = newUser_account(request)
-		content['title'] = "Lewis Bank | New Account"
-
-	elif url == "newLoan_0":
-		content = newLoanDecision(request)
-
-	elif url == "newLoan_1":
-		content = buildLoan_init(request)
-
-	elif url == "home":
-		content = welcome_content(request)
-
-	elif url == "summary":
-		content = fetchAccountSummary(request)
-
-	elif url == "accounts":
-		content = fetchAccountContent(request)
-
-	elif url == "loans":
-		content = fetchLoansContent(request)
-
-	elif url == "transactions":
-		content = fetchTransactionsContent(request)
-
-	elif url == "profile":
-		content = fetchProfileContent(request)
-
-	elif url == "password":
-		content = fetchPasswordContent(request)
-
-	elif url == "delete":
-		content = fetchDeleteContent(request)
-
-	elif url == "sorted":
-		content = fetch_sorted_content(request)
-
-	elif url == "account_list":
-		content = fetch_account_List(request)
-
-	return content
-
 def serialize_json(model, m_type):
 	data = None
 	if m_type == "History":
@@ -788,7 +747,7 @@ def full_account(user, sort, direction):
 			d['item_id'] = 'li_' + str(count)
 			count += 1
 			sorted_list.append(d)
-			
+
 	return sorted_list
 
 def mega_account_link_raw(h_list):
@@ -838,6 +797,212 @@ def fetch_account_List(request):
 	sorted_list = full_account(user, sort, direction)
 	content['sorted_list'] = sorted_list
 	return content
+
+def Withdrawal(request):
+	data = {}
+	withdraw = str(request.POST.get("withdraw"))
+	acct_no = str(request.POST.get('account_number'))
+	account = locate_account(acct_no)
+	current_bal = float(account.balance)
+	withdraw = float(withdraw)
+	data['account'] = account
+	data['status'] = 1
+
+	if withdraw > current_bal:
+		data['status'] = -1
+	else:
+		new_bal = current_bal - withdraw
+		account.balance = new_bal
+		account.save()
+
+		history = History(account_number=account.account_number)
+		history.user_id = int(account.user_id)
+		history.date = datetime.now().date()
+		history.balance = new_bal
+		history.account_type = "Account"
+		history.description = "Withdrawal: $" + str(withdraw)
+		history.save()
+		data['history'] = history
+	return data
+
+def Deposit(request):
+	deposit = str(request.POST.get('deposit'))
+	acct_no = str(request.POST.get('account_number'))
+	account = locate_account(acct_no)
+
+	account.balance = float(deposit) + float(account.balance)
+	account.save()
+
+	history = History(account_number=account.account_number)
+	history.user_id = int(account.user_id)
+	history.account_type = "Account"
+	history.balance = account.balance
+	history.date = datetime.now().date()
+	history.description = "Deopsit: $" + str(deposit)
+	history.save()
+
+	data = {}
+	data['account'] = account
+	data['history'] = history
+	return data
+
+def Transfer(request):
+	data = {}
+	transfer = str(request.POST.get('transfer'))
+	acc_no_from = str(request.POST.get('account_from'))
+	acc_no_to = str(request.POST.get('account_to'))
+
+	account_from = locate_account(acc_no_from)
+	account_to = locate_account(acc_no_to)
+	transfer = float(transfer)
+	data['status'] = 1
+
+	if float(account_from.balance) < transfer:
+		data['status'] = -1
+	else:
+		account_from.balance -= transfer
+		account_to.balance += transfer
+		account_from.save()
+		account_to.save()
+		date = datetime.now().date()
+
+		from_type = "Savings"
+		if account_from.isSavings == False:
+			from_type = "Checking"
+
+		history_from = History(account_number=account_from.account_number)
+		history_to = History(account_number=account_to.account_number)
+
+		history_from.account_type = "Account"
+		history_from.user_id = int(account_from.user_id)
+		history_from.date = date
+		history_from.balance = account_from.balance
+		history_from.description = "Withdrawal: $" + str(transfer)
+
+		history_to.account_type = "Account"		
+		history_to.user_id = int(account_to.user_id)
+		history_to.date = date
+		history_to.balance = account_to.balance
+		history_to.description = "Transfer: $" + str(transfer) + " FROM " + from_type + ": " + str(account_from.account_number)
+
+		history_from.save()
+		history_to.save()
+		data['account_from'] = account_from
+		data['account_to'] = account_to
+		data['history_from'] = history_from
+		data['history_to'] = history_to
+	return data
+
+def Delete_Account(request):
+	content = {}
+	account_number = str(request.POST.get('account_number'))
+	account = locate_account(account_number)
+	account.delete()
+	content['account'] = account
+	content['status'] = 1
+	return content
+
+def New_Account_Active_User(request):
+	content = {}
+	user = request.user
+	isSavings = pythonBool(request.POST.get('isSavings'))
+	balance = decoderCurrency(request, "dollars", "cents")
+	date = datetime.now().date()
+
+	act_type_text = "Savings"
+	if isSavings == False:
+		act_type_text = "Checking"
+
+	account = Account(user_id=int(user.id))
+	account.date = date
+	account.account_number = fetchAccountNumber(8, False, True, "account")
+	account.isSavings = isSavings
+	account.balance = balance
+	account.save()
+
+	history = History(user_id=int(user.id))
+	history.account_number = account.account_number
+	history.date = date
+	history.account_type = "Account"
+	history.balance = float(account.balance)
+	history.description = "Account Opened"
+	history.save()
+
+	content['account'] = account
+	content['history'] = history
+	return content
+
+def fetch_content(request, url):
+	content = {}
+
+	if url == "newAccount_0":
+		content['title'] = "Lewis Bank | New Account"
+		content['questions1'] = fetchSecurityQuestions1()
+		content['questions2'] = fetchSecurityQuestions2()
+
+	elif url == "newAccount_1":
+		content = newUser_account(request)
+		content['title'] = "Lewis Bank | New Account"
+
+	elif url == "newLoan_0":
+		content = newLoanDecision(request)
+
+	elif url == "newLoan_1":
+		content = buildLoan_init(request)
+
+	elif url == "home":
+		content = welcome_content(request)
+
+	elif url == "summary":
+		content = fetchAccountSummary(request)
+
+	elif url == "accounts":
+		content = fetchAccountContent(request)
+
+	elif url == "loans":
+		content = fetchLoansContent(request)
+
+	elif url == "transactions":
+		content = fetchTransactionsContent(request)
+
+	elif url == "profile":
+		content = fetchProfileContent(request)
+
+	elif url == "password":
+		content = fetchPasswordContent(request)
+
+	elif url == "delete":
+		content = fetchDeleteContent(request)
+
+	elif url == "sorted":
+		content = fetch_sorted_content(request)
+
+	elif url == "account_list":
+		content = fetch_account_List(request)
+
+	elif url == "withdrawal":
+		content = Withdrawal(request)
+
+	elif url == "deposit":
+		content = Deopsit(request)
+
+	elif url == "transfer":
+		content = Transfer(request)
+
+	elif url == "delete_account":
+		content = Delete_Account(request)
+
+	elif url == "add_account":
+		content = New_Account_Active_User(request)
+
+	return content
+
+
+		
+		
+
+
+
 
 
 
