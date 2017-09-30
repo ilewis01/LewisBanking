@@ -30,6 +30,32 @@
 			</div>
 		</div>
 
+		<div class="fadeOut" id="z3">
+			<div class="advanced_Search_wrap" id="advanced_Search_wrap">
+				<div class="messageNav-solid">
+					<a href="javascript: visibility(3, 'hide');">
+						<i class="fa fa-window-close" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageHeader" id="messageHeader">Advanced Search Options</div>
+
+				<div class="hold_logo">
+					<div class="class_left">
+						<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-small'>
+						<div class="sm-logo-text">Lewis Bank</div>
+					</div>
+
+					<div class="vertical_divider"></div>
+
+					<div class="message_text" id="messageContent">
+					</div>
+				</div>
+
+				<button type="button" onClick="javascript: visibility(3, 'hide');">Close</button>
+			</div>
+		</div>
+
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
 		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
 		<input type="hidden" name="selected_account_number" id="selected_account_number" value="">
@@ -100,28 +126,32 @@
 			<div class="summary-boxes2 summary-selected-data">
 				<div class="a_page_selected">
 					<div class="selected-item-wrap">
-						<div class="Selcted_Item">Selected Item</div>
-						<div class="si1 inner_class"><span id="selType"></span></div>
-						<div class="si2 inner_class">Account No: <span id="selAcct"></span></div>
-						<div class="si2 inner_class"><em><b style="color:black;">Active Since</b> <span id="selDate"></span></em></div>
-						<div class="si3 inner_class">Available Balance: $<span id="selBaln"></span></div>
-
+						<div class="Selcted_Item" id="tv_head">Selected Account:</div>
+						<div class="divider"></div>
+						<div class="inner_class si1"><span id="selType"></span> <span id="selAcct"></span></div>
+						<div class="inner_class si2">Active Since <span id="selDate"></span></div>
+						<div class="inner_class si3">Available Now:<br><span>$</span><span id="selBaln"></span></div>
 						<div class="selected-item-content"></div>
 					</div>
 				</div>
 
 				<div class="a_page_search">
 					<div class="avd_search">
-						<a href="#">Advanced Search</a>
+						<a href="javascript: visibility(3,'show');">Advanced Search</a>
 					</div>
-					<input type="search" placeholder="Search" id="search">
+					<div class="search_icon">
+						<input type="search" placeholder="Search Accounts" id="search">
+						<div class="search_span">
+							<a href="javascript: initialize_account_search();"><span class="fa fa-search"></span></a>
+						</div>
+					</div>
 				</div>
 
 				<div class="a_page_buttons">
 					<button type="button" class="a-button-top" onCLick="javascript: load_account_sort_options('0'); load_frame('/withdraw0/');">Withdrawal</button>
 					<button type="button" onCLick="javascript: load_account_sort_options('0'); load_frame('/deposit0/');">Deposit</button>
 					<button type="button" onCLick="javascript: load_account_sort_options('0'); load_frame('/transfer0/');">Transfer</button>
-					<button type="button" id="hi_btn" onCLick="javascript: load_account_sort_options('1'); init_history('/view_history0/');">View Selected Account History</button>
+					<button type="button" id="hi_btn" onCLick="javascript: load_account_sort_options('1'); init_history('/view_history0/');">View Selected Account's History</button>
 					<button type="button" class="a-button-bottom" onCLick="javascript: load_account_sort_options('0'); load_frame('/delete_account0/');">Delete Account</button>
 				</div>
 

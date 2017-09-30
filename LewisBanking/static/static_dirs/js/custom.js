@@ -774,6 +774,7 @@ function init_history(url)
 	var btn = grab('hi_btn');
 	btn.innerHTML = "View All";
 	btn.setAttribute('onCLick', 'javascript: view_all();')
+	grab('tv_head').innerHTML = "Viewing History:";
 
 	var iframe = grab('iframe_list');
 	iframe.src = url;
@@ -782,7 +783,8 @@ function init_history(url)
 function view_all()
 {
 	var btn = grab('hi_btn');
-	btn.innerHTML = "View Selected Account History";
+	grab('tv_head').innerHTML = "Selected Account";
+	btn.innerHTML = "View Selected Account's History";
 	btn.setAttribute('onCLick', "javascript: load_account_sort_options(\'1\'); init_history(\'/view_history0/\');");
 	var iframe = grab('iframe_list');
 	iframe.src = "/load_account_list/";
@@ -882,6 +884,11 @@ function get_sort_options_html(mode)
 
 	html += "</select>";
 	return html
+}
+
+function initialize_account_search()
+{
+	
 }
 
 

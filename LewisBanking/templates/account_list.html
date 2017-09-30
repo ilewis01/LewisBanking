@@ -37,13 +37,13 @@
 					<div class="{{s.class}}" id="{{s.item_id}}change_class">
 						<input type="hidden" id="{{s.account_no_id}}" value="{{s.account.account_number}}">
 						<input type="hidden" id="{{s.date_id}}" value="{{s.account.date}}">
-						<input type="hidden" id="{{s.balance_id}}" value="{{s.account.balance}}">
+						<input type="hidden" id="{{s.balance_id}}" value="{{s.format}}">
 						<input type="hidden" id="{{s.type_id}}" value="{{s.type}}">
 						
 						<div class="li_account">{{s.account.account_number}}</div>
 						<div class="li_type">({{s.type}})</div>
 						<div class="li_available">Available Now:</div>
-						<div class="li_balance">${{s.account.balance}}</div>
+						<div class="li_balance">${{s.format}}</div>
 					</div>
 				</a>
 			</li>

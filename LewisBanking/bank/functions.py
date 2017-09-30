@@ -77,6 +77,78 @@ def get_action_from_index(index):
 			break
 	return result
 
+def format_currency(value):
+	result = ""
+	value = str(value)
+	length = len(value)
+	dollars = ""
+	breaks = []
+	reverse = []
+
+	if value[length - 3] != "." or value[length - 2] != ".":
+		if value[length - 2] == ".":
+			value += "0"
+		elif value[length - 3] != ".":
+			value += ".00"
+
+	cents = value[length - 3]
+	cents += value[length - 2]
+	cents += value[length - 1]
+
+	if cents[0] != ".":
+		cents = ".00"
+
+	for i in range(length):
+		if value[i] != ".":
+			dollars += value[i]
+		else:
+			break
+
+	if len(dollars) > 3:
+		temp = ""
+		index = len(dollars) - 1
+		count = 0
+
+		for j in range(len(dollars)):
+			temp += dollars[index]
+			index -= 1
+			count += 1
+
+			if count == 3:
+				breaks.append(temp)
+				temp = ""
+				count = 0
+
+		breaks.append(temp)
+
+		for b in breaks:
+			if len(b) == 1:
+				reverse.append(b)
+			elif len(b) == 2:
+				t = b[1]
+				t += b[0]
+				reverse.append(t)
+			else:
+				t = b[2]
+				t += b[1]
+				t += b[0]
+				reverse.append(t)
+
+		f_index = len(reverse)
+		index = f_index - 1
+
+		for r in range(f_index):
+			result += reverse[index]
+			index -= 1
+
+			if index == 0:
+				result += ","
+			else:
+				result += cents
+	else:
+		result = dollars + cents
+	return result
+
 def userExist(email):
 	exist = False
 	users = User.objects.all()
@@ -330,25 +402,7 @@ def welcome_content(request):
 
 def fetchAccountSummary(request):
 	content = {}
-	user = request.user
-	name = name_abv(user)
-	sort = request.POST.get('sort')
-	sorted_list = None
-	direction = None
-	m_type = "History"
-
-	if sort == None:
-		sort = "date"
-		direction = "descend"
-	else:
-		direction = str(request.POST.get("direction"))
-
-	sorted_list = mega_sort(user, sort, direction, m_type)
-
-	content['name'] = name
-	content['user'] = user
-	content['sorted_list'] = sorted_list
-	content['title'] = "Lewis Bank | Summary"
+	
 	return content
 
 def fetch_sorted_content(request):
@@ -852,6 +906,7 @@ def full_account(user, sort, direction):
 			d['balance_id'] = item_id + "balance"
 			d['type_id'] = item_id + "type"
 			d['index'] = count
+			d['format'] = format_currency(a.balance)
 			count += 1
 
 			sorted_list.append(d)
