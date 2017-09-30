@@ -37,4 +37,27 @@ urlpatterns = patterns('',
     url(r'^delete_account0/$', 'bank.views.delete_account0'),
     url(r'^view_history/$', 'bank.views.view_history'),
     url(r'^view_history0/$', 'bank.views.view_history0'),
+    url(r'^account_search/$', 'bank.views.account_search'),
+    url(r'^accountResults/$', 'bank.views.accountResults'),
+    url(r'^account_search_test/$', 'bank.views.account_search_test'),    
+    url(r'^account_results_loader/$', 'bank.views.account_results_loader'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+    # url(r'^account_search/$', 'bank.views.account_search'),
+
+
+
+
+
+
+
+
+
 )

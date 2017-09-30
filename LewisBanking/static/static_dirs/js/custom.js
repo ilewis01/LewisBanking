@@ -888,7 +888,37 @@ function get_sort_options_html(mode)
 
 function initialize_account_search()
 {
-	
+	var search = String(grab('search').value);
+
+	if (search.length !== 0)
+	{
+		grab('frame1').src = "/account_search/";
+	}
+}
+
+function load_a_search_data()
+{
+	var search = parent.grab('search').value;
+	grab('search').value = search;
+	parent.grab('search').value = "";
+	grab('search_form').submit();
+}
+
+function account_search_test()
+{
+	var match = String(grab('match').value);
+
+	if (match === "False")
+	{
+		var form = grab('search_form');
+		form.action = "/accountResults/";
+		form.submit();
+		win_visibility(1, "show");
+	}
+	else
+	{
+		parent.grab('iframe_list').src = "/account_results_loader/";
+	}
 }
 
 

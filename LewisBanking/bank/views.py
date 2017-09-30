@@ -232,6 +232,31 @@ def delete_account0(request):
 	content.update(csrf(request))
 	return render_to_response('delete_account0.html', content)
 
+@login_required(login_url='/index')
+def account_search(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('account_search.html', content)
+
+@login_required(login_url='/index')
+def account_search_test(request):
+	content = fetch_content(request, 'account_search_test')
+	content.update(csrf(request))
+	return render_to_response('account_search_test.html', content)
+
+@login_required(login_url='/index')
+def accountResults(request):
+	# content = fetch_content(request, 'account_search')
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('accountResults.html', content)
+
+@login_required(login_url='/index')
+def account_results_loader(request):
+	content = fetch_content(request, 'account_search')
+	content.update(csrf(request))
+	return render_to_response('account_results_loader.html', content)
+
 
 
 

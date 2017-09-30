@@ -1040,6 +1040,200 @@ def get_user_accounts(user_id):
 			data.append(a)
 	return data
 
+def search_algorithm(search, value):
+	match 		= False
+	size 		= len(value)
+	search_size = len(search)
+
+	if search_size <= size:
+		last_char 	= search_size - 1
+		search 		= str(search)
+		for i in range(size):
+			t = ""
+			if last_char != size:
+				index = i
+				for j in range(search_size):
+					t += str(value[index])
+					index += 1
+				if t == search:
+					match = True
+					break
+				else:
+					last_char += 1
+	return match
+
+def account_search_test(request):
+	content = {}
+	search = str(request.POST.get('search'))
+	user_id = str(request.user.id)
+	accounts = get_user_accounts(user_id)
+	match = False
+
+	for a1 in accounts:
+		if search_algorithm(search, a1.account_number) == True:
+			match = True
+
+	if match == False:
+		for a2 in accounts:
+			if search_algorithm(search, str(a2.balance)) == True:
+				match = True
+
+	if match == False:
+		for a4 in accounts:
+			if search_algorithm(search, str(a4.date)) == True:
+				match = True
+
+	if match == False:
+		for a5 in accounts:
+			m_type = get_account_type_text(a5.isSavings)
+			m_type = str(m_type).lower()
+			search = search.lower()
+			if search_algorithm(search, m_type) == True:
+				match = True
+
+	if match == False:
+		for a in accounts:
+			history = get_all_history(a, 'date', 'descend')
+
+			if match == False:
+				for h1 in history:
+					if search_algorithm(search, str(h1.date)) == True:
+						match = True
+
+			if match == False:
+				for h2 in history:
+					if search_algorithm(search, str(h2.e_balance)) == True:
+						match = True
+
+			if match == False:
+				for h3 in history:
+					if search_algorithm(search, str(h3.e_balance)) == True:
+						match = True
+
+			if match == False:
+				for h4 in history:
+					if search_algorithm(search, str(h4.b_balance)) == True:
+						match = True
+
+			if match == False:
+				for h5 in history:
+					if search_algorithm(search.lower(), str(h5.action.action).lower()) == True:
+						match = True
+
+	content['match'] = match
+	return content
+
+def account_search_algorithm(request):
+	content = {}
+	search = str(request.POST.get('search'))
+	user_id = str(request.user.id)
+	accounts = get_user_accounts(user_id)
+	matches = []
+	count = 0
+
+	for a1 in accounts:
+		if search_algorithm(search, a1.account_number) == True:
+			d = {}
+			d['index'] = count
+			d['item_id'] = "s" + str(count) + "_"
+			d['account'] = a1
+			d['type'] = 'account'
+			count += 1
+			matches.append(d)
+
+	for a2 in accounts:
+		if search_algorithm(search, str(a2.balance)) == True:
+			d = {}
+			d['index'] = count
+			d['item_id'] = "s" + str(count) + "_"
+			d['account'] = a2
+			d['type'] = 'account'
+			count += 1
+			matches.append(d)
+
+	for a4 in accounts:
+		if search_algorithm(search, str(a4.date)) == True:
+			d = {}
+			d['index'] = count
+			d['item_id'] = "s" + str(count) + "_"
+			d['account'] = a3
+			d['type'] = 'account'
+			count += 1
+			matches.append(d)
+
+	for a5 in accounts:
+		m_type = get_account_type_text(a5.isSavings)
+		m_type = str(m_type).lower()
+		search = search.lower()
+		if search_algorithm(search, m_type) == True:
+			d = {}
+			d['index'] = count
+			d['item_id'] = "s" + str(count) + "_"
+			d['account'] = a4
+			d['type'] = 'account'
+			count += 1
+			matches.append(d)
+
+	for a in accounts:
+		history = get_all_history(a, 'date', 'descend')
+
+		for h1 in history:
+			if search_algorithm(search, str(h1.date)) == True:
+				d = {}
+				d['index'] = count
+				d['item_id'] = "s" + str(count) + "_"
+				d['type'] = "history"
+				d['history'] = h1
+				count += 1
+				matches.append(d)
+
+		for h2 in history:
+			if search_algorithm(search, str(h2.e_balance)) == True:
+				d = {}
+				d['index'] = count
+				d['item_id'] = "s" + str(count) + "_"
+				d['type'] = "history"
+				d['history'] = h2
+				count += 1
+				matches.append(d)
+
+		for h3 in history:
+			if search_algorithm(search, str(h3.e_balance)) == True:
+				d = {}
+				d['index'] = count
+				d['item_id'] = "s" + str(count) + "_"
+				d['type'] = "history"
+				d['history'] = h3
+				count += 1
+				matches.append(d)
+
+		for h4 in history:
+			if search_algorithm(search, str(h4.b_balance)) == True:
+				d = {}
+				d['index'] = count
+				d['item_id'] = "s" + str(count) + "_"
+				d['type'] = "history"
+				d['history'] = h4
+				count += 1
+				matches.append(d)
+
+		for h5 in history:
+			if search_algorithm(search.lower(), str(h5.action.action).lower()) == True:
+				d = {}
+				d['index'] = count
+				d['item_id'] = "s" + str(count) + "_"
+				d['type'] = "history"
+				d['history'] = h5
+				count += 1
+				matches.append(d)
+	content['matches'] = matches
+	content['number'] = count
+	content['phrase'] = "Results"
+	if len(matches) == 1:
+		content['phrase'] = "Result"
+	print content
+	return content
+
 def propagateTransferOptions(request):
 	options = {}
 	fm_list = []
@@ -1267,6 +1461,12 @@ def fetch_content(request, url):
 
 	elif url == "trans0":
 		content = propagateTransferOptions(request)
+
+	elif url == "account_search":
+		content = account_search_algorithm(request)
+
+	elif url == "account_search_test":
+		content = account_search_test(request)
 
 	return content
 
