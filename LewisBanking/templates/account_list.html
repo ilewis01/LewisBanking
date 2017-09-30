@@ -21,17 +21,19 @@
     <title></title>
 </head>
 
-<body class="list_frame_body">
+<body class="list_frame_body" onLoad="javascript: load_index(0);">
 	<form action="/load_account_list/" method="post" id="frame_form"> {% csrf_token %}
 		<input type="hidden" name="sort" id="sort" value="{{sort}}">
 		<input type="hidden" name="direction" id="direction" value="{{direction}}">
 		<input type="hidden" name="return_class" id="return_class" value="li_clear">
 		<input type="hidden" name="selected_li" id="selected_li" value="li0_change_class">
 		<input type="hidden" name="selected_account" id="selected_account" value="">
+		<input type="hidden" name="selected_index" id="selected_index" value="0">
+
 		<ul>
 			{% for s in sorted_list %}
 			<li>
-				<a href="javascript: load_list_item('{{s.item_id}}');" class="li_a_tag">
+				<a href="javascript: load_list_item('{{s.item_id}}', '{{s.index}}');" class="li_a_tag">
 					<div class="{{s.class}}" id="{{s.item_id}}change_class">
 						<input type="hidden" id="{{s.account_no_id}}" value="{{s.account.account_number}}">
 						<input type="hidden" id="{{s.date_id}}" value="{{s.account.date}}">

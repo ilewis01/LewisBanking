@@ -433,7 +433,7 @@ function get_error_html(error_list)
 	return html;
 }
 
-function initialize_accounts()
+function initialize_accounts(selected_index)
 {
 	var win = frame('iframe_list');
 	var sort = String(win.grab('sort').value);
@@ -460,6 +460,8 @@ function initialize_accounts()
 	grab('selBaln').innerHTML = balance;
 	grab('selDate').innerHTML = date;
 	grab('selType').innerHTML = type;
+
+	grab('selected_index').value = selected_index;
 }
 
 function set_sort_select(select, sort)
@@ -527,49 +529,54 @@ function load_url(url)
 	form.submit();
 }
 
-function load_list_item(item_id)
+function load_list_item(item_id, index)
 {
-	// clearSelectedLI_child();
-
-	var acct_name = item_id + "account_number";
-	var date_name = item_id + "date";
-	var balance_name = item_id + "balance";
-	var type_name = item_id + "type";
-	var div_name = item_id + "change_class";
-
-	var account_number = grab(acct_name).value;
-	var date = grab(date_name).value;
-	var balance = grab(balance_name).value;
-	var m_type = grab(type_name).value;
-
-	var hid_acct = parent.grab('selected_account_number');
-	var hid_date = parent.grab('selected_date');
-	var hid_baln = parent.grab('selected_balance');
-	var hid_type = parent.grab('selected_type');
-
-	hid_acct.value = account_number;
-	hid_date.value = date;
-	hid_type.value = m_type;
-	hid_baln.value = balance;
-
-	parent.grab('selAcct').innerHTML = account_number;
-	parent.grab('selBaln').innerHTML = balance;
-	parent.grab('selDate').innerHTML = date;
-	parent.grab('selType').innerHTML = m_type;
-
-	// div = grab(div_name);
-	// div.style.backgroundColor = "yellow";
-	// grab('return_class').value = div.className;
-	// var cng = item_id + "change_class";
-	// grab('selected_li').value = cng;
-	
+	var prev_index = grab('selected_index').value;
+	clearSelectedLI_child(prev_index);
+	load_index(index);	
 }
 
-function clearSelectedLI_child()
+function load_index(index)
 {
-	var current_id = grab('selected_li').value;
-	var div = grab(current_id);
-	div.removeAttribute('backgroundColor');
+	var prefix = "li" + String(index) + "_";
+	var div_name = prefix + "change_class";
+	var div = grab(div_name);
+	div.className = "li_highlight";
+	grab('selected_index').value = index;
+	populate_viewer(index);
+}
+
+function populate_viewer(index)
+{
+	var t_name = "li" + String(index) + "_type";
+	var b_name = "li" + String(index) + "_balance";
+	var d_name = "li" + String(index) + "_date";
+	var a_name = "li" + String(index) + "_account_number";
+	var m_type = grab(t_name).value;
+	var m_balc = grab(b_name).value;
+	var m_date = grab(d_name).value;
+	var m_acct = grab(a_name).value;
+	parent.grab('selType').innerHTML = m_type;
+	parent.grab('selBaln').innerHTML = m_balc;
+	parent.grab('selDate').innerHTML = m_date;
+	parent.grab('selAcct').innerHTML = m_acct;
+}
+
+function clearSelectedLI_child(index)
+{
+	index = Number(index);
+	var view = index % 2;
+	var div_name = "li" + String(index) + "_change_class";
+	var div = grab(div_name);
+
+	if (view == 0)
+	{
+		div.className = 'li_clear';
+	}
+	else
+	{
+		div.className = 'li_shade';
+	}
 }
 
 function toggle_carat()
@@ -826,6 +833,45 @@ function get_select_index(value, select)
 		}
 	}
 	return index;
+}
+
+function load_account_sort_options(mode)
+{
+	var view_div = grab('view_mode');
+	var view_mode = String(view_div.value);
+	var html = null;
+	mode = String(mode);
+
+	if (mode !== view_mode)
+	{
+		view_div.value = mode;
+		grab('select_builder').innerHTML = get_sort_options_html(mode);
+	}
+}
+
+function get_sort_options_html(mode)
+{
+	mode = String(mode);
+	html = "<select name=\"sort_parent\" id=\"sort_parent\" onChange=\"javascript: set_frame_list();\">";
+
+	if (mode === "0")
+	{
+		html += "<option value=\"account_number\">Account Number</option>";
+		html += "<option value=\"isSavings\">Account Type</option>";
+		html += "<option value=\"balance\">Balance</option>";
+		html += "<option value=\"date\">Date Opened</option>";
+	}
+
+	else if (mode === "1")
+	{
+		html += "<option value=\"date\">Transaction Date</option>";
+		html += "<option value=\"action\">Transaction Type</option>";
+		html += "<option value=\"b_balance\">Starting Balance</option>";
+		html += "<option value=\"e_balance\">Ending Balance</option>";
+	}
+
+	html += "</select>";
+	return html
 }
 
 

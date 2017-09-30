@@ -859,6 +859,7 @@ def full_account(user, sort, direction):
 			d['date_id'] = item_id + "date"
 			d['balance_id'] = item_id + "balance"
 			d['type_id'] = item_id + "type"
+			d['index'] = count
 			count += 1
 
 			sorted_list.append(d)

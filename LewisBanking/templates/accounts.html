@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: initialize_accounts();">
+<body onLoad="javascript: initialize_accounts(0);">
 
 		<div class="fadeOut" id="z2">
 			<div class="messageWindow" id="messageWindow">
@@ -32,10 +32,8 @@
 
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
 		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
-		<input type="hidden" name="selected_account_number" id="selected_account_number" value="">
-		<input type="hidden" name="selected_date" id="selected_date" value="">
-		<input type="hidden" name="selected_balance" id="selected_balance" value="">
-		<input type="hidden" name="selected_type" id="selected_type" value="">
+		<input type="hidden" name="view_mode" id="view_mode" value="0">
+		<input type="hidden" name="selected_index" id="selected_index" value="0">
 
 		<div class="fadeOut" id="z1">
 			<div class="window1">
@@ -55,7 +53,7 @@
 									<td><div class="sortBy1">Sort By:</div></td>
 
 									<td>
-										<div>
+										<div id="select_builder">
 											<select name="sort_parent" id="sort_parent" onChange="javascript: set_frame_list();">
 												<option value="account_number">Account Number</option>
 												<option value="isSavings">Account Type</option>
@@ -116,11 +114,11 @@
 				</div>
 
 				<div class="a_page_buttons">
-					<button type="button" class="a-button-top" onCLick="javascript: load_frame('/withdraw0/');">Withdrawal</button>
-					<button type="button" onCLick="javascript: load_frame('/deposit0/');">Deposit</button>
-					<button type="button" onCLick="javascript: load_frame('/transfer0/');">Transfer</button>
-					<button type="button" onCLick="javascript: init_history('/view_history0/');">View History</button>
-					<button type="button" class="a-button-bottom" onCLick="javascript: load_frame('/delete_account0/');">Delete Account</button>
+					<button type="button" class="a-button-top" onCLick="javascript: load_account_sort_options('0'); load_frame('/withdraw0/');">Withdrawal</button>
+					<button type="button" onCLick="javascript: load_account_sort_options('0'); load_frame('/deposit0/');">Deposit</button>
+					<button type="button" onCLick="javascript: load_account_sort_options('0'); load_frame('/transfer0/');">Transfer</button>
+					<button type="button" onCLick="javascript: load_account_sort_options('1'); init_history('/view_history0/');">View History</button>
+					<button type="button" class="a-button-bottom" onCLick="javascript: load_account_sort_options('0'); load_frame('/delete_account0/');">Delete Account</button>
 				</div>
 
 				<div class="a_right_btm"></div>
