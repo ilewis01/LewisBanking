@@ -20,7 +20,7 @@ from django.http import FileResponse, Http404
 
 from bank.functions import getUserProfile, fetch_content
 
-from bank.models import profile, Account, Loan, History
+from bank.models import profile, Account, Loan, History, Action
 
 def index(request):
 	content = {}
@@ -161,6 +161,18 @@ def load_account_list(request):
 	return render_to_response('account_list.html', content)
 
 @login_required(login_url='/index')
+def view_history0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('view_history0.html', content)
+
+@login_required(login_url='/index')
+def view_history(request):
+	content = fetch_content(request, "view_history")
+	content.update(csrf(request))
+	return render_to_response('view_history.html', content)
+
+@login_required(login_url='/index')
 def withdraw(request):
 	content = fetch_content(request, "withdraw")
 	content.update(csrf(request))
@@ -176,7 +188,7 @@ def deposit(request):
 def transfer(request):
 	content = fetch_content(request, "transfer")
 	content.update(csrf(request))
-	return render_to_response('transfer.html', content)
+	return render_to_response(content['url'], content)
 
 @login_required(login_url='/index')
 def add_account(request):
@@ -204,7 +216,7 @@ def deposit0(request):
 
 @login_required(login_url='/index')
 def transfer0(request):
-	content = {}
+	content = fetch_content(request, "trans0")
 	content.update(csrf(request))
 	return render_to_response('transfer0.html', content)
 

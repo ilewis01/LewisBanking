@@ -608,8 +608,11 @@ function set_frame_list()
 
 function load_frame(action)
 {
+	grab('iframe_list').src = "/load_account_list/";
 	grab('frame1').setAttribute('src', action);
 	visibility(1, "show");
+
+	// frame('iframe_list').
 }
 
 function win_visibility(z_index, mode)
@@ -681,6 +684,51 @@ function w_error()
 	}
 }
 
+function t_error()
+{
+	var dollars = String(grab('t_dollars').value);
+	var cents = String(grab('t_cents').value);
+	var errors = [];
+
+	if (cents.length == 0) {grab('t_cents').value = "00"; cents = "00";}
+
+	if (dollars === "0" && cents === "00")
+	{
+		errors.push("You must transfer at least $0.01");
+	}
+
+	if (dollars.length === 0)
+	{
+		errors.push("You must enter a transfer amount");
+	}
+
+	if (grab('from_account').selectedIndex == 0)
+	{
+		errors.push("You must selected an account to transfer from")
+	}
+
+	if (grab('to_account').selectedIndex == 0)
+	{
+		errors.push("You must selected an account to transfer to")
+	}
+
+	if (errors.length !== 0)
+	{
+		parent.grab('messageContent').innerHTML = get_error_html(errors);
+		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>";
+		var e_win = parent.grab('messageWindow');
+		e_win.style.height = "260px";
+		e_win.style.width = "400px";
+		win_visibility(2, "show");
+	}
+	else
+	{
+		var form = grab('transfer_form');
+		form.action = "/transfer/";
+		form.submit();
+	}
+}
+
 function w_error_add()
 {
 	var dollars = String(grab('dollars_w').value);
@@ -712,6 +760,73 @@ function reload_li_list()
 	win_visibility(1, 'hide');
 }
 
+function init_history(url)
+{
+	var iframe = grab('iframe_list');
+	// var win = frame('iframe_list');
+	// var selected = grab('selected_account_number').value;
+	// var frame_element = win.grab('selected_account');
+	// frame_element.value = selected;
+	// alert(frame_element.value)
+	iframe.src = url;
+}
+
+function load_history()
+{
+	var selected = parent.grab('selected_account_number').value;
+	grab('selected_account').value = selected;
+	grab('load_form').submit();
+}
+
+function initialize_account_history(options)
+{
+	alert('initializing')
+	var select = parent.grab('sort_parent');
+
+	for (var i = 0; i < options.length; i++)
+	{
+		alert(select[0]);
+	}
+}
+
+function loadTransferSelect(changed)
+{
+	grab('selected_fm').value = grab('from_account').selectedIndex;
+	grab('selected_to').value = grab('to_account').selectedIndex;
+
+	grab('transfer_form').submit()
+}
+
+function load_dynamic_sel(a, b)
+{
+	a = Number(a);
+	b = Number(b);
+	sel_from = grab('from_account');
+	sel_to = grab('to_account');
+	index_a = get_select_index(a, sel_from);
+	index_b = get_select_index(b, sel_to);
+
+	sel_from.selectedIndex = index_a;
+	sel_to.selectedIndex = index_b;
+}
+
+function get_select_index(value, select)
+{
+	value = String(value);
+	index = 0;
+
+	for (var i = 1; i < select.length; i++)
+	{
+		var v = String(select[i].value);
+
+		if (v === value)
+		{
+			index = i;
+			break
+		}
+	}
+	return index;
+}
 
 
 

@@ -7,7 +7,7 @@ import json
 import json as simplejson
 from decimal import Decimal
 
-from bank.models import profile, Account, Loan, History
+from bank.models import profile, Account, Loan, History, Action
 
 
 def fetchSecurityQuestions1():
@@ -41,6 +41,41 @@ def fetchSecurityQuestions2():
 	questions[4]['question'] = "What is the name of your elementary school?"
 
 	return questions
+
+def fetchActions():
+	actions = []
+	action.append('Opened Account')
+	action.append('Withdrawal')
+	action.append('Deposit')
+	action.append('Transfer From Account')
+	action.append('Closed Account')
+	action.append('Loan Approved')
+	action.append('Payment')
+	action.append('Refinanced Loan')
+	action.append('Loan Default')
+	action.append('Loan Default')
+	action.append('Transfer To Account')
+	return action
+
+def get_action_from_text(action):
+	actions = Action.objects.all()
+	result = None
+
+	for a in actions:
+		if action == a.action:
+			result = a
+			break
+	return result
+
+def get_action_from_index(index):
+	actions = Action.objects.all()
+	result = None
+
+	for a in actions:
+		if index == a.index:
+			result = a
+			break
+	return result
 
 def userExist(email):
 	exist = False
@@ -119,6 +154,7 @@ def newUser_account(request):
 		history.balance = account.balance
 		history.date = datetime.now().date()
 		history.description = "Account Opened"
+		history.action = get_action_from_index(0)
 
 		profile.accounts = str(account.id) + "~"
 		profile.is_active = True
@@ -205,6 +241,7 @@ def buildLoan_init(request):
 	history_account.description 	= "Account Opened"
 	history_account.account_number	= account.account_number
 	history_account.balance 		= account.balance
+	history_account.action 			= get_action_from_index(0)
 	history_account.save()
 
 	a_type = "Checking"
@@ -219,6 +256,7 @@ def buildLoan_init(request):
 	history_loan.description 		= "Loan Approved and deposited into " + a_type + ": " + str(account.account_number)
 	history_loan.account_number		= loan.account_number
 	history_loan.balance 			= loan.balance
+	listory_loan.action 			= get_action_from_index(5)
 	history_loan.save()
 
 	content['user'] = user
@@ -718,14 +756,74 @@ def single_history_link(account):
 			break;
 	return history
 
-def get_all_history(account):
+def get_all_history(account, sort, direction):
 	history = []
-	h_list = History.objects.all()
+
+	if direction == "descend":
+		sort = "-" + sort
+
+	h_list = History.objects.all().order_by(sort)
 
 	for h in h_list:
 		if str(h.account_number) == str(account.account_number):
 			history.append(h)
 	return history
+
+def singleHistorySortOptions():
+	options = []
+	options.append('date')
+	options.append('description')
+	options.append('balance')
+	options.append('action')
+	return options
+
+def fetch_account_history(request):
+	content = {}
+	data = []
+	acct_no = request.POST.get('selected_account')
+	sort = request.POST.get('sort')
+	direction = None
+	account = locate_account(acct_no)
+
+	if sort == None:
+		sort = "date"
+		direction = "descend"
+	else:
+		direction = request.POST.get('direction')
+
+	history = get_all_history(account, sort, direction)
+	count = 0;
+	m_type = "Checking"
+
+	if account.isSavings == True:
+		m_type = "Savings"
+
+	for h in history:
+		d = {}
+
+		if count % 2 == 0:
+			d['class'] = "li_clear"
+		else:
+			d['class'] = "li_clear"
+
+		item_id = "li" + str(count) + "_"
+		count += 1
+
+		d['item_id'] 		= item_id
+		d['account_no_id'] 	= item_id + "account_number"
+		d['date_id'] 		= item_id + "date"
+		d['balance_id'] 	= item_id + "balance"
+		d['type_id'] 		= item_id + "type"
+		d['description_id'] = item_id + "description"
+		d['history'] = h
+
+		data.append(d)
+
+	sort_opt = singleHistorySortOptions()
+	options = json.dumps(sort_opt)
+	content['history'] = data;
+	content['options'] = options
+	return content
 
 def full_account(user, sort, direction):
 	user_id = str(user.id)
@@ -743,7 +841,7 @@ def full_account(user, sort, direction):
 		if str(a.user_id) == user_id:
 			d = {}
 			d['account'] = a
-			d['history'] = get_all_history(a)
+			d['history'] = get_all_history(a, 'date', 'descend')
 			d['type'] = 'Savings'
 
 			if a.isSavings == False:
@@ -811,7 +909,12 @@ def fetch_account_List(request):
 		sort = str(sort)
 		direction = str(request.POST.get('direction'))
 
+	opts = singleHistorySortOptions()
+	options = json.dumps(opts)
+	content['options'] = options
+
 	sorted_list = full_account(user, sort, direction)
+	content['options'] = options
 	content['sorted_list'] = sorted_list
 	content['sort'] = sort;
 	content['direction'] = direction;
@@ -836,6 +939,7 @@ def Withdrawal(request):
 	history.balance = new_bal
 	history.account_type = "Account"
 	history.description = "Withdrawal: $" + str(withdraw)
+	history.action = get_action_from_index(1)
 	history.save()
 
 	content['history'] = history
@@ -853,8 +957,6 @@ def Deposit(request):
 	m_type = request.POST.get('d_type')
 
 	account.balance = deposit + Decimal(account.balance)
-	print "Previous:" + str(previous)
-	print "BALANCE: " + str(account.balance)
 	account.save()
 
 	history = History(account_number=account.account_number)
@@ -863,6 +965,7 @@ def Deposit(request):
 	history.balance = account.balance
 	history.date = datetime.now().date()
 	history.description = "Deopsit: $" + str(deposit)
+	history.action = get_action_from_index(2)
 	history.save()
 
 	content['account'] = account
@@ -870,52 +973,138 @@ def Deposit(request):
 	content['type'] = m_type
 	return content
 
-def Transfer(request):
-	data = {}
-	transfer = str(request.POST.get('transfer'))
-	acc_no_from = str(request.POST.get('account_from'))
-	acc_no_to = str(request.POST.get('account_to'))
+def last4(account_number):
+	account_number = str(account_number)
+	last = account_number[4]
+	last += account_number[5]
+	last += account_number[6]
+	last += account_number[7]
+	return last
 
-	account_from = locate_account(acc_no_from)
-	account_to = locate_account(acc_no_to)
-	transfer = float(transfer)
-	data['status'] = 1
+def get_user_accounts(user_id):
+	all_accts = Account.objects.all()
+	data = []
 
-	if float(account_from.balance) < transfer:
-		data['status'] = -1
-	else:
-		account_from.balance -= transfer
-		account_to.balance += transfer
-		account_from.save()
-		account_to.save()
-		date = datetime.now().date()
-
-		from_type = "Savings"
-		if account_from.isSavings == False:
-			from_type = "Checking"
-
-		history_from = History(account_number=account_from.account_number)
-		history_to = History(account_number=account_to.account_number)
-
-		history_from.account_type = "Account"
-		history_from.user_id = int(account_from.user_id)
-		history_from.date = date
-		history_from.balance = account_from.balance
-		history_from.description = "Withdrawal: $" + str(transfer)
-
-		history_to.account_type = "Account"		
-		history_to.user_id = int(account_to.user_id)
-		history_to.date = date
-		history_to.balance = account_to.balance
-		history_to.description = "Transfer: $" + str(transfer) + " FROM " + from_type + ": " + str(account_from.account_number)
-
-		history_from.save()
-		history_to.save()
-		data['account_from'] = account_from
-		data['account_to'] = account_to
-		data['history_from'] = history_from
-		data['history_to'] = history_to
+	for a in all_accts:
+		if str(a.user_id) == str(user_id):
+			data.append(a)
 	return data
+
+def propagateTransferOptions(request):
+	options = {}
+	fm_list = []
+	to_list = []
+	user_id = request.user.id
+	account = get_user_accounts(user_id)
+	li_info = []
+	index_to = 1
+	index_fm = 1
+
+	selected_to = request.POST.get('selected_to')
+	selected_fm = request.POST.get('selected_fm')
+	fm = request.POST.get('from_account')
+	to = request.POST.get('to_account')
+
+	if selected_to == None:
+		selected_to = 0
+	if selected_fm == None:
+		selected_fm = 0
+
+	if fm == None:
+		fm = '0'
+	if to == None:
+		tm = '0'
+
+	for a in account:
+		if fm != str(a.account_number):
+			to_list.append(a.account_number)
+			index_fm += 1
+		else:
+			selected_fm = a.account_number
+
+		if to != str(a.account_number):
+			fm_list.append(a.account_number)
+			index_to += 1
+		else:
+			selected_to = a.account_number
+
+	options['fm_list'] = fm_list
+	options['to_list'] = to_list
+	options['from_index'] = selected_fm
+	options['to_index'] = selected_to
+	return options 
+
+def get_account_type_text(isSavings):
+	m_type = "Checking"
+
+	if isSavings == True:
+		m_type = "Savings"
+	return m_type
+
+def Transfer(request):
+	content = {}
+	transfer_amt = decoderCurrency(request, 't_dollars', 't_cents')
+	fm_account_no = str(request.POST.get('from_account'))
+	to_account_no = str(request.POST.get('to_account'))
+
+	fm_account = locate_account(fm_account_no)
+	to_account = locate_account(to_account_no)
+	fm_prev_bn = fm_account.balance
+	to_prev_bn = to_account.balance
+	fm_type = get_account_type_text(fm_account.isSavings)
+	to_type = get_account_type_text(to_account.isSavings)
+
+	content['url'] = 'transfer.html'
+
+	if fm_prev_bn < transfer_amt:
+		content['status'] = 'transfer_error.html'
+		content['type'] = fm_type
+		content['balance'] = fm_prev_bn
+		content['account'] = fm_account_no
+		content['url'] = 'transfer_error.html'
+	else:
+		user_id = request.user.id
+		date = datetime.now().date()
+		to_balance = to_prev_bn + transfer_amt
+		fm_balance = fm_prev_bn - transfer_amt
+
+		to_account.balance = to_balance
+		fm_account.balance = fm_balance
+
+		to_account.save()
+		fm_account.save()
+
+		to_history = History(user_id=user_id)
+		fm_history = History(user_id=user_id)
+
+		to_history.b_balance = to_prev_bn
+		fm_history.b_balance = fm_prev_bn
+
+		to_history.e_balance = to_account.balance
+		fm_history.e_balance = fm_account.balance
+
+		to_history.account_number = to_account_no
+		fm_history.account_number = fm_account_no
+
+		to_history.date = date
+		fm_history.date = date
+
+		to_history.action = get_action_from_index(9)
+		fm_history.action = get_action_from_index(3)
+
+		to_history.account_type = 'Account'
+		fm_history.account_type = 'Account'
+
+		to_history.description = "Transfer of $" + str(transfer_amt) + " received from " + fm_type + " account (" + fm_account_no + ")"
+		fm_history.description = "Transfer of $" + str(transfer_amt) + " to " + to_type + " account (" + to_account_no + ")"
+
+		to_history.save()
+		fm_history.save()
+		content['to_account'] = to_account
+		content['fm_account'] = fm_account
+		content['to_history'] = to_history
+		content['fm_history'] = fm_history
+	return content
 
 def Delete_Account(request):
 	content = {}
@@ -951,6 +1140,7 @@ def New_Account_Active_User(request):
 	history.account_type = "Account"
 	history.balance = float(account.balance)
 	history.description = "Account Opened"
+	history.action = get_action_from_index(0)
 	history.save()
 
 	content['account'] = account
@@ -1020,6 +1210,12 @@ def fetch_content(request, url):
 
 	elif url == "add_account":
 		content = New_Account_Active_User(request)
+
+	elif url == "view_history":
+		content = fetch_account_history(request)
+
+	elif url == "trans0":
+		content = propagateTransferOptions(request)
 
 	return content
 

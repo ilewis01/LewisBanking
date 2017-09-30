@@ -15,57 +15,86 @@
     <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
 </head>
 
-<body class="window_sub_body" onload="init_withdrawal();">
+<body class="window_sub_body" onload="load_dynamic_sel({{from_index}}, {{to_index}});">
 
-		<div class="sub_wrapper">
+		<div class="sub_wrapper_red">
 			<div class="sub_win_close">
 				<a href="javascript: win_visibility(1, 'hide');"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+			</div>
+
+			<div class="w_sub_head" style="margin-bottom:3%;">
+				Transfer Funds
 			</div>
 
 			<div class="cuny-logo2">
 				<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-xs'>
 			</div>
-
-			<div class="w_sub_head">
-				Transfer Funds
-			</div>
 			
-			<div class="w_amount">
-				<table>
-					<tr>
-						<td>
-							<div class="w_sub_label">Enter Amount:</div>
-						</td>
-					</tr>
-				</table>
+			<form action="/transfer0/" method="post" id="transfer_form"> {% csrf_token %}
+				<input type="hidden" name="selected_to" id="selected_to" value="0">
+				<input type="hidden" name="selected_fm" id="selected_fm" value="0">
+				
+				<div class="w_amount">
+					<table>
+						<tr>
+							<td><div class="w_sub_label">From:</div></td>
 
-				<table>
-					<tr>
-						<td><div class="w_sub_label">$</div></td>
-						<td>
-							<div class="w_dollars">
-								<input type="text" name="dollars" id="dollars" required oninput="javascript: entry_error(dollars, 'number', 10);">
-							</div>
-						</td>
+							<td>
+								<div>
+									<select name="from_account" id="from_account" onChange="javascript: loadTransferSelect('from');">
+										<option value="0">Select</option>
 
-						<td>.</td>
+										{% for a in fm_list %}
+											<option value="{{a}}">{{a}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</td>
 
-						<td>
-							<div class="w_cents">
-								<input type="text" name="cents" id="cents" required placeholder="00" oninput="javascript: entry_error(cents, 'number', 2);">
-							</div>
-						</td>
-					</tr>
-				</table>
-			</div>
+							<td><div class="w_sub_label">To:</div></td>
 
-			<form action="/withdraw/" method="post" id="bank_form"> {% csrf_token %}
-			</form>
+							<td>
+								<div>
+									<select name="to_account" id="to_account" onChange="javascript: loadTransferSelect('to');">
+										<option value="0">Select</option>
 
-			<div class="w_btns">
-				<button type="button" onCLick="javascript: w_error();">Proceed</button>
-				<button type="button" onCLick="javascript: win_visibility(1, 'hide');">Cancel</button>
-			</div>
+										{% for b in to_list %}
+											<option value="{{b}}">{{b}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</td>
+						</tr>
+					</table>
+
+					<table>
+						<tr>
+							<td>
+								<div class="w_sub_label">Enter Amount: $</div>
+							</td>
+
+							<td>
+								<div class="w_dollars">
+									<input type="text" name="t_dollars" id="t_dollars" required oninput="javascript: entry_error(t_dollars, 'number', 10);">
+								</div>
+							</td>
+
+							<td>.</td>
+
+							<td>
+								<div class="w_cents">
+									<input type="text" name="t_cents" id="t_cents" required placeholder="00" oninput="javascript: entry_error(t_cents, 'number', 2);">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="w_btns">
+					<button type="button" onCLick="javascript: t_error();">Proceed</button>
+					<button type="button" onCLick="javascript: win_visibility(1, 'hide');">Cancel</button>
+				</div>
+			</form>				
 		</div>
 
 	<!-- Custom JS -->

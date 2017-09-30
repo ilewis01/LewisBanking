@@ -35,4 +35,6 @@ urlpatterns = patterns('',
     url(r'^transfer0/$', 'bank.views.transfer0'),
     url(r'^add_account0/$', 'bank.views.add_account0'),
     url(r'^delete_account0/$', 'bank.views.delete_account0'),
+    url(r'^view_history/$', 'bank.views.view_history'),
+    url(r'^view_history0/$', 'bank.views.view_history0'),
 )

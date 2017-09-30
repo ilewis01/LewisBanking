@@ -1,9 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Action(models.Model):
+	index = models.IntegerField(default=0)
+	action = models.CharField(max_length=50, default=0, blank=True, null=True)
+
+	def __unicode__(self):
+		return self.action
+
+
 class profile(models.Model):
 	user 			= models.OneToOneField(User)
-	accounts		= models.CharField(max_length=100000, default=0, blank=True, null=True)
 	phone 			= models.CharField(max_length=16, default=0, blank=True, null=True)
 	recoveryCode 	= models.CharField(max_length=30, default=None, blank=True, null=True)
 	question1 		= models.IntegerField(default=0)
@@ -47,9 +54,11 @@ class History(models.Model):
 	user_id 		= models.IntegerField(default=0)
 	account_number 	= models.CharField(max_length=8, default=None, blank=True, null=True)
 	description 	= models.CharField(max_length=200, default=None, blank=True, null=True)
-	balance		 	= models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+	b_balance		= models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
+	e_balance		= models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
 	date 			= models.DateField(default=None, blank=True, null=True)
 	account_type 	= models.CharField(max_length=20, default=None, blank=True, null=True)
+	action 			= models.ForeignKey(Action, default=None, blank=True, null=True)
 
 	def __unicode__(self):
 		return str(self.account_number)

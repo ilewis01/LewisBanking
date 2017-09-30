@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
 </head>
 
-<body class="window_sub_body" onload="init_withdrawal();">
+<body class="window_sub_body" onload="">
 
         <div class="sub_wrapper_red">
             <div class="sub_win_close" style="border-bottom:1px solid #cccccc; padding-bottom:1%;">
@@ -23,15 +23,16 @@
             </div>
 
             <div class="w_sub_head" style="margin-bottom:5%; margin-top:4%;">
-                Transfer Complete
+                Transfer Not Complete
             </div>
 
             <div class="cuny-logo2">
                 <img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-xs'>
             </div>
 
-            
-    
+            <div class="transfer_error_div">
+            	You do not have sufficient funds in {{type}} account {{account}} to complete this transaction. Please choose an amount less than ${{balance}}.
+            </div>
 
             <form action="/withdraw/" method="post" id="bank_form"> {% csrf_token %}
             </form>
