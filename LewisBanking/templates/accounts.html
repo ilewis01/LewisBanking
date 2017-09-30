@@ -32,6 +32,10 @@
 
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
 		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
+		<input type="hidden" name="selected_account_number" id="selected_account_number" value="">
+		<input type="hidden" name="selected_date" id="selected_date" value="">
+		<input type="hidden" name="selected_balance" id="selected_balance" value="">
+		<input type="hidden" name="selected_type" id="selected_type" value="">
 		<input type="hidden" name="view_mode" id="view_mode" value="0">
 		<input type="hidden" name="selected_index" id="selected_index" value="0">
 

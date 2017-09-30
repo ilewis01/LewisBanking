@@ -27,23 +27,26 @@
 		<input type="hidden" name="direction" id="direction" value="{{direction}}">
 		<input type="hidden" name="return_class" id="return_class" value="li_clear">
 		<input type="hidden" name="selected_li" id="selected_li" value="li0_change_class">
-		<input type="hidden" name="selected_account" id="selected_account" value="">
+		<input type="hidden" name="selected_account" id="selected_account" value="{{account_number}}">
 		<ul>
 			{% for h in history %}
 			<li>
-				<a href="javascript: load_list_item('{{h.item_id}}');" class="li_a_tag">
-					<div class="{{s.class}}" id="{{h.item_id}}change_class">
+				<div href="javascript: load_list_item('{{h.item_id}}');" class="li_a_tag">
+					<div class="{{h.class}}" id="{{h.item_id}}change_class">
 						<input type="hidden" id="{{h.account_no_id}}" value="{{h.account.account_number}}">
 						<input type="hidden" id="{{h.date_id}}" value="{{h.account.date}}">
 						<input type="hidden" id="{{h.balance_id}}" value="{{h.account.balance}}">
 						<input type="hidden" id="{{h.type_id}}" value="{{h.type}}">
 						
-						<div class='h_date'>{{h.history.date}}</div>
-						<div class="h_available">Available Now:</div>
-						<div class="h_balance">${{h.history.balance}}</div>
-						<div class="h_account">{{h.history.description}}</div>
+						<div class='hi_date'>{{h.history.date}}</div>
+						<div class="hi_action">{{h.history.action}}</div>
+						<div class="hi_label"><em>Starting Balance:</em></div>
+						<div class="">${{h.history.b_balance}}</div>
+						<div class="hi_label"><em>Ending Balance:</em></div>
+						<div class="">${{h.history.e_balance}}</div>
+						<div class="hi_description">{{h.history.description}}</div>
 					</div>
-				</a>
+				</div>
 			</li>
 			{% endfor %}
 		</ul>

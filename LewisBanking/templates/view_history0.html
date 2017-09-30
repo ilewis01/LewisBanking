@@ -18,6 +18,8 @@
 <body style="background-color:white;" onLoad="javascript: load_history();">
 	<form action="/view_history/" method="post" id="load_form"> {% csrf_token %}
 		<input type="hidden" name="selected_account" id="selected_account" value="">
+        <input type="hidden" name="sort" id="sort" value="date">
+        <input type="hidden" name="direction" id="direction" value="descend">
 		Loading...
 	</form>
 

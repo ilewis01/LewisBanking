@@ -560,6 +560,11 @@ function populate_viewer(index)
 	parent.grab('selBaln').innerHTML = m_balc;
 	parent.grab('selDate').innerHTML = m_date;
 	parent.grab('selAcct').innerHTML = m_acct;
+
+	parent.grab('selected_type').value = m_type;
+	parent.grab('selected_balance').value = m_balc;
+	parent.grab('selected_date').value = m_date;
+	parent.grab('selected_account_number').value = m_acct;
 }
 
 function clearSelectedLI_child(index)
@@ -770,11 +775,6 @@ function reload_li_list()
 function init_history(url)
 {
 	var iframe = grab('iframe_list');
-	// var win = frame('iframe_list');
-	// var selected = grab('selected_account_number').value;
-	// var frame_element = win.grab('selected_account');
-	// frame_element.value = selected;
-	// alert(frame_element.value)
 	iframe.src = url;
 }
 

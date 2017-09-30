@@ -782,47 +782,39 @@ def fetch_account_history(request):
 	data = []
 	acct_no = request.POST.get('selected_account')
 	sort = request.POST.get('sort')
-	direction = None
+	direction = request.POST.get('direction')
 	account = locate_account(acct_no)
-
-	if sort == None:
-		sort = "date"
-		direction = "descend"
-	else:
-		direction = request.POST.get('direction')
 
 	history = get_all_history(account, sort, direction)
 	count = 0;
-	m_type = "Checking"
-
-	if account.isSavings == True:
-		m_type = "Savings"
+	m_type = get_account_type_text(account)
 
 	for h in history:
 		d = {}
 
 		if count % 2 == 0:
-			d['class'] = "li_clear"
+			d['class'] = "hi_clear"
 		else:
-			d['class'] = "li_clear"
+			d['class'] = "hi_shade"
 
-		item_id = "li" + str(count) + "_"
-		count += 1
+		item_id = "hi" + str(count) + "_"
 
 		d['item_id'] 		= item_id
 		d['account_no_id'] 	= item_id + "account_number"
 		d['date_id'] 		= item_id + "date"
 		d['balance_id'] 	= item_id + "balance"
 		d['type_id'] 		= item_id + "type"
-		d['description_id'] = item_id + "description"
-		d['history'] = h
-
+		d['description_id'] = item_id + "action"
+		d['action_id'] 		= item_id + "description"
+		d['index'] 			= count
+		d['history'] 		= h
+		count += 1
 		data.append(d)
 
-	sort_opt = singleHistorySortOptions()
-	options = json.dumps(sort_opt)
+	content['sort'] = sort
+	content['direction'] = direction
+	content['account_number'] = acct_no
 	content['history'] = data;
-	content['options'] = options
 	return content
 
 def full_account(user, sort, direction):
@@ -937,9 +929,10 @@ def Withdrawal(request):
 	history = History(account_number=account.account_number)
 	history.user_id = int(account.user_id)
 	history.date = datetime.now().date()
-	history.balance = new_bal
+	history.e_balance = new_bal
+	history.b_balance = prev
 	history.account_type = "Account"
-	history.description = "Withdrawal: $" + str(withdraw)
+	history.description = "Withdrawal in the amount of $" + str(withdraw)
 	history.action = get_action_from_index(1)
 	history.save()
 
@@ -963,9 +956,10 @@ def Deposit(request):
 	history = History(account_number=account.account_number)
 	history.user_id = int(account.user_id)
 	history.account_type = "Account"
-	history.balance = account.balance
+	history.b_balance = previous
+	history.e_balance = account.balance
 	history.date = datetime.now().date()
-	history.description = "Deopsit: $" + str(deposit)
+	history.description = "Deposit in the amount of $" + str(deposit)
 	history.action = get_action_from_index(2)
 	history.save()
 
@@ -1139,8 +1133,9 @@ def New_Account_Active_User(request):
 	history.account_number = account.account_number
 	history.date = date
 	history.account_type = "Account"
-	history.balance = float(account.balance)
-	history.description = "Account Opened"
+	history.e_balance = Decimal(account.balance)
+	history.b_balance = Decimal(0.00)
+	history.description = "New " + act_type_text + " Account"
 	history.action = get_action_from_index(0)
 	history.save()
 
