@@ -620,11 +620,8 @@ function set_frame_list()
 
 function load_frame(action)
 {
-	grab('iframe_list').src = "/load_account_list/";
 	grab('frame1').setAttribute('src', action);
 	visibility(1, "show");
-
-	// frame('iframe_list').
 }
 
 function win_visibility(z_index, mode)
@@ -774,8 +771,21 @@ function reload_li_list()
 
 function init_history(url)
 {
+	var btn = grab('hi_btn');
+	btn.innerHTML = "View All";
+	btn.setAttribute('onCLick', 'javascript: view_all();')
+
 	var iframe = grab('iframe_list');
 	iframe.src = url;
+}
+
+function view_all()
+{
+	var btn = grab('hi_btn');
+	btn.innerHTML = "View Selected Account History";
+	btn.setAttribute('onCLick', "javascript: load_account_sort_options(\'1\'); init_history(\'/view_history0/\');");
+	var iframe = grab('iframe_list');
+	iframe.src = "/load_account_list/";
 }
 
 function load_history()
