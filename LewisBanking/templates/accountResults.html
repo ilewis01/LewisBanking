@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
 </head>
 
-<body class="window_sub_body" >
+<body class="window_sub_body">
 
 		<div class="sub_wrapper_red">
 			<div class="sub_win_close">
@@ -31,7 +31,7 @@
 			</div>
 			
 			<form action="/transfer0/" method="post" id="transfer_form"> {% csrf_token %}
-				<input type="hidden" name="search" id="search" value="">
+				<input type="hidden" name="search" id="search" value="{{search}}">
 				
 				<div class="w_amount">
 					<div class="zero_results">Your search returned 0 results</div>

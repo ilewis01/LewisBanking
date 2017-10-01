@@ -875,8 +875,8 @@ def full_account(user, sort, direction):
 	user_id = str(user.id)
 	sorted_list = []
 	count = 0
-	class1 = "li_clear"
-	class2 = "li_shade"
+	class1 = "li_shade"
+	class2 = "li_clear"
 
 	if direction == "descend":
 		sort = "-" + sort
@@ -894,9 +894,9 @@ def full_account(user, sort, direction):
 				d['type'] = 'Checking'
 
 			if count % 2 == 0:
-				d['class'] = class1
-			else:
 				d['class'] = class2
+			else:
+				d['class'] = class1
 
 			item_id = 'li' + str(count) + "_"
 
@@ -917,8 +917,8 @@ def mega_account_link_raw(h_list):
 	data = []
 	a_list = None
 	count = 0
-	class1 = "li_clear"
-	class2 = "li_shade"
+	class1 = "li_shade"
+	class2 = "li_clear"
 
 	for h in h_list:
 		d = {}
@@ -927,9 +927,9 @@ def mega_account_link_raw(h_list):
 		d['history'] = h
 
 		if count % 2 == 0:
-			d['class'] = class1
-		else:
 			d['class'] = class2
+		else:
+			d['class'] = class1
 		count += 1
 
 		if a_type == "Account":
@@ -1120,6 +1120,7 @@ def account_search_test(request):
 					if search_algorithm(search.lower(), str(h5.action.action).lower()) == True:
 						match = True
 
+	content['search'] = search
 	content['match'] = match
 	return content
 
@@ -1138,6 +1139,12 @@ def account_search_algorithm(request):
 			d['item_id'] = "s" + str(count) + "_"
 			d['account'] = a1
 			d['type'] = 'account'
+			d['m_type'] = get_account_type_text(a1)
+			d['format'] = format_currency(a1.balance)
+			if count % 2 == 0:
+				d['class'] = 'si_clear'
+			else:
+				d['class'] = 'si_shade'
 			count += 1
 			matches.append(d)
 
@@ -1148,6 +1155,12 @@ def account_search_algorithm(request):
 			d['item_id'] = "s" + str(count) + "_"
 			d['account'] = a2
 			d['type'] = 'account'
+			d['m_type'] = get_account_type_text(a2)
+			d['format'] = format_currency(a2.balance)
+			if count % 2 == 0:
+				d['class'] = 'si_clear'
+			else:
+				d['class'] = 'si_shade'
 			count += 1
 			matches.append(d)
 
@@ -1158,6 +1171,12 @@ def account_search_algorithm(request):
 			d['item_id'] = "s" + str(count) + "_"
 			d['account'] = a3
 			d['type'] = 'account'
+			d['m_type'] = get_account_type_text(a3)
+			d['format'] = format_currency(a4.balance)
+			if count % 2 == 0:
+				d['class'] = 'si_clear'
+			else:
+				d['class'] = 'si_shade'
 			count += 1
 			matches.append(d)
 
@@ -1171,6 +1190,12 @@ def account_search_algorithm(request):
 			d['item_id'] = "s" + str(count) + "_"
 			d['account'] = a4
 			d['type'] = 'account'
+			d['m_type'] = get_account_type_text(a4)
+			d['format'] = format_currency(a5.balance)
+			if count % 2 == 0:
+				d['class'] = 'si_clear'
+			else:
+				d['class'] = 'si_shade'
 			count += 1
 			matches.append(d)
 
@@ -1183,7 +1208,14 @@ def account_search_algorithm(request):
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
 				d['type'] = "history"
-				d['history'] = h1
+				d['account'] = h1
+				d['m_type'] = "Transaction History"
+				d['format'] = format_currency(h1.e_balance)
+				d['description'] = str(h1.action.action) + ": " + str(h1.description)
+				if count % 2 == 0:
+					d['class'] = 'si_clear'
+				else:
+					d['class'] = 'si_shade'
 				count += 1
 				matches.append(d)
 
@@ -1193,27 +1225,48 @@ def account_search_algorithm(request):
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
 				d['type'] = "history"
-				d['history'] = h2
+				d['account'] = h2
+				d['m_type'] = "Transaction History"
+				d['format'] = format_currency(h2.e_balance)
+				d['description'] = str(h2.action.action) + ": " + str(h2.description)
+				if count % 2 == 0:
+					d['class'] = 'si_clear'
+				else:
+					d['class'] = 'si_shade'
 				count += 1
 				matches.append(d)
 
 		for h3 in history:
-			if search_algorithm(search, str(h3.e_balance)) == True:
+			if search_algorithm(search, str(h3.b_balance)) == True:
 				d = {}
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
 				d['type'] = "history"
-				d['history'] = h3
+				d['account'] = h3
+				d['m_type'] = "Transaction History"
+				d['formatb'] = format_currency(h3.b_balance)
+				d['description'] = str(h3.action.action) + ": " + str(h3.description)
+				if count % 2 == 0:
+					d['class'] = 'si_clear'
+				else:
+					d['class'] = 'si_shade'
 				count += 1
 				matches.append(d)
 
 		for h4 in history:
-			if search_algorithm(search, str(h4.b_balance)) == True:
+			if search_algorithm(search, str(h4.account_number)) == True:
 				d = {}
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
 				d['type'] = "history"
-				d['history'] = h4
+				d['account'] = h4
+				d['m_type'] = "Transaction History"
+				d['format'] = format_currency(h4.e_balance)
+				d['description'] = str(h4.action.action) + ": " + str(h4.description)
+				if count % 2 == 0:
+					d['class'] = 'si_clear'
+				else:
+					d['class'] = 'si_shade'
 				count += 1
 				matches.append(d)
 
@@ -1223,15 +1276,22 @@ def account_search_algorithm(request):
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
 				d['type'] = "history"
-				d['history'] = h5
+				d['account'] = h5
+				d['m_type'] = "Transaction History"
+				d['format'] = format_currency(h5.e_balance)
+				d['description'] = str(h5.action.action) + ": " + str(h5.description)
+				if count % 2 == 0:
+					d['class'] = 'si_shade'
+				else:
+					d['class'] = 'si_clear'
 				count += 1
 				matches.append(d)
 	content['matches'] = matches
 	content['number'] = count
 	content['phrase'] = "Results"
+	content['search'] = search
 	if len(matches) == 1:
 		content['phrase'] = "Result"
-	print content
 	return content
 
 def propagateTransferOptions(request):

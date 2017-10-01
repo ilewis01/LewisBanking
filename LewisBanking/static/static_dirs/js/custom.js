@@ -783,11 +783,16 @@ function init_history(url)
 function view_all()
 {
 	var btn = grab('hi_btn');
-	grab('tv_head').innerHTML = "Selected Account";
+	display_tv();
 	btn.innerHTML = "View Selected Account's History";
 	btn.setAttribute('onCLick', "javascript: load_account_sort_options(\'1\'); init_history(\'/view_history0/\');");
 	var iframe = grab('iframe_list');
 	iframe.src = "/load_account_list/";
+	grab('icon').style.visibility = "visible";
+	grab('sort_label').style.visibility = "visible";
+	grab('sort_parent').style.visibility = "visible";
+	grab('dir_text').style.visibility = "visible";
+	load_account_sort_options(0)
 }
 
 function load_history()
@@ -900,25 +905,70 @@ function load_a_search_data()
 {
 	var search = parent.grab('search').value;
 	grab('search').value = search;
-	parent.grab('search').value = "";
 	grab('search_form').submit();
 }
 
 function account_search_test()
 {
 	var match = String(grab('match').value);
+	var search = String(grab('search').value);
+	var form = grab('search_form');
 
 	if (match === "False")
 	{
-		var form = grab('search_form');
 		form.action = "/accountResults/";
 		form.submit();
 		win_visibility(1, "show");
 	}
 	else
 	{
-		parent.grab('iframe_list').src = "/account_results_loader/";
+		parent.grab('iframe_list').src = "/final_a_loader/";
 	}
+}
+
+function final_a_loader()
+{
+	var search = parent.grab('search').value;
+	grab('search').value = search;
+	parent.grab('sort_parent').style.visibility = "hidden";
+	parent.grab('sort_label').style.visibility = "hidden";
+	parent.grab('dir_text').style.visibility = "hidden";
+	parent.grab('icon').style.visibility = "hidden";
+	parent.grab('hi_btn').innerHTML = "View All";
+	parent.grab('hi_btn').setAttribute('onCLick', 'javascript: view_all();')
+	grab('search_form').submit();
+}
+
+function set_display_search()
+{	
+	var html = "<div>Search for: <span id=\"s_search\"></span></div>";
+	var html = "<div><span id='s_count'></span> <span id='s_phrase'> Found</span></div>";
+	parent.grab('tv_builder').innerHTML = html;
+}
+
+function set_search_setting()
+{
+	no_results = grab('count').value;
+	phrase = grab('phrase').value;
+	search = parent.grab('search').value;
+
+	html = "<div class=\"sr0\">Search Results:</div>";
+	html += "<div class=\"sr1\">Search for: <span><em>\"" + search + "\"</em></span></div>";
+	html += "<div class=\"sr2\"><span><em>(" + no_results + ") </em></span> <span>" + phrase + " </span>Found</div>";
+	parent.grab('tv_builder').innerHTML = html;
+	parent.grab('search').value = "";
+}
+
+function display_tv()
+{
+	html = "";
+	html += "<div class=\"Selcted_Item\" id=\"tv_head\">Selected Account:</div>"
+	html += "<div class=\"divider\"></div>"
+	html += "<div class=\"inner_class si1\"><span id=\"selType\"></span> <span id=\"selAcct\"></span></div>"
+	html += "<div class=\"inner_class si2\">Active Since <span id=\"selDate\"></span></div>"
+	html += "<div class=\"inner_class si3\">Available Now:<br><span>$</span><span id=\"selBaln\"></span></div>"
+	html += "<div class=\"selected-item-content\"></div>"
+	grab('tv_builder').innerHTML = html;
 }
 
 

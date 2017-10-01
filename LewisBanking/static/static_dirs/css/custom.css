@@ -1251,6 +1251,56 @@ iframe {
 	text-align: left;
 }
 
+.si_clear {
+	text-align: left;
+	border-bottom: 1px solid #666666;
+}
+
+.si_shade {
+	background-color: #b9d2d8;
+	text-align: left;
+	border-bottom: 1px solid #666666;
+}
+
+.si_date {
+	padding-left: 5%;
+	position: relative;
+	float:left;
+	width:130px;
+	font-weight: bold;
+	color:black;
+}
+
+.si_available {
+	padding-left: 5%;
+	position: relative;
+	float:left;
+	width:130px;
+	font-weight: bold;
+	color:#3399cc;
+}
+
+.si_type {
+	font-weight: bold;
+	color:#330000;
+}
+
+.si_balance {
+	padding-left: 5%;
+	font-style: italic;
+	font-weight: bold;
+	font-style: italic;
+	color:black;
+}
+
+.si_description {
+	padding-left: 5%;
+	font-style: italic;
+	font-weight: bold;
+	font-style: italic;
+	color: #666666;
+}
+
 .li_highlight {
 	background-color: orange;
 	height:26px;
@@ -1735,6 +1785,57 @@ iframe {
 	color:#cccccc;
 	font-weight: bold;
 	font-style: italic;
+}
+
+.search_results_header {
+	padding-left: 5%;
+	font-size: 16px;
+	border-bottom: 2px solid black;
+	font-weight: bold;
+	padding-top:1%;
+	padding-bottom:10px;
+	color:#490a14;
+	background-color: #dad0ba;
+}
+
+.sr0 {
+	font-size: 22px;
+	font-weight: bold;
+	font-style: italic;
+	text-align: left;
+	padding-left:20px;
+	width:100%;
+	border-bottom: 1px solid #666666;
+	color:orange;
+	text-shadow: 1px 1px gray;
+	background-color: #f4eddd;
+	padding-top: 1.5%;
+	padding-bottom: 2%;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+
+.sr1 {
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	color:#666666;
+	padding-top:5%;
+	padding-bottom: 1%;
+}
+
+.sr1 span {
+	color:#336699;
+}
+
+.sr2 {
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.sr2 em {
+	color: #660000;
 }
 
 

@@ -246,10 +246,18 @@ def account_search_test(request):
 
 @login_required(login_url='/index')
 def accountResults(request):
-	# content = fetch_content(request, 'account_search')
 	content = {}
+	content['search'] = request.POST.get('search')
 	content.update(csrf(request))
 	return render_to_response('accountResults.html', content)
+
+@login_required(login_url='/index')
+def final_a_loader(request):
+	content = {}
+	content['search'] = request.POST.get('search')
+	content['match'] = request.POST.get('match')
+	content.update(csrf(request))
+	return render_to_response('final_a_loader.html', content)
 
 @login_required(login_url='/index')
 def account_results_loader(request):
