@@ -2,9 +2,11 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: selectBtn('summary');">
+<body onLoad="javascript: set_base_select('btn1', 'text1');">
 	
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
+		<input type='hidden' name="btn" id='btn' value="btn1">
+		<input type='hidden' name="txn" id='txn' value="text1">
 		<div class="data-wrap">
 			<div class="url-wrap">Overview | Banking Summary</div>
 

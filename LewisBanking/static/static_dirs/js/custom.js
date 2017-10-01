@@ -522,6 +522,52 @@ function toggle_dropdown()
 	}
 }
 
+function set_base_select(btn, text)
+{
+	grab(btn).className = "btn-selected";
+	grab(text).className = "btn-selected-text";
+
+	if (String(text) === "text1")
+	{
+		grab('text2').style.borderRight = "1px solid #666666";
+		grab('text3').style.borderRight = "1px solid #666666";
+		grab('text4').style.borderRight = "1px solid #666666";
+	}
+
+	else if (String(text) === "text2")
+	{
+		grab('text3').style.borderRight = "1px solid #666666";
+		grab('text4').style.borderRight = "1px solid #666666";
+	}
+
+	else if (String(text) === "text3")
+	{
+		grab('text1').style.borderRight = "1px solid #666666";
+		grab('text4').style.borderRight = "1px solid #666666";
+	}
+
+	else if (String(text) === "text4")
+	{
+		grab('text1').style.borderRight = "1px solid #666666";
+		grab('text2').style.borderRight = "1px solid #666666";
+	}
+
+	else if (String(text) === "text4")
+	{
+		grab('text1').style.borderRight = "1px solid #666666";
+		grab('text2').style.borderRight = "1px solid #666666";
+		grab('text3').style.borderRight = "1px solid #666666";
+	}
+
+	else
+	{
+		grab('text1').style.borderRight = "1px solid #666666";
+		grab('text2').style.borderRight = "1px solid #666666";
+		grab('text3').style.borderRight = "1px solid #666666";
+		grab('text4').style.borderRight = "1px solid #666666";
+	}
+}
+
 function load_url(url)
 {
 	var form = grab("bank_form");

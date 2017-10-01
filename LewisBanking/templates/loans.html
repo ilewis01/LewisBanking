@@ -2,8 +2,10 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: selectBtn('loans');">
+<body onLoad="javascript: set_base_select('btn3', 'text3');">
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
+		<input type='hidden' name="btn" id='btn' value="btn3">
+		<input type='hidden' name="txn" id='txn' value="text3">
 		<div class="data-wrap">
 			<div class="url-wrap">Loan Management</div>
 		</div>
