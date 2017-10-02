@@ -3,23 +3,11 @@
 {% load staticfiles %}
 
 <body onLoad="javascript: set_base_select('btn1', 'text1');">
-	
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
-		<input type='hidden' name="btn" id='btn' value="btn1">
-		<input type='hidden' name="txn" id='txn' value="text1">
+		<input type='hidden' name="btn" id='btn' value="btn3">
+		<input type='hidden' name="txn" id='txn' value="text3">
 		<div class="data-wrap">
 			<div class="url-wrap">Overview | Banking Summary</div>
-
-			<div class="summary-boxes summary-content">
-				<div class="overview-nav"></div>
-
-				<div class="overview-content">
-				</div>
-			</div>
-
-			<div class="summary-boxes summary-selected-data">
-				
-			</div>
 		</div>
 	</form>
 </body>

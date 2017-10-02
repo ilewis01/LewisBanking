@@ -1519,10 +1519,10 @@ iframe {
 .si1 {
 	margin-top: 2%;
 	/*color: #7d55c7;*/
-	color: #5d8cb3;
+	color: #330066;
 	font-weight: bold;
 	font-style: italic;
-	font-size: 12px;
+	font-size: 13px;
 }
 
 .si2 {
@@ -1533,14 +1533,13 @@ iframe {
 
 .si3 {
 	font-weight: bold;
-	font-size: 15px;
 	font-style: italic;
-	color:#666666;
+	color:#336699;
 	font-size: 13px;
 }
 
 .si3 span {
-	font-size: 15px;
+	font-size: 18px;
 	color:#b02e31;
 }
 

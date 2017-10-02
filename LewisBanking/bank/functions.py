@@ -1300,20 +1300,22 @@ def propagateTransferOptions(request):
 	to_list = []
 	user_id = request.user.id
 	account = get_user_accounts(user_id)
-	li_info = []
-	index_to = 1
-	index_fm = 1
 
-	selected_to = request.POST.get('selected_to')
+	selected_ds = request.POST.get('selected_dollars')
+	selected_cs = request.POST.get('selected_cents')
 	selected_fm = request.POST.get('selected_fm')
+	selected_to = request.POST.get('selected_to')
 	fm = request.POST.get('from_account')
 	to = request.POST.get('to_account')
 
-	if selected_to == None:
-		selected_to = 0
+	if selected_ds == None:
+		selected_ds = ""
+	if selected_cs == None:
+		selected_cs = ""
 	if selected_fm == None:
-		selected_fm = 0
-
+		selected_fm = ""
+	if selected_to == None:
+		selected_to = ""
 	if fm == None:
 		fm = '0'
 	if to == None:
@@ -1322,20 +1324,22 @@ def propagateTransferOptions(request):
 	for a in account:
 		if fm != str(a.account_number):
 			to_list.append(a.account_number)
-			index_fm += 1
 		else:
 			selected_fm = a.account_number
 
 		if to != str(a.account_number):
 			fm_list.append(a.account_number)
-			index_to += 1
 		else:
 			selected_to = a.account_number
 
+	options['json_from'] = json.dumps(fm_list)
+	options['json_to'] = json.dumps(to_list)
 	options['fm_list'] = fm_list
 	options['to_list'] = to_list
-	options['from_index'] = selected_fm
-	options['to_index'] = selected_to
+	options['selected_dollars'] = selected_ds
+	options['selected_cents'] = selected_cs
+	options['selected_from'] = selected_fm
+	options['selected_to'] = selected_to
 	return options 
 
 def get_account_type_text(isSavings):

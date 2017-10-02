@@ -522,6 +522,14 @@ function toggle_dropdown()
 	}
 }
 
+function load_welcome()
+{
+	grab('text1').style.borderRight = "1px solid #666666";
+	grab('text2').style.borderRight = "1px solid #666666";
+	grab('text3').style.borderRight = "1px solid #666666";
+	grab('text4').style.borderRight = "1px solid #666666";
+}
+
 function set_base_select(btn, text)
 {
 	grab(btn).className = "btn-selected";
@@ -552,7 +560,7 @@ function set_base_select(btn, text)
 		grab('text2').style.borderRight = "1px solid #666666";
 	}
 
-	else if (String(text) === "text4")
+	else if (String(text) === "text5")
 	{
 		grab('text1').style.borderRight = "1px solid #666666";
 		grab('text2').style.borderRight = "1px solid #666666";
@@ -821,9 +829,16 @@ function init_history(url)
 	btn.innerHTML = "View All";
 	btn.setAttribute('onCLick', 'javascript: view_all();')
 	grab('tv_head').innerHTML = "Viewing History:";
+	grab('selType2').innerHTML = grab('selected_type').value;
+	grab('selAcct2').innerHTML = grab('selected_account_number').value;
+	// grab('active_div').style.visibility = "hidden";
+	// grab('selDate').style.visibility = "hidden";
 
 	var iframe = grab('iframe_list');
 	iframe.src = url;
+
+	grab('active_div').innerHTML = "";
+	grab('selDate').innerHTML = "";
 }
 
 function view_all()
@@ -839,6 +854,17 @@ function view_all()
 	grab('sort_parent').style.visibility = "visible";
 	grab('dir_text').style.visibility = "visible";
 	load_account_sort_options(0)
+}
+
+function display_tv()
+{
+	html =  "<div class=\"Selcted_Item\" id=\"tv_head\" style=\"margin-top:3.5%;\"><span id=\"selType\"></span> <span id=\"selAcct\"></span></div>"
+	html += "<div class=\"divider\"></div>"
+	html += "<div class=\"inner_class si1\"><span id=\"selType2\"></span> <span id=\"selAcct2\"></span></div>"
+	html += "<div class=\"inner_class si2\" id=\"active_div\">Active Since <span id=\"selDate\"></span></div>"
+	html += "<div class=\"inner_class si3\">Available Now:<br><span>$</span><span id=\"selBaln\"></span></div>"
+	html += "<div class=\"selected-item-content\"></div>"
+	grab('tv_builder').innerHTML = html;
 }
 
 function load_history()
@@ -865,6 +891,70 @@ function loadTransferSelect(changed)
 	grab('selected_to').value = grab('to_account').selectedIndex;
 
 	grab('transfer_form').submit()
+}
+
+function loadFromSelected()
+{
+	grab('selected_fm').value = grab('from_account').value;
+	grab('selected_dollars').value = grab('t_dollars').value;
+	grab('selected_cents').value = grab('t_cents').value;
+
+	grab('transfer_form').submit();
+}
+
+function loadToSelected()
+{
+	grab('selected_to').value = grab('to_account').value;
+	grab('selected_dollars').value = grab('t_dollars').value;
+	grab('selected_cents').value = grab('t_cents').value;
+
+	grab('transfer_form').submit();
+}
+
+function load_dynamic_selectes(fm_list, to_list)
+{
+	var from_select = grab('from_account');
+	var to_select = grab('to_account');
+	var value_fm = grab('selected_fm').value;
+	var value_to = grab('selected_to').value;
+	var index_fm = 0;
+	var index_to = 0;
+
+	build_aft_list(fm_list, from_select);
+	build_aft_list(to_list, to_select);
+
+	for (var i = 0; i < fm_list.length; i++)
+	{
+		if (String(value_fm) === String(fm_list[i]))
+		{
+			index_fm = i + 1;
+			break;
+		}
+	}
+
+	for (var i = 0; i < to_list.length; i++)
+	{
+		if (String(value_to) === String(to_list[i]))
+		{
+			index_to = i + 1;
+			break;
+		}
+	}
+
+	from_select.selectedIndex = index_fm;
+	to_select.selectedIndex = index_to;
+}
+
+function build_aft_list(fm_list, target)
+{
+	var html = "<option value=\"0\">Select</option>";
+
+	for (var i = 0;  i < fm_list.length; i++)
+	{
+		html += "<option value=\"" + fm_list[i] + "\">" + fm_list[i] + "</option>";
+	}
+
+	target.innerHTML = html;
 }
 
 function load_dynamic_sel(a, b)
@@ -1005,17 +1095,7 @@ function set_search_setting()
 	parent.grab('search').value = "";
 }
 
-function display_tv()
-{
-	html = "";
-	html += "<div class=\"Selcted_Item\" id=\"tv_head\">Selected Account:</div>"
-	html += "<div class=\"divider\"></div>"
-	html += "<div class=\"inner_class si1\"><span id=\"selType\"></span> <span id=\"selAcct\"></span></div>"
-	html += "<div class=\"inner_class si2\">Active Since <span id=\"selDate\"></span></div>"
-	html += "<div class=\"inner_class si3\">Available Now:<br><span>$</span><span id=\"selBaln\"></span></div>"
-	html += "<div class=\"selected-item-content\"></div>"
-	grab('tv_builder').innerHTML = html;
-}
+
 
 
 

@@ -128,10 +128,10 @@
 			<div class="summary-boxes2 summary-selected-data">
 				<div class="a_page_selected">
 					<div class="selected-item-wrap" id="tv_builder">
-						<div class="Selcted_Item" id="tv_head">Selected Account:</div>
+						<div class="Selcted_Item" id="tv_head" style="margin-top:3.5%;"><span id="selType"></span> <span id="selAcct"></span></div>
 						<div class="divider"></div>
-						<div class="inner_class si1"><span id="selType"></span> <span id="selAcct"></span></div>
-						<div class="inner_class si2">Active Since <span id="selDate"></span></div>
+						<div class="inner_class si1"><span id="selType2"></span> <span id="selAcct2"></span></div>
+						<div class="inner_class si2" id="active_div">Active Since <span id="selDate"></span></div>
 						<div class="inner_class si3">Available Now:<br><span>$</span><span id="selBaln"></span></div>
 						<div class="selected-item-content"></div>
 					</div>
@@ -154,7 +154,7 @@
 					<button type="button" onCLick="javascript: load_account_sort_options('0'); load_frame('/deposit0/');">Deposit</button>
 					<button type="button" onCLick="javascript: load_account_sort_options('0'); load_frame('/transfer0/');">Transfer</button>
 					<button type="button" id="hi_btn" onCLick="javascript: load_account_sort_options('1'); init_history('/view_history0/');">View Selected Account's History</button>
-					<button type="button" class="a-button-bottom" onCLick="javascript: load_account_sort_options('0'); load_frame('/delete_account0/');">Delete Account</button>
+					<button type="button" class="a-button-bottom" onCLick="javascript: load_account_sort_options('0'); load_frame('/delete_account0/');">Deactivate Account</button>
 				</div>
 
 				<div class="a_right_btm"></div>

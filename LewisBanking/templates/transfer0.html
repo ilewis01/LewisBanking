@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
 </head>
 
-<body class="window_sub_body" onload="load_dynamic_sel({{from_index}}, {{to_index}});">
+<body class="window_sub_body" onload="load_dynamic_selectes({{json_from}}, {{json_to}});">
 
 		<div class="sub_wrapper_red">
 			<div class="sub_win_close">
@@ -31,8 +31,10 @@
 			</div>
 			
 			<form action="/transfer0/" method="post" id="transfer_form"> {% csrf_token %}
-				<input type="hidden" name="selected_to" id="selected_to" value="0">
-				<input type="hidden" name="selected_fm" id="selected_fm" value="0">
+				<input type="hidden" name="selected_to" id="selected_to" value="{{selected_to}}">
+				<input type="hidden" name="selected_fm" id="selected_fm" value="{{selected_from}}">
+				<input type="hidden" name="selected_dollars" id="selected_dollars" value="{{selected_dollars}}">
+				<input type="hidden" name="selected_cents" id="selected_cents" value="{{selected_cents}}">
 				
 				<div class="w_amount">
 					<table>
@@ -41,12 +43,7 @@
 
 							<td>
 								<div>
-									<select name="from_account" id="from_account" onChange="javascript: loadTransferSelect('from');">
-										<option value="0">Select</option>
-
-										{% for a in fm_list %}
-											<option value="{{a}}">{{a}}</option>
-										{% endfor %}
+									<select name="from_account" id="from_account" onChange="javascript: loadFromSelected();">
 									</select>
 								</div>
 							</td>
@@ -55,12 +52,8 @@
 
 							<td>
 								<div>
-									<select name="to_account" id="to_account" onChange="javascript: loadTransferSelect('to');">
-										<option value="0">Select</option>
-
-										{% for b in to_list %}
-											<option value="{{b}}">{{b}}</option>
-										{% endfor %}
+									<select name="to_account" id="to_account" onChange="javascript: loadToSelected();">
+										
 									</select>
 								</div>
 							</td>
@@ -75,7 +68,7 @@
 
 							<td>
 								<div class="w_dollars">
-									<input type="text" name="t_dollars" id="t_dollars" required oninput="javascript: entry_error(t_dollars, 'number', 10);">
+									<input type="text" name="t_dollars" id="t_dollars" required oninput="javascript: entry_error(t_dollars, 'number', 10);" value="{{selected_dollars}}">
 								</div>
 							</td>
 
@@ -83,7 +76,7 @@
 
 							<td>
 								<div class="w_cents">
-									<input type="text" name="t_cents" id="t_cents" required placeholder="00" oninput="javascript: entry_error(t_cents, 'number', 2);">
+									<input type="text" name="t_cents" id="t_cents" required placeholder="00" oninput="javascript: entry_error(t_cents, 'number', 2);" value="{{selected_cents}}">
 								</div>
 							</td>
 						</tr>

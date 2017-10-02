@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: selectBtn('welcome');">
+<body onLoad="javascript: load_welcome();">
 	<form action="" method="post" id="bank_form"> {% csrf_token %}
 		<div class="welcome_holder">
 			Welcome Back, {{user.first_name}}!
