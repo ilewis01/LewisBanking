@@ -2,12 +2,12 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: set_base_select('btn2', 'text2'); initialize_accounts(0); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}});">
+<body onLoad="javascript: set_base_select('btn2', 'text2'); initialize_accounts(0); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}}); adv_visibility('money');">
 
-		<div class="fadeOut" id="z2">
+	<div class="fadeOut" id="z2">
 			<div class="messageWindow" id="messageWindow">
 				<div class="messageNav-short">
-					<a href="javascript: visibility(1, 'hide');">
+					<a href="javascript: visibility(2, 'hide');">
 						<i class="fa fa-window-close-o" aria-hidden="true"></i>
 					</a>
 				</div>
@@ -30,7 +30,33 @@
 			</div>
 		</div>
 
-		<div class="fadeIn" id="z3" style="z-index:3;">
+		<div class="fadeOut" id="z5">
+			<div class="messageWindow" id="messageWindow" style="height:250px;">
+				<div class="messageNav-short">
+					<a href="javascript: visibility(5, 'hide');">
+						<i class="fa fa-window-close-o" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageHeader" id="messageHeader" style="color:#993333;">Error Detected</div>
+
+				<div class="hold_logo">
+					<div class="class_left">
+						<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-small'>
+						<div class="sm-logo-text">Lewis Bank</div>
+					</div>
+
+					<div class="vertical_divider"></div>
+
+					<div class="message_text" id="messageContent5" style="padding-top:7%;">
+					</div>
+				</div>
+
+				<button type="button" onClick="javascript: visibility(5, 'hide');">Close</button>
+			</div>
+		</div>
+
+		<div class="fadeOut" id="z3" style="z-index:3;">
 			<div class="advanced_Search_wrap" id="advanced_Search_wrap" style="width:350px;">
 				<div class="messageNav-solid">
 					<a href="javascript: visibility(3, 'hide');">
@@ -44,135 +70,132 @@
 					<div class="vertical_divider" style="width:20px;"></div>
 
 					<div class="message_text" id="messageContent">
-						<div>
-							<table>
-								<tr>
-									<td>
-										<div class="avd_input_aft">
-											<input type='radio' name="adv_option" id='amt_range' value='amt_range' checked onClick="javascript: adv_visibility('money');">
-										</div>
-									</td>
-
-									<td><div class="avd_label_z3">Dollar Amount Range</div></td>
-								</tr>
-							</table>
-
-							<div id="money_visibility_adv">
+						<form action="//" method="post" id="adv_search_form"> {% csrf_token %}
+							<div>
 								<table>
 									<tr>
-										<td><div style="width:20px;"></div></td>
-
-										<td><div class="from_to_label">From: </div></td>
-
-										<td><div style="margin-right:3px;">$</div></td>
-
 										<td>
-											<input type='text' name="dollars_fm" id="dollars_fm" class="adv_dollars" placeholder="0">
+											<div class="avd_input_aft">
+												<input type='radio' name="adv_option" id='amt_range' value='amt_range' checked onClick="javascript: adv_visibility('money');">
+											</div>
 										</td>
 
-										<td><div><b>.</b></div></td>
-
-										<td><div><input type="text" name="cents_fm" id="cents_fm" class="adv_cents" placeholder="00"></div></td>
-									</tr>
-
-									<tr>
-										<td></td>
-										<td><div class="from_to_label">To: </div></td>
-
-										<td><div style="margin-right:3px;">$</div></td>
-
-										<td>
-											<input type='text' name="dollars_to" id="dollars_to" class="adv_dollars" placeholder="0">
-										</td>
-
-										<td><div><b>.</b></div></td>
-
-										<td><div><input type="text" name="cents_to" id="cents_to" class="adv_cents" placeholder="00"></div></td>
+										<td><div class="avd_label_z3">Dollar Amount Range</div></td>
 									</tr>
 								</table>
+
+								<div id="money_visibility_adv">
+									<table>
+										<tr>
+											<td><div style="width:20px;"></div></td>
+
+											<td><div class="from_to_label">From: </div></td>
+
+											<td><div style="margin-right:3px;">$</div></td>
+
+											<td>
+												<input type='text' name="dollars_fm" id="dollars_fm" class="adv_dollars" placeholder="0" oninput="javascript: entry_error(dollars_fm, 'number', 10);">
+											</td>
+
+											<td><div><b>.</b></div></td>
+
+											<td><div><input type="text" name="cents_fm" id="cents_fm" class="adv_cents" placeholder="00" oninput="javascript: entry_error(cents_fm, 'number', 2);"></div></td>
+										</tr>
+
+										<tr>
+											<td></td>
+											<td><div class="from_to_label">To: </div></td>
+
+											<td><div style="margin-right:3px;">$</div></td>
+
+											<td>
+												<input type='text' name="dollars_to" id="dollars_to" class="adv_dollars" placeholder="0" required oninput="javascript: entry_error(dollars_to, 'number', 10);"> 
+											</td>
+
+											<td><div><b>.</b></div></td>
+
+											<td><div><input type="text" name="cents_to" id="cents_to" class="adv_cents" placeholder="00" oninput="javascript: entry_error(cents_to, 'number', 2);"></div></td>
+										</tr>
+									</table>
+								</div>
 							</div>
-						</div>
 
-						<div>
-							<table>
-								<tr>
-									<td>
-										<div  class="avd_input_aft">
-											<input type='radio' name="adv_option" id='date_range' value='date_range' onClick="javascript: adv_visibility('date');">
-										</div>
-									</td>
-
-									<td><div class="avd_label_z3">Date Range</div></td>
-								</tr>
-							</table>
-
-							<div id="date_visibility_adv">
+							<div>
 								<table>
 									<tr>
-										<td><div class="avd_input_aft"></div></td>
-
-										<td><div class="from_to_label">From:</div></td>
-
 										<td>
-											<div>
-												<select name="mm_fm" id="mm_fm" style="margin-right:5px;"></select>
+											<div  class="avd_input_aft">
+												<input type='radio' name="adv_option" id='date_range' value='date_range' onClick="javascript: adv_visibility('date');">
 											</div>
 										</td>
 
-										<td>
-											<div>
-												<select name="dd_fm" id="dd_fm" style="margin-right:5px;"></select>
-											</div>
-										</td>
-
-										<td>
-											<div>
-												<select name="yy_fm" id="yy_fm"></select>
-											</div>
-										</td>
-
-										<td><div style="height:30px;"></div></td>
-									</tr>
-
-
-
-									<tr>
-										<td><div class="avd_input_aft"></div></td>
-
-										<td><div class="from_to_label">To:</div></td>
-
-										<td>
-											<div>
-												<select name="mm_to" id="mm_to"></select>
-											</div>
-										</td>
-
-										<td>
-											<div>
-												<select name="dd_to" id="dd_to"></select>
-											</div>
-										</td>
-
-										<td>
-											<div>
-												<select name="yy_to" id="yy_to"></select>
-											</div>
-										</td>
+										<td><div class="avd_label_z3">Date Range</div></td>
 									</tr>
 								</table>
-							</div>
 
-							<!-- <div class="adv_pop_buttons">
-								<button>Submit</button>
-								<button type="button" onClick="javascript: visibility(3, 'hide');">Cancel</button>
-							</div> -->
-						</div>
+								<div id="date_visibility_adv">
+									<table>
+										<tr>
+											<td><div class="avd_input_aft"></div></td>
+
+											<td><div class="from_to_label">From:</div></td>
+
+											<td>
+												<div>
+													<select name="mm_fm" id="mm_fm" style="margin-right:5px;"></select>
+												</div>
+											</td>
+
+											<td>
+												<div>
+													<select name="dd_fm" id="dd_fm" style="margin-right:5px;"></select>
+												</div>
+											</td>
+
+											<td>
+												<div>
+													<select name="yy_fm" id="yy_fm"></select>
+												</div>
+											</td>
+
+											<td><div style="height:30px;"></div></td>
+										</tr>
+
+
+
+										<tr>
+											<td><div class="avd_input_aft"></div></td>
+
+											<td><div class="from_to_label">To:</div></td>
+
+											<td>
+												<div>
+													<select name="mm_to" id="mm_to"></select>
+												</div>
+											</td>
+
+											<td>
+												<div>
+													<select name="dd_to" id="dd_to"></select>
+												</div>
+											</td>
+
+											<td>
+												<div>
+													<select name="yy_to" id="yy_to"></select>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
 
 			<div class="adv_pop_buttons">
-				<button type="button">Submit</button>
+				<button type="button" onClick="javascript: a_adv_search_init();">Submit</button>
 				<button type="button" onClick="javascript: visibility(3, 'hide');">Cancel</button>
 			</div>
 		</div>
@@ -187,6 +210,9 @@
 		<input type="hidden" name="selected_index" id="selected_index" value="0">
 		<input type='hidden' name="btn" id='btn' value="btn2">
 		<input type='hidden' name="txn" id='txn' value="text2">
+		<input type="hidden" name="search2" id="search2" value="">
+		<input type="hidden" name="searchType" id="searchType" value="">
+		<input type="hidden" name="advType" id="advType" value="">
 
 		<div class="fadeOut" id="z1">
 			<div class="window1">
@@ -265,7 +291,7 @@
 					<div class="search_icon">
 						<input type="search" placeholder="Search Accounts" id="search" name="search">
 						<div class="search_span">
-							<a href="javascript: initialize_account_search();"><span class="fa fa-search"></span></a>
+							<a href="javascript: normal_search();"><span class="fa fa-search"></span></a>
 						</div>
 					</div>
 				</div>

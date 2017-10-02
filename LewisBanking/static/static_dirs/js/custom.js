@@ -1027,9 +1027,16 @@ function get_sort_options_html(mode)
 	return html
 }
 
+function normal_search()
+{
+	grab('searchType').value = "normal";
+	initialize_account_search();
+}
+
 function initialize_account_search()
 {
 	var search = String(grab('search').value);
+	var searchType = String(grab('searchType').value)
 
 	if (search.length !== 0)
 	{
@@ -1040,7 +1047,18 @@ function initialize_account_search()
 function load_a_search_data()
 {
 	var search = parent.grab('search').value;
+	var searchType = String(parent.grab('searchType').value);
 	grab('search').value = search;
+	grab('searchType').value = searchType;
+
+	if (searchType === 'advanced')
+	{
+		var search2 = parent.grab('search2').value
+		var advType = parent.grab('advType').value
+		grab('search2').value = search2;
+		grab('advType').value = advType
+	}
+
 	grab('search_form').submit();
 }
 
@@ -1142,19 +1160,102 @@ function set_adv_dates(months, days_from, days_to, years)
 
 function adv_visibility(mode)
 {
-	// var money_visibility_adv = grab('money_visibility_adv');
-	// var date_visibility_adv = grab('date_visibility_adv');
+	var money_visibility_adv = grab('money_visibility_adv');
+	var date_visibility_adv = grab('date_visibility_adv');
 
-	// if (mode === "date")
-	// {
-	// 	money_visibility_adv.style.visibility = "hidden";
-	// 	date_visibility_adv.style.visibility = "visible";
-	// }
-	// else if (mode === "money")
-	// {
-	// 	money_visibility_adv.style.visibility = "visible";
-	// 	date_visibility_adv.style.visibility = "hidden";
-	// }
+	if (mode === "date")
+	{
+		money_visibility_adv.style.opacity = "0.5";
+		date_visibility_adv.style.opacity = "1.0";
+
+		grab("dollars_fm").disabled = true;
+		grab("dollars_to").disabled = true;
+		grab("cents_fm").disabled = true;
+		grab("cents_to").disabled = true;
+
+		grab("mm_fm").disabled = false;
+		grab("mm_to").disabled = false;
+		grab("dd_fm").disabled = false;
+		grab("dd_to").disabled = false;
+		grab("yy_fm").disabled = false;
+		grab("yy_to").disabled = false;
+
+	}
+	else if (mode === "money")
+	{
+		money_visibility_adv.style.opacity = "1.0";
+		date_visibility_adv.style.opacity = "0.5";
+
+		grab("mm_fm").disabled = true;
+		grab("mm_to").disabled = true;
+		grab("dd_fm").disabled = true;
+		grab("dd_to").disabled = true;
+		grab("yy_fm").disabled = true;
+		grab("yy_to").disabled = true;
+
+		grab("dollars_fm").disabled = false;
+		grab("dollars_to").disabled = false;
+		grab("cents_fm").disabled = false;
+		grab("cents_to").disabled = false;
+	}
+	grab('advType').value = mode;
+}
+
+function a_adv_search_init()
+{
+	var proceed = true;
+	var s_fm = "";
+	var s_to = "";
+	var isDate = grab('date_range').checked;
+	parent.grab('searchType').value = 'advanced';
+
+	if (isDate === true)
+	{
+		s_fm += String(grab('yy_fm').value);
+		s_fm += "-";
+		s_fm += String(grab('mm_fm').value);
+		s_fm += "-";
+		s_fm += String(grab('dd_fm').value);
+
+		s_to += String(grab('yy_to').value);
+		s_to += "-";
+		s_to += String(grab('mm_to').value);
+		s_to += "-";
+		s_to += String(grab('dd_to').value);
+	}
+
+	else
+	{
+		var fm_cents = String(grab('cents_fm').value);
+		var to_cents = String(grab('cents_to').value);
+		var fm_dollars = String(grab('dollars_fm').value);
+		var to_dollars = String(grab('dollars_to').value);
+
+		if (to_dollars.length === 0)
+		{
+			grab('messageContent5').innerHTML = "You must enter an ending search amount";
+			visibility(5, "show");
+			proceed = false;
+		}
+
+		else 
+		{
+			if (to_cents.length === 0) {to_cents = "00";}
+			if (fm_cents.length === 0) {fm_cents = "00";}
+			if (fm_dollars.length === 0) {fm_dollars = "0";}
+
+			s_fm = fm_dollars + "." + fm_cents;
+			s_to = to_dollars + "." + to_cents;
+		}	
+	}
+
+	if (proceed === true)
+	{
+		grab('search').value = s_fm;
+		grab('search2').value = s_to;
+		visibility(3, 'hide');
+		initialize_account_search();
+	}
 }
 
 function convert_js_months_toString(month)

@@ -1151,59 +1151,66 @@ def account_search_test(request):
 	content = {}
 	search = str(request.POST.get('search'))
 	user_id = str(request.user.id)
+	searchType = str(request.POST.get('searchType'))
 	accounts = get_user_accounts(user_id)
 	match = False
 
-	for a1 in accounts:
-		if search_algorithm(search, a1.account_number) == True:
-			match = True
-
-	if match == False:
-		for a2 in accounts:
-			if search_algorithm(search, str(a2.balance)) == True:
+	if searchType == "normal":
+		for a1 in accounts:
+			if search_algorithm(search, a1.account_number) == True:
 				match = True
 
-	if match == False:
-		for a4 in accounts:
-			if search_algorithm(search, str(a4.date)) == True:
-				match = True
+		if match == False:
+			for a2 in accounts:
+				if search_algorithm(search, str(a2.balance)) == True:
+					match = True
 
-	if match == False:
-		for a5 in accounts:
-			m_type = get_account_type_text(a5.isSavings)
-			m_type = str(m_type).lower()
-			search = search.lower()
-			if search_algorithm(search, m_type) == True:
-				match = True
+		if match == False:
+			for a4 in accounts:
+				if search_algorithm(search, str(a4.date)) == True:
+					match = True
 
-	if match == False:
-		for a in accounts:
-			history = get_all_history(a, 'date', 'descend')
+		if match == False:
+			for a5 in accounts:
+				m_type = get_account_type_text(a5.isSavings)
+				m_type = str(m_type).lower()
+				search = search.lower()
+				if search_algorithm(search, m_type) == True:
+					match = True
 
-			if match == False:
-				for h1 in history:
-					if search_algorithm(search, str(h1.date)) == True:
-						match = True
+		if match == False:
+			for a in accounts:
+				history = get_all_history(a, 'date', 'descend')
 
-			if match == False:
-				for h2 in history:
-					if search_algorithm(search, str(h2.e_balance)) == True:
-						match = True
+				if match == False:
+					for h1 in history:
+						if search_algorithm(search, str(h1.date)) == True:
+							match = True
 
-			if match == False:
-				for h3 in history:
-					if search_algorithm(search, str(h3.e_balance)) == True:
-						match = True
+				if match == False:
+					for h2 in history:
+						if search_algorithm(search, str(h2.e_balance)) == True:
+							match = True
 
-			if match == False:
-				for h4 in history:
-					if search_algorithm(search, str(h4.b_balance)) == True:
-						match = True
+				if match == False:
+					for h3 in history:
+						if search_algorithm(search, str(h3.e_balance)) == True:
+							match = True
 
-			if match == False:
-				for h5 in history:
-					if search_algorithm(search.lower(), str(h5.action.action).lower()) == True:
-						match = True
+				if match == False:
+					for h4 in history:
+						if search_algorithm(search, str(h4.b_balance)) == True:
+							match = True
+
+				if match == False:
+					for h5 in history:
+						if search_algorithm(search.lower(), str(h5.action.action).lower()) == True:
+							match = True
+
+	elif searchType == "advanced":
+		search2 = str(request.POST.get('search2'))
+		advType = str(request.POST.get('advType'))
+		#START THE SEARCH ALGORITHM AND SEE IF A MATCH EXIST...THEN SORT AND PLACE THE MATCHES
 
 	content['search'] = search
 	content['match'] = match
