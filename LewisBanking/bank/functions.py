@@ -42,6 +42,33 @@ def fetchSecurityQuestions2():
 
 	return questions
 
+def convert_month_toString(mm):
+	if mm == 1:
+		mm = "January"
+	elif mm == 2:
+		mm = "February"
+	elif mm == 3:
+		mm = "March"
+	elif mm == 4:
+		mm = "April"
+	elif mm == 5:
+		mm = "May"
+	elif mm == 6:
+		mm = "June"
+	elif mm == 7:
+		mm = "July"
+	elif mm == 8:
+		mm = "August"
+	elif mm == 9:
+		mm = "September"
+	elif mm == 10:
+		mm = "October"
+	elif mm == 11:
+		mm = "November"
+	elif mm == 12:
+		mm = "December"
+	return mm
+
 def fetchActions():
 	actions = []
 	action.append('Opened Account')
@@ -428,15 +455,73 @@ def fetch_sorted_content(request):
 
 def fetchAccountContent(request):
 	content = {}
+	years = []
+	days_from = []
+	days_to = []
+	months = []
 	user = request.user
 	profile = getUserProfile(user)
 	name = name_abv(user)
+	today = datetime.now()
 
+	yy_joined = user.date_joined.year
+	mm_joined = user.date_joined.month
+	dd_joined = user.date_joined.day
+	yy = today.year
+	mm = today.month
+	dd = today.day 
+
+	if yy - yy_joined == 0:
+		years.append(yy)
+
+		for i in range(mm - mm_joined + 1):
+			d = {}
+			d['value'] = mm_joined
+			d['option'] = convert_month_toString(mm_joined)
+			months.append(d)
+			mm_joined += 1
+	else:
+		for j in range(yy - yy_joined + 1):
+			years.append(yy_joined)
+			yy_joined += 1
+
+		for k in range(12):
+			d = {}
+			tm = k + 1
+			d['value'] = tm
+			d['option'] = convert_month_toString(tm)
+			months.append(d)
+
+	num_days_fm = getDays(mm_joined, yy_joined)
+	num_days_to = getDays(mm, yy)
+
+	for l in range(num_days_fm):
+		days_from.append(l + 1)
+
+	for m in range(num_days_to):
+		days_to.append(m + 1)
+
+	content['years'] = json.dumps(years)
+	content['months'] = json.dumps(months)
+	content['days_from'] = json.dumps(days_from)
+	content['days_to'] = json.dumps(days_to)
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
 	content['title'] = "Lewis Bank | Manage Accounts"
 	return content
+
+def getDays(mm, yy):
+	days = 0
+	if mm == 2:
+		days = 28
+		if yy % 4 == 0:
+			days = 29
+	elif mm == 4 or mm == 6 or mm == 9 or mm == 11:
+		days = 30
+	else:
+		days = 31
+	return days
 
 def fetchLoansContent(request):
 	content = {}

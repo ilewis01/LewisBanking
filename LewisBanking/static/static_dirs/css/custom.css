@@ -1837,6 +1837,60 @@ iframe {
 	color: #660000;
 }
 
+.avd_input_aft {
+	width:20px;
+	padding-bottom:3px;
+}
+
+.avd_input_aft input {
+	
+}
+
+.avd_label_z3 {
+	width:150px;
+}
+
+.from_to_label {
+	margin-right:7px;
+	text-align: right;
+	color:#336699;
+}
+
+#money_visibility_adv input {
+	border-radius: 5px;
+}
+
+.adv_dollars {
+	width:90px;
+	text-align: right;
+}
+
+.adv_cents {
+	width:30px;
+	text-align: center;	
+}
+
+.adv_pop_buttons {
+	width:315px;
+	margin:auto;
+	text-align: center;
+	margin-top:100px;
+	z-index:4;
+	position:relative;
+	margin-top:-50px;
+}
+
+.adv_pop_buttons button {
+	border-radius: 5px;
+	width:49%;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.adv_pop_buttons button:hover {
+	background-color: #999999;
+}
+
 
 
 

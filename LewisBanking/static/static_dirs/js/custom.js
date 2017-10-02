@@ -1095,6 +1095,121 @@ function set_search_setting()
 	parent.grab('search').value = "";
 }
 
+function set_adv_dates(months, days_from, days_to, years)
+{
+	var i = 0;
+	html = "";
+	today = new Date();
+	today = today.getDate();
+
+	for (i = 0; i < months.length; i++)
+	{
+		html += "<option value=\"" + months[i]['value'] + "\">" + months[i]['option'] + "</option>";
+	}
+
+	grab('mm_fm').innerHTML = html;
+	grab('mm_to').innerHTML = html;
+	html = "";
+
+	for (i = 0; i < days_from.length; i++)
+	{
+		html += "<option value=\"" + days_from[i] + "\">" + days_from[i] + "</option>";
+	}
+
+	grab('dd_fm').innerHTML = html;
+	html = "";
+
+	for (i = 0; i < days_to.length; i++)
+	{
+		html += "<option value=\"" + days_to[i] + "\">" + days_to[i] + "</option>";
+	}
+
+	grab('dd_to').innerHTML = html;
+	html = "";
+
+	for (i = 0; i < years.length; i++)
+	{
+		html += "<option value=\"" + years[i] + "\">" + years[i] + "</option>";
+	}
+
+	grab('yy_fm').innerHTML = html;
+	grab('yy_to').innerHTML = html;
+
+	grab('mm_to').selectedIndex = months.length - 1;
+	grab('yy_to').selectedIndex = years.length - 1;
+	grab('dd_to').selectedIndex = today - 1;
+}
+
+function adv_visibility(mode)
+{
+	// var money_visibility_adv = grab('money_visibility_adv');
+	// var date_visibility_adv = grab('date_visibility_adv');
+
+	// if (mode === "date")
+	// {
+	// 	money_visibility_adv.style.visibility = "hidden";
+	// 	date_visibility_adv.style.visibility = "visible";
+	// }
+	// else if (mode === "money")
+	// {
+	// 	money_visibility_adv.style.visibility = "visible";
+	// 	date_visibility_adv.style.visibility = "hidden";
+	// }
+}
+
+function convert_js_months_toString(month)
+{
+	if (month === 0)
+	{
+		month = "January";
+	}
+	else if (month === 1)
+	{
+		month = "February";
+	}
+	else if (month === 2)
+	{
+		month = "March";
+	}
+	else if (month === 3)
+	{
+		month = "April";
+	}
+	else if (month === 4)
+	{
+		month = "May";
+	}
+	else if (month === 5)
+	{
+		month = "June";
+	}
+	else if (month === 6)
+	{
+		month = "July";
+	}
+	else if (month === 7)
+	{
+		month = "August";
+	}
+	else if (month === 8)
+	{
+		month = "September";
+	}
+	else if (month === 9)
+	{
+		month = "October";
+	}
+	else if (month === 10)
+	{
+		month = "November";
+	}
+	else if (month === 11)
+	{
+		month = "December";
+	}
+	return month;
+}
+
 
 
 
