@@ -1258,13 +1258,14 @@ def account_search_test(request):
 						match = True
 						break				
 			elif advType == "money":
-				history = get_all_history(a, 'b_balance', 'descend')
+				history = grab_all_user_history(user_id, 'e_balance', 'descend')
 				m_fm = str(search)
 				m_to = str(search2)
 				m_fm = Decimal(m_fm)
 				m_to = Decimal(m_to)
 				for h in history:
-					if (h.b_balance >= m_fm) and (h.b_balance <= m_to) or (h.e_balance >= m_fm) and (h.e_balance <= m_to):
+					transaction = abs(h.e_balance - h.b_balance)
+					if (transaction >= m_fm) and (transaction <= m_to):
 						match = True
 						break
 	content['search'] = search
@@ -1361,8 +1362,8 @@ def advanced_search_algorithm(request):
 		m_fm = str(search)
 		m_to = str(search2)
 		content['adv_search_crit'] = str(m_fm) + " - " + str(m_to)
-		m_fm = Decimal(m_fm)
-		m_to = Decimal(m_to)
+		m_fm = float(m_fm)
+		m_to = float(m_to)
 		for h in history:
 			transaction = abs(h.e_balance - h.b_balance)
 			if (transaction >= m_fm) and (transaction <= m_to):
