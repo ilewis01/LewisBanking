@@ -138,74 +138,29 @@ def get_action_from_index(index):
 def format_currency(value):
 	result = ""
 	value = str(value)
-	length = len(value)
-	dollars = ""
-	breaks = []
-	reverse = []
+	mix = value.split('.')
+	dollars = str(mix[0])
+	d_size = len(dollars)
+	temp = ""
 
-	if value[length - 3] != "." or value[length - 2] != ".":
-		if value[length - 2] == ".":
-			value += "0"
-		elif value[length - 3] != ".":
-			value += ".00"
-
-	cents = value[length - 3]
-	cents += value[length - 2]
-	cents += value[length - 1]
-
-	if cents[0] != ".":
-		cents = ".00"
-
-	for i in range(length):
-		if value[i] != ".":
-			dollars += value[i]
+	for i in range(d_size):
+		if i != 0 and (d_size - i) % 3 == 0:
+			temp += ","
+		temp += dollars[i]
+	
+	if len(mix) == 1:
+		result = temp + ".00"
+	elif len(mix) == 2:
+		cents = str(mix[1])
+		if len(cents) == 1:
+			result = temp + "." + cents + "0"
 		else:
-			break
+			result = temp + "." + cents
+	elif len(mix) == 1 and dollars == "0":
+		result = 0
 
-	if len(dollars) > 3:
-		temp = ""
-		index = len(dollars) - 1
-		count = 0
-
-		for j in range(len(dollars)):
-			temp += dollars[index]
-			index -= 1
-			count += 1
-
-			if count == 3:
-				breaks.append(temp)
-				temp = ""
-				count = 0
-
-		breaks.append(temp)
-
-		for b in breaks:
-			if len(b) == 1:
-				reverse.append(b)
-			elif len(b) == 2:
-				t = b[1]
-				t += b[0]
-				reverse.append(t)
-			else:
-				t = b[2]
-				t += b[1]
-				t += b[0]
-				reverse.append(t)
-
-		f_index = len(reverse)
-		index = f_index - 1
-
-		for r in range(f_index):
-			result += reverse[index]
-			index -= 1
-
-			if index == 0:
-				result += ","
-			else:
-				result += cents
-	else:
-		result = dollars + cents
 	return result
+
 
 def userExist(email):
 	exist = False
@@ -368,9 +323,10 @@ def buildLoan_init(request):
 	history_account.date 			= dates['start']
 	history_account.account_type	= "Account"
 	history_account.user_id			= user.id
-	history_account.description 	= "Account Opened"
+	history_account.description 	= "Loan " + str(loan.account_number) + " of $" + str(loan.loan_amount) + " deposited into new account"
 	history_account.account_number	= account.account_number
-	history_account.balance 		= account.balance
+	history_account.b_balance 		= 0
+	history_account.e_balance 		= account.balance
 	history_account.action 			= get_action_from_index(0)
 	history_account.save()
 
@@ -385,8 +341,9 @@ def buildLoan_init(request):
 	history_loan.user_id			= user.id
 	history_loan.description 		= "Loan Approved and deposited into " + a_type + ": " + str(account.account_number)
 	history_loan.account_number		= loan.account_number
-	history_loan.balance 			= loan.balance
-	listory_loan.action 			= get_action_from_index(5)
+	history_loan.e_balance 			= loan.balance
+	history_loan.b_balance 			= 0
+	history_loan.action 			= get_action_from_index(5)
 	history_loan.save()
 
 	content['user'] = user
@@ -409,7 +366,7 @@ def newLoanDecision(request):
 
 		if userExist(email) == False:
 			term 				= str(request.POST.get("loanTerm"))
-			term 				= float(term)
+			term 				= Decimal(term)
 			rate				= decision['interest']
 			monthly_payment		= calculatePayments(rate, term, principal)
 			monthly_interest 	= monthly_payment - (principal/term)
@@ -757,6 +714,9 @@ def denumerateLoanType(loan_type):
 	return result
 
 def calculatePayments(rate, term, principal):
+	rate = Decimal(rate)
+	principal = Decimal(principal)
+	term = Decimal(term)
 	x1 = (1 + rate)**term
 	numerator = x1 * rate
 	denominator = x1 - 1
@@ -1309,13 +1269,17 @@ def grab_all_user_history(user_id, sort, direction):
 
 def get_h_acct(history):
 	result = None
+	proceed = True
 	account = Account.objects.all().order_by('-account_number')
+	loans = Loan.objects.all().order_by('-start_date')
 
 	for a in account:
 		if str(history.account_number) == str(a.account_number):
-			result = a
-			break
-	return result
+			return a
+	for l in loans:
+		if str(history.account_number) == str(l.account_number):
+			return l
+	return None
 
 def advanced_search_algorithm(request):
 	content = {}
@@ -1345,9 +1309,9 @@ def advanced_search_algorithm(request):
 				d['account'] = h
 				d['disp_account'] = "(" + str(h.account_number) + ")"
 				d['disp_balance_b_head'] = "Starting Balance:"
-				d['disp_balance_b_amt'] = "$" + str(h.b_balance)
+				d['disp_balance_b_amt'] = "$" + format(h.b_balance)
 				d['disp_balance_e_head'] = "Ending Balance:"
-				d['disp_balance_e_amt'] = "$" + str(h.e_balance)
+				d['disp_balance_e_amt'] = "$" + format_currency(h.e_balance)
 				d['m_type2'] = "Type: " + str(get_account_type_text(account))
 				d['format'] = format_currency(account.balance)
 				d['description'] = str(h.action.action) + ": " + str(h.description)
@@ -1371,7 +1335,7 @@ def advanced_search_algorithm(request):
 				d = {}
 				d['index'] = count
 				d['account'] = h
-				d['disp_account'] = "(" + str(h.account_number) + ")"
+				d['disp_account'] = str(h.account_number)
 				d['disp_balance_b_head'] = "Starting Balance:"
 				d['disp_balance_b_amt'] = "$" + str(h.b_balance)
 				d['disp_balance_e_head'] = "Ending Balance:"

@@ -1902,6 +1902,7 @@ iframe {
 	position:relative;
 	float:left;
 	width:103px;
+	font-style: italic;
 }
 
 .disp_bal_head2 {
@@ -1925,6 +1926,7 @@ iframe {
 
 .disp_bal_amt2 {
 	color:red;
+	font-style: italic;
 }
 
 
