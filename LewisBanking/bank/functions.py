@@ -69,6 +69,37 @@ def convert_month_toString(mm):
 		mm = "December"
 	return mm
 
+def convert_str_toDate(value):
+	value = str(value)
+	size = len(value)
+	date = None
+	count = 0
+	temp = ""
+	yy = ""
+	mm = ""
+	dd = ""
+
+	for i in range(size):
+		c = str(value[i])
+		if c != "-":
+			temp += c
+		else:
+			if count == 0:
+				yy = temp
+				temp = ""
+				count += 1
+			elif count == 1:
+				mm = temp
+				temp = ""
+				count += 1
+	dd = temp
+	yy = int(yy)
+	mm = int(mm)
+	dd = int(dd)
+	date = datetime(yy, mm, dd).date()
+	return date
+
+
 def fetchActions():
 	actions = []
 	action.append('Opened Account')
@@ -1153,6 +1184,7 @@ def account_search_test(request):
 	user_id = str(request.user.id)
 	searchType = str(request.POST.get('searchType'))
 	accounts = get_user_accounts(user_id)
+	history = None
 	match = False
 
 	if searchType == "normal":
@@ -1210,10 +1242,154 @@ def account_search_test(request):
 	elif searchType == "advanced":
 		search2 = str(request.POST.get('search2'))
 		advType = str(request.POST.get('advType'))
-		#START THE SEARCH ALGORITHM AND SEE IF A MATCH EXIST...THEN SORT AND PLACE THE MATCHES
+		content['search2'] = search2
+		content['advType'] = advType
+		history = None
 
+		for a in accounts:
+			m_fm = None
+			m_to = None
+			if advType == "date":
+				history = get_all_history(a, 'date', 'descend')
+				m_fm = convert_str_toDate(search)
+				m_to = convert_str_toDate(search2)
+				for h in history:
+					if (h.date >= m_fm) and (h.date <= m_to):
+						match = True
+						break				
+			elif advType == "money":
+				history = get_all_history(a, 'b_balance', 'descend')
+				m_fm = str(search)
+				m_to = str(search2)
+				m_fm = Decimal(m_fm)
+				m_to = Decimal(m_to)
+				for h in history:
+					if (h.b_balance >= m_fm) and (h.b_balance <= m_to) or (h.e_balance >= m_fm) and (h.e_balance <= m_to):
+						match = True
+						break
 	content['search'] = search
+	content['searchType'] = searchType
 	content['match'] = match
+	return content
+
+def advanced_search(value, s_type, s_fm, s_to):
+	match = False
+	s_type = str(s_type)
+
+	if s_type == "date":
+		if value >= s_fm and value <= s_to:
+			match = True 	
+	return match
+
+def super_account_search(request):
+	content = {}
+	searchType = str(request.POST.get('searchType'))
+	if searchType == "normal":
+		content = account_search_algorithm(request)
+	elif searchType == "advanced":
+		content = advanced_search_algorithm(request)
+	return content
+
+def grab_all_user_history(user_id, sort, direction):
+	result = []
+	sort = str(sort)
+	user_id = str(user_id)
+	direction = str(direction)
+
+	if direction == 'descend':
+		sort = "-" + sort
+
+	history = History.objects.all().order_by(sort)
+
+	for h in history:
+		if user_id == str(h.user_id):
+			result.append(h)
+	return result
+
+def get_h_acct(history):
+	result = None
+	account = Account.objects.all().order_by('-account_number')
+
+	for a in account:
+		if str(history.account_number) == str(a.account_number):
+			result = a
+			break
+	return result
+
+def advanced_search_algorithm(request):
+	content = {}
+	user_id = str(request.user.id)
+	search = str(request.POST.get('search'))
+	search2 = str(request.POST.get('search2'))
+	user_id = str(request.user.id)
+	advType = str(request.POST.get('advType'))
+	matches = []
+	count = 0
+	m_fm = None
+	m_to = None
+
+	if advType == "date":
+		m_fm = convert_str_toDate(search)
+		m_to = convert_str_toDate(search2)
+		content['adv_search_crit'] = str(m_fm) + " - " + str(m_to)
+	
+	if advType == "date":
+		history = grab_all_user_history(user_id, 'date', 'descend')		
+			
+		for h in history:
+			if (h.date >= m_fm) and (h.date <= m_to):
+				account = get_h_acct(h)
+				d = {}
+				d['index'] = count
+				d['account'] = h
+				d['disp_account'] = "(" + str(h.account_number) + ")"
+				d['disp_balance_b_head'] = "Starting Balance:"
+				d['disp_balance_b_amt'] = "$" + str(h.b_balance)
+				d['disp_balance_e_head'] = "Ending Balance:"
+				d['disp_balance_e_amt'] = "$" + str(h.e_balance)
+				d['m_type2'] = "Type: " + str(get_account_type_text(account))
+				d['format'] = format_currency(account.balance)
+				d['description'] = str(h.action.action) + ": " + str(h.description)
+				if count % 2 == 0:
+					d['class'] = 'si_clear'
+				else:
+					d['class'] = 'si_shade'
+				count += 1
+				matches.append(d)				
+	elif advType == "money":
+		history = grab_all_user_history(user_id, 'e_balance', 'descend')
+		m_fm = str(search)
+		m_to = str(search2)
+		content['adv_search_crit'] = str(m_fm) + " - " + str(m_to)
+		m_fm = Decimal(m_fm)
+		m_to = Decimal(m_to)
+		for h in history:
+			transaction = abs(h.e_balance - h.b_balance)
+			if (transaction >= m_fm) and (transaction <= m_to):
+				account = get_h_acct(h)
+				d = {}
+				d['index'] = count
+				d['account'] = h
+				d['disp_account'] = "(" + str(h.account_number) + ")"
+				d['disp_balance_b_head'] = "Starting Balance:"
+				d['disp_balance_b_amt'] = "$" + str(h.b_balance)
+				d['disp_balance_e_head'] = "Ending Balance:"
+				d['disp_balance_e_amt'] = "$" + str(h.e_balance)
+				d['m_type2'] = "Type: " + str(get_account_type_text(account))
+				d['format'] = format_currency(account.balance)
+				d['description'] = str(h.action.action) + ": " + str(h.description)
+				if count % 2 == 0:
+					d['class'] = 'si_clear'
+				else:
+					d['class'] = 'si_shade'
+				count += 1
+				matches.append(d)
+				
+	content['matches'] = matches
+	content['number'] = count
+	content['phrase'] = "Results"
+	if len(matches) == 1:
+		content['phrase'] = "Result"
 	return content
 
 def account_search_algorithm(request):
@@ -1489,8 +1665,8 @@ def Transfer(request):
 		to_history.date = date
 		fm_history.date = date
 
-		to_history.action = get_action_from_index(9)
-		fm_history.action = get_action_from_index(3)
+		to_history.action = get_action_from_index(3)
+		fm_history.action = get_action_from_index(9)
 
 		to_history.account_type = 'Account'
 		fm_history.account_type = 'Account'
@@ -1619,7 +1795,7 @@ def fetch_content(request, url):
 		content = propagateTransferOptions(request)
 
 	elif url == "account_search":
-		content = account_search_algorithm(request)
+		content = super_account_search(request)
 
 	elif url == "account_search_test":
 		content = account_search_test(request)

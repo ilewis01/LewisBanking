@@ -240,6 +240,7 @@ def account_search(request):
 
 @login_required(login_url='/index')
 def account_search_test(request):
+	content = {}
 	content = fetch_content(request, 'account_search_test')
 	content.update(csrf(request))
 	return render_to_response('account_search_test.html', content)
@@ -255,6 +256,7 @@ def accountResults(request):
 def final_a_loader(request):
 	content = {}
 	content['search'] = request.POST.get('search')
+	content['search2'] = request.POST.get('search2')
 	content['match'] = request.POST.get('match')
 	content.update(csrf(request))
 	return render_to_response('final_a_loader.html', content)

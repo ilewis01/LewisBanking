@@ -1891,6 +1891,42 @@ iframe {
 	background-color: #999999;
 }
 
+.disp_bal_head1 {
+	margin-left:5%;
+	position:relative;
+	float:left;
+	width:103px;
+}
+
+.disp_bal_amt {
+	position:relative;
+	float:left;
+	width:103px;
+}
+
+.disp_bal_head2 {
+	position:relative;
+	float:left;
+	width:98px;
+}
+
+.disp_s_account {
+	color:blue;
+	font-weight: bold;
+}
+
+.si_type2 {
+	font-weight: bold;
+	color:#330000;
+	position:relative;
+	float:left;
+	width:103px;
+}
+
+.disp_bal_amt2 {
+	color:red;
+}
+
 
 
 

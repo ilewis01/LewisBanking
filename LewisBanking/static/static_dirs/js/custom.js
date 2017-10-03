@@ -1066,6 +1066,7 @@ function account_search_test()
 {
 	var match = String(grab('match').value);
 	var search = String(grab('search').value);
+	var advType = String(grab('advType').value);
 	var form = grab('search_form');
 
 	if (match === "False")
@@ -1083,7 +1084,13 @@ function account_search_test()
 function final_a_loader()
 {
 	var search = parent.grab('search').value;
+	var search2 = parent.grab('search2').value;
+	var searchType = parent.grab('searchType').value;
+	var advType = parent.grab('advType').value;
 	grab('search').value = search;
+	grab('search2').value = search2;
+	grab('searchType').value = searchType;
+	grab('advType').value = advType;
 	parent.grab('sort_parent').style.visibility = "hidden";
 	parent.grab('sort_label').style.visibility = "hidden";
 	parent.grab('dir_text').style.visibility = "hidden";
@@ -1104,7 +1111,13 @@ function set_search_setting()
 {
 	no_results = grab('count').value;
 	phrase = grab('phrase').value;
-	search = parent.grab('search').value;
+	search = String(parent.grab('search').value);
+	searchType = String(parent.grab('searchType').value);
+	
+	if (searchType === 'advanced')
+	{
+		search = String(parent.grab('adv_search_crit').value);
+	}
 
 	html = "<div class=\"sr0\">Search Results:</div>";
 	html += "<div class=\"sr1\">Search for: <span><em>\"" + search + "\"</em></span></div>";
@@ -1222,6 +1235,10 @@ function a_adv_search_init()
 		s_to += String(grab('mm_to').value);
 		s_to += "-";
 		s_to += String(grab('dd_to').value);
+
+		adv_s_date_fm = convert_js_months_toString(Number(grab('mm_fm').value)) + String(grab('dd_fm').value) + "/" + String(grab('yy_fm').value)
+		adv_s_date_to = convert_js_months_toString(Number(grab('mm_to').value)) + String(grab('dd_to').value) + "/" + String(grab('yy_to').value)
+		parent.grab('adv_search_crit').value = adv_s_date_fm + " - " + adv_s_date_to
 	}
 
 	else
@@ -1246,13 +1263,25 @@ function a_adv_search_init()
 
 			s_fm = fm_dollars + "." + fm_cents;
 			s_to = to_dollars + "." + to_cents;
+			parent.grab('adv_search_crit').value = "$" + s_fm + " - $" + s_to
 		}	
 	}
 
 	if (proceed === true)
 	{
+		var now = new Date();
 		grab('search').value = s_fm;
 		grab('search2').value = s_to;
+		grab('dollars_fm').value = "";
+		grab('dollars_to').value = "";
+		grab('cents_fm').value = "";
+		grab('dollars_to').value = "";
+		grab('mm_fm').selectedIndex = 0;
+		grab('dd_fm').selectedIndex = 0;
+		grab('yy_fm').selectedIndex = 0;
+		grab('mm_to').selectedIndex = (grab('mm_to').length) - 1;
+		grab('dd_to').selectedIndex = now.getDate() - 1;
+		grab('yy_to').selectedIndex = 0;
 		visibility(3, 'hide');
 		initialize_account_search();
 	}
@@ -1260,53 +1289,53 @@ function a_adv_search_init()
 
 function convert_js_months_toString(month)
 {
-	if (month === 0)
+	if (month === 1)
 	{
-		month = "January";
-	}
-	else if (month === 1)
-	{
-		month = "February";
+		month = "01/";
 	}
 	else if (month === 2)
 	{
-		month = "March";
+		month = "02/";
 	}
 	else if (month === 3)
 	{
-		month = "April";
+		month = "03/";
 	}
 	else if (month === 4)
 	{
-		month = "May";
+		month = "04/";
 	}
 	else if (month === 5)
 	{
-		month = "June";
+		month = "05/";
 	}
 	else if (month === 6)
 	{
-		month = "July";
+		month = "06/";
 	}
 	else if (month === 7)
 	{
-		month = "August";
+		month = "07/";
 	}
 	else if (month === 8)
 	{
-		month = "September";
+		month = "08/";
 	}
 	else if (month === 9)
 	{
-		month = "October";
+		month = "09/";
 	}
 	else if (month === 10)
 	{
-		month = "November";
+		month = "10/";
+	}
+	else if (month === 12)
+	{
+		month = "11/";
 	}
 	else if (month === 11)
 	{
-		month = "December";
+		month = "12/";
 	}
 	return month;
 }
