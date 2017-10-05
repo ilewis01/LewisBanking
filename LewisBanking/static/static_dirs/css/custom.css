@@ -1237,6 +1237,73 @@ iframe {
 	text-align: left;
 }
 
+.lo_shade {
+	background-color: #f2efe8;
+	height: 185px;
+}
+
+.lo_clear {
+
+}
+
+.lo_date {
+	color:#2a3b71;
+	font-weight: bold;
+	width:50%;
+	padding-left: 5%;
+	position: relative;
+	float:left;
+	font-size: 15px;
+}
+
+.lo_business {
+	font-weight: bold;
+	position: relative;
+	float: right;
+	width:25%;
+	font-style: italic;
+	text-align: right;
+	padding-right:5%;
+	color:blue;
+}
+
+.lo_account {
+	color:#666666;
+	width:25%;
+	font-weight: bold;
+	position: relative;
+	float: left;
+	text-align: right;
+	font-style: italic;
+}
+
+.lo_qa {
+	width: 330px;
+	padding-left: 5%;
+	font-weight: bold;
+}
+
+.lo_qa span {
+	font-style: italic;
+	font-weight: bold;
+	color:#2a3b71;
+}
+
+.right_loan_balance {
+	width:100%;
+	text-align: right;
+	padding-right: 5%;
+	font-size: 15px;
+	font-weight: bold;
+	font-style: italic;
+	color:#620d25;
+	background-color: #c9cdb4;
+}
+
+.right_loan_balance span {
+	color:black;
+}
+
 .hi_highlight {
 	background-color: orange;
 	text-align: left;
@@ -1916,6 +1983,12 @@ iframe {
 	font-weight: bold;
 }
 
+.single_line_account_no {
+	color:blue;
+	font-weight: bold;
+	margin-left:5%;
+}
+
 .si_type2 {
 	font-weight: bold;
 	color:#330000;
@@ -1929,6 +2002,51 @@ iframe {
 	font-style: italic;
 }
 
+.loan_head_sm {
+	width:80%;
+	margin:auto;
+	text-align: left;
+	color:#cccccc;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+.new_rates {
+	width:80%;
+	margin:auto;
+	font-size: 12px;
+	color:#cccccc;
+}
+
+.l_deny_text {
+	width: 80%;
+	margin:auto;
+	color:#cccccc;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 12px;
+	margin-top:-15px;
+}
+
+.l_details_text {
+	width:80%;
+	margin:auto;
+	color:#cccccc;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.l_details_text span {
+	font-style: italic;
+	color:#15d6ed;
+}
+
+.l_deny_text_radio {
+	font-size: 12px;
+	font-weight: bold;
+	font-style: italic;
+	width:80px;
+}
 
 
 

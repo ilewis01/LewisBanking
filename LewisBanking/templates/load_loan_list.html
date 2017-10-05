@@ -21,8 +21,10 @@
     <title></title>
 </head>
 
-<body class="list_frame_body" onLoad="javascript: load_index(0);">
-	<form action="/load_account_list/" method="post" id="frame_form"> {% csrf_token %}
+<!-- onLoad="javascript: load_index(0);" -->
+
+<body class="list_frame_body">
+	<form action="/load_loan_list/" method="post" id="frame_form"> {% csrf_token %}
 		<input type="hidden" name="sort" id="sort" value="{{sort}}">
 		<input type="hidden" name="direction" id="direction" value="{{direction}}">
 		<input type="hidden" name="return_class" id="return_class" value="li_clear">
@@ -31,19 +33,30 @@
 		<input type="hidden" name="selected_index" id="selected_index" value="0">
 
 		<ul>
-			{% for s in sorted_list %}
+			{% for l in loans %}
 			<li>
-				<a href="javascript: load_list_item('{{s.item_id}}', '{{s.index}}');" class="li_a_tag">
-					<div class="{{s.class}}" id="{{s.item_id}}change_class">
-						<input type="hidden" id="{{s.account_no_id}}" value="{{s.account.account_number}}">
-						<input type="hidden" id="{{s.date_id}}" value="{{s.account.date}}">
-						<input type="hidden" id="{{s.balance_id}}" value="{{s.format}}">
-						<input type="hidden" id="{{s.type_id}}" value="{{s.type}}">
+				<a href="javascript: load_list_item('{{l.item_id}}', '{{l.index}}');" class="li_a_tag">
+					<div class="lo_shade">
+						<input type="hidden" id="{{l.account_no_id}}" value="{{l.account.account_number}}">
+						<input type="hidden" id="{{l.balance_id}}" value="{{l.account.balance}}">
+						<input type="hidden" id="{{l.start_date_id}}" value="{{l.account.start_date}}">
+						<input type="hidden" id="{{l.loan_amount_id}}" value="{{l.account.loan_amount}}">
+						<input type="hidden" id="{{l.type_id}}" value="{{l.account.loan_type}}">
+						<input type="hidden" id="{{l.rate_id}}" value="{{l.account.rate}}">
+						<input type="hidden" id="{{l.term_id}}" value="{{l.account.term}}">
 						
-						<div class="li_account">{{s.account.account_number}}</div>
-						<div class="li_type">({{s.type}})</div>
-						<div class="li_available">{{s.available}}</div>
-						<div class="li_balance">${{s.format}}</div>
+						<div class="lo_date">{{l.account.start_date}}</div>
+						<div class="lo_account">({{l.account.account_number}})</div>
+						<div class="lo_business">{{l.loan_type}} LOAN</div>
+						
+						<div class="lo_qa">Principal Balance: <span>${{l.principal}}</span> </div>
+						<div class="lo_qa">Interest Rate: <span>{{l.rate}}</span></div>
+						
+						<div class="lo_qa">Total Interest over {{l.term}}: <span>${{l.total_interest}}</span></div>
+						<div class="lo_qa">Monthly Payments: <span>${{l.payment}}</span></div>
+						<div class="lo_qa">Next Installment: <span>{{l.next_payment}}</span></div>
+
+						<div class="right_loan_balance"><span>Outstanding Balance: </span> ${{l.balance}}</div>
 					</div>
 				</a>
 			</li>

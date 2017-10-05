@@ -161,6 +161,12 @@ def load_account_list(request):
 	return render_to_response('account_list.html', content)
 
 @login_required(login_url='/index')
+def load_loan_list(request):
+	content = fetch_content(request, "loans")
+	content.update(csrf(request))
+	return render_to_response('load_loan_list.html', content)
+
+@login_required(login_url='/index')
 def view_history0(request):
 	content = {}
 	content.update(csrf(request))
@@ -266,6 +272,77 @@ def account_results_loader(request):
 	content = fetch_content(request, 'account_search')
 	content.update(csrf(request))
 	return render_to_response('account_results_loader.html', content)
+
+
+
+
+
+
+@login_required(login_url='/index')
+def user_new_loan0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('loans/user_new_loan0.html', content)
+
+@login_required(login_url='/index')
+def user_new_loan(request):
+	content = fetch_content(request, 'user_new_loan')
+	content.update(csrf(request))
+	return render_to_response(content['url'], content)
+
+@login_required(login_url='/index')
+def user_new_loan_complete(request):
+	content = fetch_content(request, 'user_new_loan_complete')
+	content.update(csrf(request))
+	return render_to_response("loans/user_new_loan_complete.html", content)
+
+@login_required(login_url='/index')
+def refinance0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('loans/refinance0.html', content)
+
+@login_required(login_url='/index')
+def refinance(request):
+	content = fetch_content(request, 'refinance')
+	content.update(csrf(request))
+	return render_to_response('loans/refinance.html', content)
+
+@login_required(login_url='/index')
+def view_Payment_dates0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('loans/view_Payment_dates0.html', content)
+
+@login_required(login_url='/index')
+def view_Payment_dates(request):
+	content = fetch_content(request, 'account_search')
+	content.update(csrf(request))
+	return render_to_response('loans/view_Payment_dates.html', content)
+
+@login_required(login_url='/index')
+def view_loan_history0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('loans/view_loan_history0.html', content)
+
+@login_required(login_url='/index')
+def view_loan_history(request):
+	content = fetch_content(request, 'account_search')
+	content.update(csrf(request))
+	return render_to_response('loans/view_loan_history.html', content)
+
+@login_required(login_url='/index')
+def make_payment0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('loans/make_payment0.html', content)
+
+@login_required(login_url='/index')
+def make_payment(request):
+	content = fetch_content(request, 'make_payment')
+	content.update(csrf(request))
+	return render_to_response('loans/make_payment.html', content)
 
 
 

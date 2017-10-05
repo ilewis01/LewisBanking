@@ -253,6 +253,14 @@ def newUser_account(request):
 
 	return content
 
+def clear_format(value):
+	value = str(value)
+	result = ''
+	for v in value:
+		if v != ",":
+			result += v
+	return Decimal(result)
+
 def buildLoan_init(request):
 	content = {}
 	content['title'] 	= "Lewis Bank | New Loan Application"
@@ -265,7 +273,7 @@ def buildLoan_init(request):
 	dates = loanDates_newLoan(term)
 	loan_type = str(request.POST.get("ltype"))
 	rate = str(request.POST.get("rate"))
-	rate = float(rate)
+	rate = Decimal(rate)
 	rate /= 100
 
 	content['loan_type'] = loan_type
@@ -273,9 +281,9 @@ def buildLoan_init(request):
 	principal = str(request.POST.get("principal"))
 	interest = str(request.POST.get("interest"))
 	payment = str(request.POST.get("payments"))
-	principal = float(principal)
-	interest = float(interest)
-	payment = float(payment)
+	principal = clear_format(principal)
+	interest = clear_format(interest)
+	payment = clear_format(payment)
 	total = principal + interest
 
 	user = User()
@@ -297,12 +305,12 @@ def buildLoan_init(request):
 
 	loan = Loan(user_id=user.id)
 	loan.account_number = fetchAccountNumber(8, True, True, "loan")
-	loan.loan_amount 	= principal
-	loan.balance 		= request.POST.get("total")
+	loan.loan_amount 	= clear_format(principal)
+	loan.balance 		= clear_format(request.POST.get("total"))
 	loan.rate 			= rate
 	loan.total_interest = interest
 	loan.loan_type 		= enumerateLoanType(loan_type)
-	loan.payment 		= payment
+	loan.payment 		= clear_format(payment)
 	loan.term 			= term
 	loan.start_date 	= dates['start']
 	loan.end_date 		= dates['end']
@@ -311,7 +319,7 @@ def buildLoan_init(request):
 	account = Account(user_id=user.id)
 	account.account_number 	= fetchAccountNumber(8, False, True, "account")
 	account.isSavings 		= pythonBool(request.POST.get("account_type"))
-	account.balance 		= request.POST.get("principal")
+	account.balance 		= clear_format(request.POST.get("principal"))
 	account.date 			= dates['start']
 	account.save()
 
@@ -321,7 +329,7 @@ def buildLoan_init(request):
 
 	history_account 				= History()
 	history_account.date 			= dates['start']
-	history_account.account_type	= "Account"
+	history_account.account_type	= get_account_type_text(account.isSaving)
 	history_account.user_id			= user.id
 	history_account.description 	= "Loan " + str(loan.account_number) + " of $" + str(loan.loan_amount) + " deposited into new account"
 	history_account.account_number	= account.account_number
@@ -346,6 +354,7 @@ def buildLoan_init(request):
 	history_loan.action 			= get_action_from_index(5)
 	history_loan.save()
 
+	content['format'] = format_currency(principal)
 	content['user'] = user
 	content['profile'] = profile
 	content['account'] = account
@@ -383,10 +392,10 @@ def newLoanDecision(request):
 			content['status'] 		= 1
 			content['rate'] 		= rate
 			content['term'] 		= term
-			content['principal']	= principal
-			content['payments'] 	= monthly_payment
+			content['principal']	= format_currency(principal)
+			content['payments'] 	= format_currency(monthly_payment)
 			content['interest']		= total_interest
-			content['total']		= total
+			content['total']		= format_currency(total)
 
 			content['type'] 	= request.POST.get("loanType")
 			content['lname'] 	= request.POST.get("lname")
@@ -514,12 +523,86 @@ def getDays(mm, yy):
 def fetchLoansContent(request):
 	content = {}
 	user = request.user
+	user_id = str(user.id)
 	profile = getUserProfile(user)
 	name = name_abv(user)
+	sort = request.POST.get('sort')
+	direction = ""
+	index = 0
+	sorted_list = []
+	user_loans = []
+
+	if sort == None or sort == "None" or sort == "null" or len(sort) == 0:
+		sort = "start_date"
+		direction = 'descend'
+	else:
+		direction = str(request.POST.get('direction'))
+		if direction == "descend":
+			sort = "-" + sort
+
+	print "SORT: " + str(sort)
+
+	loans = Loan.objects.all().order_by(sort)
+
+	for ln in loans:
+		if str(ln.user_id) == user_id:
+			user_loans.append(ln)
+
+	for l in user_loans:
+		d = {}
+
+		loan_type = int(l.loan_type)
+		if loan_type == 0:
+			loan_type = "PERSONAL"
+		elif loan_type == 1:
+			loan_type = "BUSINESS"
+		else:
+			loan_type = "STUDENT"
+
+		today = datetime.now().date()
+		dd = today.day
+		mm = today.month
+		yy = today.year
+
+		if dd > 15:
+			mm += 1
+		if mm == 1:
+			yy += 1
+
+		if index % 2 == 0:
+			d['class'] = 'lo_shade'
+		else:
+			d['class'] = 'lo_clear'
+
+		payment_date = datetime(yy, mm, 15).date()
+
+		d['account'] = l
+		d['balance'] = format_currency(l.balance)
+		d['principal'] = format_currency(l.loan_amount)
+		d['rate'] = str(float(l.rate) * 100) + "%"
+		d['total_interest'] = format_currency(l.total_interest)
+		d['payment'] = format_currency(l.payment)
+		d['term'] = str(l.term) + " months"
+		d['loan_type'] = loan_type
+		d['next_payment'] = payment_date
+
+		item_id = "li" + str(index) + "_"
+		d['index'] = index
+		d['item_id'] = item_id
+		d['account_no_id'] = item_id + str(l.account_number)
+		d['start_date_id'] = item_id + str(l.start_date)
+		d['loan_amount_id'] = item_id + str(l.start_date)
+		d['balance_id'] = item_id + str(l.balance)
+		d['type_id'] = item_id + str(l.loan_type)
+		d['rate_id'] = item_id + str(l.loan_type)
+		d['term_id'] = item_id + str(l.loan_type)
+		sorted_list.append(d)
+		index += 1
 
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
+	content['loans'] = sorted_list
 	content['title'] = "Lewis Bank | Manage Loans"
 	return content
 
@@ -964,10 +1047,7 @@ def full_account(user, sort, direction):
 			d = {}
 			d['account'] = a
 			d['history'] = get_all_history(a, 'date', 'descend')
-			d['type'] = 'Savings'
-
-			if a.isSavings == False:
-				d['type'] = 'Checking'
+			d['type'] = get_account_type_text(a.isSavings)
 
 			if count % 2 == 0:
 				d['class'] = class2
@@ -982,6 +1062,7 @@ def full_account(user, sort, direction):
 			d['balance_id'] = item_id + "balance"
 			d['type_id'] = item_id + "type"
 			d['index'] = count
+			d['available'] = "Available Now:"
 			d['format'] = format_currency(a.balance)
 			count += 1
 
@@ -1307,18 +1388,23 @@ def advanced_search_algorithm(request):
 				d = {}
 				d['index'] = count
 				d['account'] = h
-				d['disp_account'] = "(" + str(h.account_number) + ")"
+				d['disp_account'] = str(h.account_number)
 				d['disp_balance_b_head'] = "Starting Balance:"
-				d['disp_balance_b_amt'] = "$" + format(h.b_balance)
+				d['disp_balance_b_amt'] = "$" + format_currency(h.b_balance)
 				d['disp_balance_e_head'] = "Ending Balance:"
 				d['disp_balance_e_amt'] = "$" + format_currency(h.e_balance)
 				d['m_type2'] = "Type: " + str(get_account_type_text(account))
+				d['available'] = "Available Now:"
 				d['format'] = format_currency(account.balance)
 				d['description'] = str(h.action.action) + ": " + str(h.description)
 				if count % 2 == 0:
 					d['class'] = 'si_clear'
 				else:
 					d['class'] = 'si_shade'
+
+				if str(h.account_type) == "Loan":
+					d['m_type2'] = "Type: Loan"
+					d['available'] = "Balance:"
 				count += 1
 				matches.append(d)				
 	elif advType == "money":
@@ -1371,8 +1457,9 @@ def account_search_algorithm(request):
 			d['index'] = count
 			d['item_id'] = "s" + str(count) + "_"
 			d['account'] = a1
-			d['type'] = 'account'
-			d['m_type'] = get_account_type_text(a1)
+			d['type'] = get_account_type_text(a1.isSavings) + ": " + str(a1.account_number)
+			d['available'] = "Available Now:"
+			d['m_type'] = get_account_type_text(a1.isSavings)
 			d['format'] = format_currency(a1.balance)
 			if count % 2 == 0:
 				d['class'] = 'si_clear'
@@ -1387,8 +1474,9 @@ def account_search_algorithm(request):
 			d['index'] = count
 			d['item_id'] = "s" + str(count) + "_"
 			d['account'] = a2
-			d['type'] = 'account'
-			d['m_type'] = get_account_type_text(a2)
+			d['type'] = get_account_type_text(a2.isSavings) + ": " + str(a2.account_number)
+			d['available'] = "Available Now:"
+			d['m_type'] = get_account_type_text(a2.isSavings)
 			d['format'] = format_currency(a2.balance)
 			if count % 2 == 0:
 				d['class'] = 'si_clear'
@@ -1402,9 +1490,11 @@ def account_search_algorithm(request):
 			d = {}
 			d['index'] = count
 			d['item_id'] = "s" + str(count) + "_"
-			d['account'] = a3
-			d['type'] = 'account'
-			d['m_type'] = get_account_type_text(a3)
+			d['account'] = a4
+			d['available'] = "Available Now:"
+			d['type'] = get_account_type_text(a4.isSavings) + ": " + str(a4.account_number)
+			d['available'] = "Available Now:"
+			d['m_type'] = get_account_type_text(a4.isSavings)
 			d['format'] = format_currency(a4.balance)
 			if count % 2 == 0:
 				d['class'] = 'si_clear'
@@ -1422,8 +1512,9 @@ def account_search_algorithm(request):
 			d['index'] = count
 			d['item_id'] = "s" + str(count) + "_"
 			d['account'] = a4
-			d['type'] = 'account'
-			d['m_type'] = get_account_type_text(a4)
+			d['type'] = get_account_type_text(a5.isSavings) + ": " + str(a5.account_number)
+			d['available'] = "Available Now:"
+			d['m_type'] = get_account_type_text(a5.isSavings)
 			d['format'] = format_currency(a5.balance)
 			if count % 2 == 0:
 				d['class'] = 'si_clear'
@@ -1434,21 +1525,27 @@ def account_search_algorithm(request):
 
 	for a in accounts:
 		history = get_all_history(a, 'date', 'descend')
+		ac_type = get_account_type_text(a.isSavings)
 
 		for h1 in history:
 			if search_algorithm(search, str(h1.date)) == True:
 				d = {}
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = "history"
+				d['type'] = ac_type
 				d['account'] = h1
-				d['m_type'] = "Transaction History"
+				d['m_type'] = "Transaction: " + ac_type
+				d['available'] = "Available Now:"
+				d['text_account_no'] = "Account Number: " + str(h1.account_number)
 				d['format'] = format_currency(h1.e_balance)
 				d['description'] = str(h1.action.action) + ": " + str(h1.description)
 				if count % 2 == 0:
 					d['class'] = 'si_clear'
 				else:
 					d['class'] = 'si_shade'
+				if str(h1.account_type) == "Loan":
+					d['available'] = "Balance"
+					d['m_type'] = "Loan"
 				count += 1
 				matches.append(d)
 
@@ -1457,15 +1554,19 @@ def account_search_algorithm(request):
 				d = {}
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = "history"
+				d['type'] = ac_type
 				d['account'] = h2
-				d['m_type'] = "Transaction History"
+				d['m_type'] = "Transaction: " + ac_type
+				d['available'] = "Available Now:"
 				d['format'] = format_currency(h2.e_balance)
 				d['description'] = str(h2.action.action) + ": " + str(h2.description)
 				if count % 2 == 0:
 					d['class'] = 'si_clear'
 				else:
 					d['class'] = 'si_shade'
+				if str(h2.account_type) == "Loan":
+					d['available'] = "Balance"
+					d['m_type'] = "Loan"
 				count += 1
 				matches.append(d)
 
@@ -1474,15 +1575,19 @@ def account_search_algorithm(request):
 				d = {}
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = "history"
+				d['type'] = ac_type
 				d['account'] = h3
-				d['m_type'] = "Transaction History"
+				d['m_type'] = "Transaction: " + ac_type
+				d['available'] = "Available Now:"
 				d['formatb'] = format_currency(h3.b_balance)
 				d['description'] = str(h3.action.action) + ": " + str(h3.description)
 				if count % 2 == 0:
 					d['class'] = 'si_clear'
 				else:
 					d['class'] = 'si_shade'
+				if str(h3.account_type) == "Loan":
+					d['available'] = "Balance"
+					d['m_type'] = "Loan"
 				count += 1
 				matches.append(d)
 
@@ -1491,15 +1596,19 @@ def account_search_algorithm(request):
 				d = {}
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = "history"
+				d['type'] = ac_type
 				d['account'] = h4
-				d['m_type'] = "Transaction History"
+				d['m_type'] = "Transaction: " + ac_type
+				d['available'] = "Available Now:"
 				d['format'] = format_currency(h4.e_balance)
 				d['description'] = str(h4.action.action) + ": " + str(h4.description)
 				if count % 2 == 0:
 					d['class'] = 'si_clear'
 				else:
 					d['class'] = 'si_shade'
+				if str(h4.account_type) == "Loan":
+					d['available'] = "Balance"
+					d['m_type'] = "Loan"
 				count += 1
 				matches.append(d)
 
@@ -1508,15 +1617,19 @@ def account_search_algorithm(request):
 				d = {}
 				d['index'] = count
 				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = "history"
+				d['type'] = ac_type
 				d['account'] = h5
-				d['m_type'] = "Transaction History"
+				d['m_type'] = "Transaction: " + ac_type
+				d['available'] = "Available Now:"
 				d['format'] = format_currency(h5.e_balance)
 				d['description'] = str(h5.action.action) + ": " + str(h5.description)
 				if count % 2 == 0:
 					d['class'] = 'si_shade'
 				else:
 					d['class'] = 'si_clear'
+				if str(h5.account_type) == "Loan":
+					d['available'] = "Balance"
+					d['m_type'] = "Loan"
 				count += 1
 				matches.append(d)
 	content['matches'] = matches
@@ -1578,7 +1691,7 @@ def propagateTransferOptions(request):
 def get_account_type_text(isSavings):
 	m_type = "Checking"
 
-	if isSavings == True:
+	if str(isSavings) == 'True':
 		m_type = "Savings"
 	return m_type
 
@@ -1765,6 +1878,187 @@ def fetch_content(request, url):
 	elif url == "account_search_test":
 		content = account_search_test(request)
 
+	elif url == "user_new_loan":
+		content = user_new_loan_only(request)
+
+	elif url == "user_new_loan_complete":
+		content = user_new_loan_complete(request)
+
+	elif url == "refinance":
+		content = refinance(request)
+
+	elif url == "make_payment":
+		content = make_payment(request)
+
+	return content
+
+def user_new_loan_only(request):
+	content = {}
+	decision = creditCheck()
+	principal = decoderCurrency(request, "dollars", "cents")
+
+	if decision['decision'] == True:
+		content['url'] 		= "loans/user_new_loan_approved.html"
+		rate 				= decision['interest']
+		loan_type 			= int(request.POST.get('loan_type'))
+		term 				= int(request.POST.get('term'))
+		term 				= Decimal(term)
+		monthly_payment		= calculatePayments(rate, term, principal)
+		monthly_interest 	= monthly_payment - (principal/term)
+		total_interest		= monthly_interest * term
+		total 				= principal + total_interest
+
+		content['rate'] 			= rate
+		content['term'] 			= term
+		content['monthly_payment'] 	= monthly_payment
+		content['monthly_interest'] = monthly_interest
+		content['total_interest'] 	= total_interest
+		content['total_loan'] 		= total
+		content['loan_type'] 		= loan_type
+
+		if loan_type == 0:
+			loan_tt = "Personal"
+		elif loan_type == 1:
+			loan_tt = "Business"
+		else:
+			loan_tt = "Student"
+
+		content['loan_tt'] = loan_tt
+
+		user_id = str(request.user.id)
+		accounts = get_user_accounts(user_id)
+		acct_nos = []
+
+		for a in accounts:
+			d = {}
+			d['value'] = a.account_number
+			d['option'] = get_account_type_text(a.isSavings) + " - " + str(a.account_number)
+			acct_nos.append(d)
+
+		if len(acct_nos) != 0:
+			content['loan_message'] = "Where would you like to deposit the funds?"
+			content['input_label'] = "Account:"
+			content['acct_nos'] = json.dumps(acct_nos)
+			content['action'] = 0
+			content['button'] = "Deposit Funds"
+		else:
+			content['loan_message'] = "What type of account would you like to open?"
+			content['input_label'] = "Type:"
+			content['action'] = 1
+			content['button'] = "Open Account"
+			acct_nos.append('Checking')
+			acct_nos.append('Savings')
+			content['acct_nos'] = json.dumps(acct_nos)
+	else:
+		content['url'] = "loans/user_new_loan_denied.html"
+
+	content['user'] = request.user
+	content['format'] = format_currency(principal)
+	content['principal'] = principal	
+	return content
+
+def user_new_loan_complete(request):
+	content = {}
+	date = datetime.now().date()
+	user_id = str(request.user.id)
+	principal = str(request.POST.get('principal'))
+	rate = str(request.POST.get('rate'))
+	term = str(request.POST.get('term'))
+	monthly_payment = str(request.POST.get('monthly_payment'))
+	monthly_interest = str(request.POST.get('monthly_interest'))
+	total_interest = str(request.POST.get('total_interest'))
+	total_loan = str(request.POST.get('total_loan'))
+	loan_type = str(request.POST.get('loan_type'))
+	action = str(request.POST.get('action'))
+	account_number = None
+	account_type = None
+	loan_typef = None
+	account = None
+
+	principal = Decimal(format(float(principal), '.2f'))
+	monthly_payment = Decimal(format(float(monthly_payment), '.2f'))
+	monthly_interest = Decimal(format(float(monthly_interest), '.2f'))
+	total_interest = Decimal(format(float(total_interest), '.2f'))
+	total_loan = Decimal(format(float(total_loan), '.2f'))
+	rate = Decimal(rate)
+	term = int(term)
+	end_date = date + relativedelta(months=+term)
+
+	if loan_type == "0":
+		loan_typef = "Personal"
+	elif loan_type == "1":
+		loan_typef = "Business"
+	else:
+		loan_typef = "Student"
+
+	if action == "0":
+		account_number = str(request.POST.get('deposit_account'))
+		account = fetchAccount(account_number)
+	elif action == "1":
+		account_type = pythonBool(request.POST.get('account_type'))
+		account = Account(user_id=user_id)
+		account.account_number = fetchAccountNumber(8, False, True, "account")
+		account.isSavings = account_type
+		account.balance = principal
+		account.date = date
+		account.save()
+
+	loan = Loan(user_id=user_id, account_number=account.account_number, loan_amount=principal)
+	loan.balance = total_loan
+	loan.loan_amount = principal
+	loan.account_number = fetchAccountNumber(8, True, True, "loan")
+	loan.term = term
+	loan.rate = rate
+	loan.payment = monthly_payment
+	loan.total_interest = total_interest
+	loan.loan_type = loan_type
+	loan.start_date = date
+	loan.end_date = end_date
+	loan.save()
+
+	history_acct = History(user_id=user_id, account_number=account.account_number, date=date, account_type=(get_account_type_text(account.isSavings)))
+	history_loan = History(user_id=user_id, account_number=loan.account_number, date=date, account_type="Loan")
+
+	history_acct.b_balance = 0.00
+	history_acct.e_balance = principal
+	history_acct.action = get_action_from_index(0)
+	history_acct.description = "$" + format_currency(account.balance) + " deposited into new " + get_account_type_text(account.isSavings) 
+
+	history_loan.b_balance = 0.00
+	history_loan.e_balance = total_loan
+	history_loan.action = get_action_from_index(5)
+	history_loan.description = "Loan of " + format_currency(principal) + " deposited into " + get_account_type_text(account.isSavings) + ": " + str(account.account_number)
+
+	history_acct.save()
+	history_loan.save()
+
+	content['sort'] = "start_date"
+	content['direction'] = "descend"
+	content['loan_typef'] = loan_typef
+	content['principalf'] = "$" + format_currency(principal)
+	content['ratef'] = str(rate * 100) + "%"
+	content['monthly_interestf'] = "$" + format_currency(monthly_interest)
+	content['total_interestf'] = "$" + format_currency(total_interest)
+	content['termf'] = "$" + format_currency(monthly_payment) + " for " + str(term) + " months"
+	content['totalf'] = "$" + format_currency(total_loan)
+	return content
+
+def fetchAccount(account_number):
+	account = None
+	a_list = Account.objects.all()
+
+	for a in a_list:
+		if str(account_number) == str(a.account_number):
+			account = a
+			break
+	return account
+
+def refinance(request):
+	content = {}
+	return content
+
+def make_payment(request):
+	content = {}
 	return content
 
 

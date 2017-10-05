@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Banking Application">
+    <meta name="author" content="Immanuel Lewis">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
+</head>
+
+<body class="window_sub_body" onload="init_user_loan_input({{action}}, {{acct_nos}});">
+    <form action="/user_new_loan_complete/" method="post" id="bank_form"> {% csrf_token %}
+        <input type="hidden" name="rate" id="rate" value="{{rate}}">
+        <input type="hidden" name="term" id="term" value="{{term}}">
+        <input type="hidden" name="monthly_payment" id="monthly_payment" value="{{monthly_payment}}">
+        <input type="hidden" name="monthly_interest" id="monthly_interest" value="{{monthly_interest}}">
+        <input type="hidden" name="total_interest" id="total_interest" value="{{total_interest}}">
+        <input type="hidden" name="total_loan" id="total_loan" value="{{total_loan}}">
+        <input type="hidden" name="loan_type" id="loan_type" value="{{loan_type}}">
+        <input type="hidden" name="principal" id="principal" value="{{principal}}">
+        <input type="hidden" name="action" id="action" value="{{action}}">
+
+        <div class="sub_wrapper_red" style="height:250px;">
+            <div class="sub_win_close" style="border-bottom:1px solid #cccccc; padding-bottom:1%;">
+                <a href="javascript: win_visibility(1, 'hide');"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+            </div>
+
+            <div class="w_sub_head" style="margin-bottom:5%; margin-top:4%;" id="loan_decision">
+                Loan Application Approved
+            </div>
+
+            <div class="cuny-logo2">
+                <img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-xs'>
+            </div>
+
+            
+            <div class="l_deny_text" style="margin-top:10px;">
+                <div style="width:100%;">{{loan_message}}</div>
+                <table>
+                    <tr>
+                        <td><div>{{input_label}}</div></td>
+                        <td><div id="loan_decision_input"></div></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="w_btns">
+                <button type='submit'>{{button}}</button>
+                <button type="button" onCLick="javascript: win_visibility(1, 'hide');">Cancel</button>
+            </div>
+        </div>
+    </form>
+    <!-- Custom JS -->
+    <script src="{% static 'js/custom.js' %}" type="text/javascript"></script>
+</body>

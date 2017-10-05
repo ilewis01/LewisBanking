@@ -3,11 +3,305 @@
 {% load staticfiles %}
 
 <body onLoad="javascript: set_base_select('btn3', 'text3');">
+	<div class="fadeOut" id="z2">
+			<div class="messageWindow" id="messageWindow">
+				<div class="messageNav-short">
+					<a href="javascript: visibility(2, 'hide');">
+						<i class="fa fa-window-close-o" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageHeader" id="messageHeader"></div>
+
+				<div class="hold_logo">
+					<div class="class_left">
+						<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-small'>
+						<div class="sm-logo-text">Lewis Bank</div>
+					</div>
+
+					<div class="vertical_divider"></div>
+
+					<div class="message_text" id="messageContent">
+					</div>
+				</div>
+
+				<button type="button" onClick="javascript: visibility(2, 'hide');">Close</button>
+			</div>
+		</div>
+
+		<div class="fadeOut" id="z5">
+			<div class="messageWindow" id="messageWindow" style="height:250px;">
+				<div class="messageNav-short">
+					<a href="javascript: visibility(5, 'hide');">
+						<i class="fa fa-window-close-o" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageHeader" id="messageHeader" style="color:#993333;">Error Detected</div>
+
+				<div class="hold_logo">
+					<div class="class_left">
+						<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-small'>
+						<div class="sm-logo-text">Lewis Bank</div>
+					</div>
+
+					<div class="vertical_divider"></div>
+
+					<div class="message_text" id="messageContent5" style="padding-top:7%;">
+					</div>
+				</div>
+
+				<button type="button" onClick="javascript: visibility(5, 'hide');">Close</button>
+			</div>
+		</div>
+
+		<div class="fadeOut" id="z3" style="z-index:3;">
+			<div class="advanced_Search_wrap" id="advanced_Search_wrap" style="width:350px;">
+				<div class="messageNav-solid">
+					<a href="javascript: visibility(3, 'hide');">
+						<i class="fa fa-window-close" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="messageHeader" id="messageHeader" style="color:#663399;">Advanced Search Options</div>
+
+				<div class="hold_logo">
+					<div class="vertical_divider" style="width:20px;"></div>
+
+					<div class="message_text" id="messageContent">
+						<form action="//" method="post" id="adv_search_form"> {% csrf_token %}
+							<div>
+								<table>
+									<tr>
+										<td>
+											<div class="avd_input_aft">
+												<input type='radio' name="adv_option" id='amt_range' value='amt_range' checked onClick="javascript: adv_visibility('money');">
+											</div>
+										</td>
+
+										<td><div class="avd_label_z3" style="width:200px;">Transaction Amount Range</div></td>
+									</tr>
+								</table>
+
+								<div id="money_visibility_adv">
+									<table>
+										<tr>
+											<td><div style="width:20px;"></div></td>
+
+											<td><div class="from_to_label">From: </div></td>
+
+											<td><div style="margin-right:3px;">$</div></td>
+
+											<td>
+												<input type='text' name="dollars_fm" id="dollars_fm" class="adv_dollars" placeholder="0" oninput="javascript: entry_error(dollars_fm, 'number', 10);">
+											</td>
+
+											<td><div><b>.</b></div></td>
+
+											<td><div><input type="text" name="cents_fm" id="cents_fm" class="adv_cents" placeholder="00" oninput="javascript: entry_error(cents_fm, 'number', 2);"></div></td>
+										</tr>
+
+										<tr>
+											<td></td>
+											<td><div class="from_to_label">To: </div></td>
+
+											<td><div style="margin-right:3px;">$</div></td>
+
+											<td>
+												<input type='text' name="dollars_to" id="dollars_to" class="adv_dollars" placeholder="0" required oninput="javascript: entry_error(dollars_to, 'number', 10);"> 
+											</td>
+
+											<td><div><b>.</b></div></td>
+
+											<td><div><input type="text" name="cents_to" id="cents_to" class="adv_cents" placeholder="00" oninput="javascript: entry_error(cents_to, 'number', 2);"></div></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<div>
+								<table>
+									<tr>
+										<td>
+											<div  class="avd_input_aft">
+												<input type='radio' name="adv_option" id='date_range' value='date_range' onClick="javascript: adv_visibility('date');">
+											</div>
+										</td>
+
+										<td><div class="avd_label_z3">Date Range</div></td>
+									</tr>
+								</table>
+
+								<div id="date_visibility_adv">
+									<table>
+										<tr>
+											<td><div class="avd_input_aft"></div></td>
+
+											<td><div class="from_to_label">From:</div></td>
+
+											<td>
+												<div>
+													<select name="mm_fm" id="mm_fm" style="margin-right:5px;"></select>
+												</div>
+											</td>
+
+											<td>
+												<div>
+													<select name="dd_fm" id="dd_fm" style="margin-right:5px;"></select>
+												</div>
+											</td>
+
+											<td>
+												<div>
+													<select name="yy_fm" id="yy_fm"></select>
+												</div>
+											</td>
+
+											<td><div style="height:30px;"></div></td>
+										</tr>
+
+
+
+										<tr>
+											<td><div class="avd_input_aft"></div></td>
+
+											<td><div class="from_to_label">To:</div></td>
+
+											<td>
+												<div>
+													<select name="mm_to" id="mm_to"></select>
+												</div>
+											</td>
+
+											<td>
+												<div>
+													<select name="dd_to" id="dd_to"></select>
+												</div>
+											</td>
+
+											<td>
+												<div>
+													<select name="yy_to" id="yy_to"></select>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="adv_pop_buttons">
+				<button type="button" onClick="javascript: a_adv_search_init();">Submit</button>
+				<button type="button" onClick="javascript: visibility(3, 'hide');">Cancel</button>
+			</div>
+		</div>
+
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
+		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
+		<input type="hidden" name="selected_account_number" id="selected_account_number" value="">
+		<input type="hidden" name="selected_date" id="selected_date" value="">
+		<input type="hidden" name="selected_balance" id="selected_balance" value="">
+		<input type="hidden" name="selected_type" id="selected_type" value="">
+		<input type="hidden" name="view_mode" id="view_mode" value="0">
+		<input type="hidden" name="selected_index" id="selected_index" value="0">
 		<input type='hidden' name="btn" id='btn' value="btn3">
 		<input type='hidden' name="txn" id='txn' value="text3">
-		<div class="data-wrap">
+		<input type="hidden" name="search2" id="search2" value="">
+		<input type="hidden" name="searchType" id="searchType" value="">
+		<input type="hidden" name="advType" id="advType" value="">
+		<input type="hidden" name="adv_search_crit" id="adv_search_crit" value="">
+
+		<div class="fadeOut" id="z1">
+			<div class="window1">
+				<iframe src="" id="frame1"></iframe>
+			</div>
+		</div>
+
+		<div class="data-wrap-solid">
 			<div class="url-wrap">Loan Management</div>
+
+			<div class="summary-boxes">
+				<div class='item-list-nav'>
+					<div class='item-list-nav-inner'>
+						<div class="tri-edge">
+							<table>
+								<tr>
+									<td><div class="sortBy1" id="sort_label">Sort By:</div></td>
+
+									<td>
+										<div id="select_builder">
+											<select name="sort_parent" id="sort_parent" onChange="javascript: set_frame_list();">
+												<option value="account_number">Account Number</option>
+												<option value="balance">Balance</option>
+												<option value="start_date">Date Opened</option>
+												<option value="loan_amount">Principal Balance</option>
+												<option value="loan_type">Loan Type</option>
+												<option value="rate">Rate</option>
+												<option value="term">Term</option>
+											</select>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div class="tri-center"></div>
+
+						<div class="tri-edge" id="carat">
+							<a href="javascript: toggle_carat(); set_frame_list();">
+								<div class="direction-holder">
+									<div class="carat-holder" id="icon"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i></div>
+									<div class="dir_text" id="dir_text">Ascending</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="mega-list-holder">
+					<iframe src="/load_loan_list/" id="iframe_list"></iframe>
+				</div>
+
+				<div class="a_right_btm" style="width:100%;"></div>
+			</div>
+
+			<div class="summary-boxes2 summary-selected-data">
+				<div class="a_page_selected">
+					<div class="selected-item-wrap" id="tv_builder">
+						<div class="Selcted_Item" id="tv_head" style="margin-top:3.5%;"><span id="selType"></span> <span id="selAcct"></span></div>
+						<div class="divider"></div>
+						<div class="inner_class si1"><span id="selType2"></span> <span id="selAcct2"></span></div>
+						<div class="inner_class si2" id="active_div">Active Since <span id="selDate"></span></div>
+						<div class="inner_class si3">Available Now:<br><span>$</span><span id="selBaln"></span></div>
+						<div class="selected-item-content"></div>
+					</div>
+				</div>
+
+				<div class="a_page_search">
+					<div class="avd_search">
+						<a href="javascript: visibility(3,'show');">Advanced Search</a>
+					</div>
+					<div class="search_icon">
+						<input type="search" placeholder="Search Loans" id="search" name="search">
+						<div class="search_span">
+							<a href="javascript: normal_search();"><span class="fa fa-search"></span></a>
+						</div>
+					</div>
+				</div>
+
+				<div class="a_page_buttons">
+					<button type="button" onCLick="javascript: load_frame('/view_Payment_dates0/');">Scheduled Payment Dates</button>
+					<button type="button" class="a-button-top" onCLick="javascript: load_frame('/make_payment0/');">Make Payment</button>
+					<button type="button" id="hi_btn" onCLick="javascript: load_frame('/refinance0/');">Refinance</button>
+					<button type="button" onCLick="javascript: load_frame('/view_loan_history0/');">View History</button>
+					<button type="button" class="a-button-bottom" onCLick="javascript: load_frame('/user_new_loan0/');">New Loan</button>
+				</div>
+
+				<div class="a_right_btm"></div>
+			</div>
 		</div>
 	</form>
 </body>

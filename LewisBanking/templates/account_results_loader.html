@@ -36,14 +36,15 @@
 				<div>
 					<div class="{{m.class}}" id="{{m.item_id}}change_class">
 						<div class="si_date">{{m.account.date}}</div>
-						<div class="si_type">{{m.m_type}}</div>
+						<div class="si_type">{{m.type}}{{m.dumb}}</div>
 						<div class="si_type2">{{m.m_type2}}</div>
+						<div class="single_line_account_no">{{m.text_account_no}}</div>
 						<div class="disp_s_account">{{m.disp_account}}</div>
 						<div class="disp_bal_head1">{{m.disp_balance_b_head}}</div>
 						<div class="disp_bal_amt">{{m.disp_balance_b_amt}}</div>
 						<div class="disp_bal_head2">{{m.disp_balance_e_head}}</div>
 						<div class="disp_bal_amt2">{{m.disp_balance_e_amt}}</div>
-						<div class="si_available">Available Now:</div>
+						<div class="si_available">{{m.available}}</div>
 						<div class="si_balance">${{m.format}}</div>
 						<div class="si_description">{{m.description}}</div>
 					</div>

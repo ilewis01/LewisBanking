@@ -65,6 +65,59 @@ function visibility2(z_index, mode)
 
 }
 
+function convert_js_months_toString(month)
+{
+	if (month === 1)
+	{
+		month = "01/";
+	}
+	else if (month === 2)
+	{
+		month = "02/";
+	}
+	else if (month === 3)
+	{
+		month = "03/";
+	}
+	else if (month === 4)
+	{
+		month = "04/";
+	}
+	else if (month === 5)
+	{
+		month = "05/";
+	}
+	else if (month === 6)
+	{
+		month = "06/";
+	}
+	else if (month === 7)
+	{
+		month = "07/";
+	}
+	else if (month === 8)
+	{
+		month = "08/";
+	}
+	else if (month === 9)
+	{
+		month = "09/";
+	}
+	else if (month === 10)
+	{
+		month = "10/";
+	}
+	else if (month === 12)
+	{
+		month = "11/";
+	}
+	else if (month === 11)
+	{
+		month = "12/";
+	}
+	return month;
+}
+
 function load_popWin(z_div, index, target, width, height, message_type) 
 {
 	target.style.width = width;
@@ -1287,58 +1340,64 @@ function a_adv_search_init()
 	}
 }
 
-function convert_js_months_toString(month)
+function w_error_uLoan()
 {
-	if (month === 1)
+	var dollars = String(grab('dollars').value);
+	var cents = String(grab('cents').value);
+
+	if (cents.length === 0)
 	{
-		month = "01/";
+		grab('cents').value = "00";
+		cents = "00";
 	}
-	else if (month === 2)
+
+	if (dollars.length === 0)
 	{
-		month = "02/";
+		parent.grab('messageContent').innerHTML = "You must enter a loan amount";
+		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		var e_win = parent.grab('messageWindow');
+		e_win.style.height = "260px";
+		win_visibility(2, "show");
 	}
-	else if (month === 3)
+
+	else 
 	{
-		month = "03/";
+		grab('bank_form').submit();
 	}
-	else if (month === 4)
-	{
-		month = "04/";
-	}
-	else if (month === 5)
-	{
-		month = "05/";
-	}
-	else if (month === 6)
-	{
-		month = "06/";
-	}
-	else if (month === 7)
-	{
-		month = "07/";
-	}
-	else if (month === 8)
-	{
-		month = "08/";
-	}
-	else if (month === 9)
-	{
-		month = "09/";
-	}
-	else if (month === 10)
-	{
-		month = "10/";
-	}
-	else if (month === 12)
-	{
-		month = "11/";
-	}
-	else if (month === 11)
-	{
-		month = "12/";
-	}
-	return month;
 }
+
+function init_user_loan_input(action, a_list)
+{
+	var html = "";
+	var i = 0;
+	action = String(action);
+
+	if (action === "0")
+	{
+		html += "<select name=\"deposit_account\" id=\"deposit_account\">";
+
+		for (i = 0; i < a_list.length; i++)
+		{
+			html += "<option value=\"" + String(a_list[i]['value']) + "\">" + String(a_list[i]['option']) + "</option>";
+		}
+
+		html += "</select>";
+	}
+
+	else if (action === "1")
+	{
+		html += "<table><tr>";
+		html += "<td><div><input type=\"radio\" name=\"account_type\" value=\"False\" checked></div></td>";
+		html += "<td><div class=\"l_deny_text_radio\">Checking</div></td>";
+		html += "<td><div><input type=\"radio\" name=\"account_type\" value=\"True\"></div></td>";
+		html += "<td><div class=\"l_deny_text_radio\">Savings</div></td>";
+		html += "</tr></table>";
+	}
+
+	grab('loan_decision_input').innerHTML = html;
+}
+
+
 
 
 
