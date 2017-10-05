@@ -527,22 +527,25 @@ def fetchLoansContent(request):
 	profile = getUserProfile(user)
 	name = name_abv(user)
 	sort = request.POST.get('sort')
-	direction = ""
+	direction = request.POST.get('direction')
 	index = 0
 	sorted_list = []
 	user_loans = []
+	m_sort = sort
+
+	if direction == None or direction == "None" or direction == "null" or len(direction) == 0:
+		direction = "descend"
 
 	if sort == None or sort == "None" or sort == "null" or len(sort) == 0:
 		sort = "start_date"
-		direction = 'descend'
-	else:
-		direction = str(request.POST.get('direction'))
-		if direction == "descend":
-			sort = "-" + sort
 
-	print "SORT: " + str(sort)
+	sort = str(sort)
+	direction = str(direction)
 
-	loans = Loan.objects.all().order_by(sort)
+	if direction == "descend":
+		m_sort = "-" + sort
+
+	loans = Loan.objects.all().order_by(m_sort)
 
 	for ln in loans:
 		if str(ln.user_id) == user_id:
@@ -571,8 +574,14 @@ def fetchLoansContent(request):
 
 		if index % 2 == 0:
 			d['class'] = 'lo_shade'
+			d['class2'] = 'right_loan_balance'
 		else:
 			d['class'] = 'lo_clear'
+			d['class2'] = 'right_loan_balance2'
+
+		if index == 0:
+			d['class'] = 'lo_select'
+			d['class2'] = 'rl_selected'
 
 		payment_date = datetime(yy, mm, 15).date()
 
@@ -589,16 +598,18 @@ def fetchLoansContent(request):
 		item_id = "li" + str(index) + "_"
 		d['index'] = index
 		d['item_id'] = item_id
-		d['account_no_id'] = item_id + str(l.account_number)
-		d['start_date_id'] = item_id + str(l.start_date)
-		d['loan_amount_id'] = item_id + str(l.start_date)
-		d['balance_id'] = item_id + str(l.balance)
-		d['type_id'] = item_id + str(l.loan_type)
-		d['rate_id'] = item_id + str(l.loan_type)
-		d['term_id'] = item_id + str(l.loan_type)
+		d['account_no_id'] = item_id + "account_number"
+		d['start_date_id'] = item_id + "start_date"
+		d['loan_amount_id'] = item_id + "principal"
+		d['balance_id'] = item_id + "balance"
+		d['type_id'] = item_id + "type"
+		d['rate_id'] = item_id + "rate"
+		d['term_id'] = item_id + "term"
 		sorted_list.append(d)
 		index += 1
 
+	content['direction'] = direction
+	content['sort'] = sort
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile

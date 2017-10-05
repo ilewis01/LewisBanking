@@ -1240,10 +1240,60 @@ iframe {
 .lo_shade {
 	background-color: #f2efe8;
 	height: 185px;
+	border-bottom: 2px solid black;
 }
 
 .lo_clear {
+	background-color: white;
+	height:185px;
+	border-bottom: 2px solid black;
+}
 
+.lo_select {
+	background-color: #ded5ec;
+	height: 185px;
+	border-bottom: 2px solid black;
+}
+
+.rl_selected {
+	width:100%;
+	text-align: right;
+	padding-right: 5%;
+	font-size: 15px;
+	font-weight: bold;
+	font-style: italic;
+	color:#620d25;
+	background-color: #a79fb3;
+}
+
+.right_loan_balance {
+	width:100%;
+	text-align: right;
+	padding-right: 5%;
+	font-size: 15px;
+	font-weight: bold;
+	font-style: italic;
+	color:#620d25;
+	background-color: #c9cdb4;
+}
+
+.right_loan_balance2 {
+	width:100%;
+	text-align: right;
+	padding-right: 5%;
+	font-size: 15px;
+	font-weight: bold;
+	font-style: italic;
+	color:#620d25;
+	background-color: #cccccc;
+}
+
+.right_loan_balance span {
+	color:black;
+}
+
+.right_loan_balance2 span {
+	color:black;
 }
 
 .lo_date {
@@ -1287,21 +1337,6 @@ iframe {
 	font-style: italic;
 	font-weight: bold;
 	color:#2a3b71;
-}
-
-.right_loan_balance {
-	width:100%;
-	text-align: right;
-	padding-right: 5%;
-	font-size: 15px;
-	font-weight: bold;
-	font-style: italic;
-	color:#620d25;
-	background-color: #c9cdb4;
-}
-
-.right_loan_balance span {
-	color:black;
 }
 
 .hi_highlight {

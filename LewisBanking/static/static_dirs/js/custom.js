@@ -486,6 +486,47 @@ function get_error_html(error_list)
 	return html;
 }
 
+function initialize_loans(selected_index)
+{
+	var win = frame('iframe_list');
+	var sort = String(win.grab('sort').value);
+	var hidden = win.grab('direction');
+	var direction = String(hidden.value);
+	var select = grab('sort_parent');
+	var dir_text = parent.grab('dir_text');
+	var icon = parent.grab('icon');
+
+	set_sort_select_loans(select, sort);
+	set_direction(icon, dir_text, hidden, direction);
+
+	var acct_no = win.grab('li0_account_number').value;
+	var date = win.grab('li0_start_date').value;
+	var principal = win.grab('li0_principal').value;
+	var balance = win.grab('li0_balance').value;
+	var type = win.grab('li0_type').value;
+	var rate = win.grab('li0_rate').value;
+	var term = win.grab('li0_term').value;
+
+	grab('selected_account_number').value = acct_no;
+	grab('selected_date').value = date;
+	grab('selected_principal').value = principal;
+	grab('selected_balance').value = balance;
+	grab('selected_type').value = type;
+	grab('selected_rate').value = rate;
+	grab('selected_term').value = term;
+
+	type = Number(type);
+	if (type === 0) {type = "Personal Loan";}
+	else if (type === 1) {type = "Business Loan";}
+	else if (type === 2) {type = "Student Loan";}
+
+	grab('selAcct').innerHTML = acct_no;
+	grab('selBaln').innerHTML = balance;
+	grab('selType').innerHTML = type;
+
+	grab('selected_index').value = Number(selected_index);
+}
+
 function initialize_accounts(selected_index)
 {
 	var win = frame('iframe_list');
@@ -537,6 +578,44 @@ function set_sort_select(select, sort)
 	else if (sort === "date")
 	{
 		select.selectedIndex = 3;
+	}
+}
+
+function set_sort_select_loans(select, sort)
+{
+	if (sort === "account_number")
+	{
+		select.selectedIndex = 0;
+	}
+
+	else if (sort === "balance")
+	{
+		select.selectedIndex = 1;
+	}
+
+	else if (sort === "start_date")
+	{
+		select.selectedIndex = 2;
+	}
+
+	else if (sort === "loan_amount")
+	{
+		select.selectedIndex = 4;
+	}
+
+	else if (sort === "loan_type")
+	{
+		select.selectedIndex = 5;
+	}
+
+	else if (sort === "rate")
+	{
+		select.selectedIndex = 6;
+	}
+
+	else if (sort === "term")
+	{
+		select.selectedIndex = 7;
 	}
 }
 
@@ -643,6 +722,26 @@ function load_list_item(item_id, index)
 	load_index(index);	
 }
 
+function load_loan_item(item_id, index)
+{
+	var prev_index = grab('selected_index').value;
+	clearSelectedLo_child(prev_index);
+	load_loan(index);
+}
+
+function load_loan(index)
+{
+	var prefix = "li" + String(index) + "_";
+	var div_name = prefix + "change_class";
+	var low_name = prefix + "low_class";
+	var div = grab(div_name);
+	var low = grab(low_name);
+	div.className = "lo_select";
+	low.className = "rl_selected";
+	grab('selected_index').value = index;
+	populate_loan_viewer(index);
+}
+
 function load_index(index)
 {
 	var prefix = "li" + String(index) + "_";
@@ -674,6 +773,32 @@ function populate_viewer(index)
 	parent.grab('selected_account_number').value = m_acct;
 }
 
+function populate_loan_viewer(index)
+{
+	var t_name = "li" + String(index) + "_type";
+	var a_name = "li" + String(index) + "_account_number";
+	var b_name = "li" + String(index) + "_format_balance";
+	var r_name = "li" + String(index) + "_balance";
+
+	var m_type = String(grab(t_name).value);
+	var m_account = String(grab(a_name).value);
+	var m_balance = String(grab(b_name).value);
+	var real_balance = String(grab(r_name).value);
+
+	if (m_type === "0") {m_type = "Personal Loan";}
+	else if (m_type === "1") {m_type = "Business Loan";}
+	else if (m_type === "2") {m_type = "Student Loan";}
+
+	parent.grab('selType').innerHTML = m_type;
+	parent.grab('selAcct').innerHTML = m_account;
+	parent.grab('selBaln').innerHTML = m_balance;
+
+	parent.grab('selected_type').value = m_type;
+	parent.grab('selected_account_number').value = m_account;
+	parent.grab('selected_balance').value = real_balance;
+
+}
+
 function clearSelectedLI_child(index)
 {
 	index = Number(index);
@@ -688,6 +813,28 @@ function clearSelectedLI_child(index)
 	else
 	{
 		div.className = 'li_shade';
+	}
+}
+
+function clearSelectedLo_child(index)
+{
+	index = Number(index);
+	var view = index % 2;
+	var div_name = "li" + String(index) + "_change_class";
+	var low_name = "li" + String(index) + "_low_class";
+	var div = grab(div_name);
+	var low = grab(low_name);
+
+	if (view == 0)
+	{
+		div.className = 'lo_clear';
+		low.className = 'right_loan_balance2';
+
+	}
+	else
+	{
+		div.className = 'lo_shade';
+		low.className = 'right_loan_balance';
 	}
 }
 

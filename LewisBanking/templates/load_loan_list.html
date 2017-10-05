@@ -35,8 +35,8 @@
 		<ul>
 			{% for l in loans %}
 			<li>
-				<a href="javascript: load_list_item('{{l.item_id}}', '{{l.index}}');" class="li_a_tag">
-					<div class="lo_shade">
+				<a href="javascript: load_loan_item('{{l.item_id}}', '{{l.index}}');" class="li_a_tag">
+					<div class="{{l.class}}" id="{{l.item_id}}change_class">
 						<input type="hidden" id="{{l.account_no_id}}" value="{{l.account.account_number}}">
 						<input type="hidden" id="{{l.balance_id}}" value="{{l.account.balance}}">
 						<input type="hidden" id="{{l.start_date_id}}" value="{{l.account.start_date}}">
@@ -44,6 +44,7 @@
 						<input type="hidden" id="{{l.type_id}}" value="{{l.account.loan_type}}">
 						<input type="hidden" id="{{l.rate_id}}" value="{{l.account.rate}}">
 						<input type="hidden" id="{{l.term_id}}" value="{{l.account.term}}">
+						<input type="hidden" id="{{l.item_id}}format_balance" value="{{l.balance}}">
 						
 						<div class="lo_date">{{l.account.start_date}}</div>
 						<div class="lo_account">({{l.account.account_number}})</div>
@@ -56,7 +57,7 @@
 						<div class="lo_qa">Monthly Payments: <span>${{l.payment}}</span></div>
 						<div class="lo_qa">Next Installment: <span>{{l.next_payment}}</span></div>
 
-						<div class="right_loan_balance"><span>Outstanding Balance: </span> ${{l.balance}}</div>
+						<div class="{{l.class2}}" id="{{l.item_id}}low_class"><span>Outstanding Balance: </span> ${{l.balance}}</div>
 					</div>
 				</a>
 			</li>
