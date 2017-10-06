@@ -506,6 +506,8 @@ function initialize_loans(selected_index)
 	var type = win.grab('li0_type').value;
 	var rate = win.grab('li0_rate').value;
 	var term = win.grab('li0_term').value;
+	var payment = win.grab('li0_payment').value;
+	var balancef = win.grab('li0_format_balance').value;
 
 	grab('selected_account_number').value = acct_no;
 	grab('selected_date').value = date;
@@ -514,6 +516,8 @@ function initialize_loans(selected_index)
 	grab('selected_type').value = type;
 	grab('selected_rate').value = rate;
 	grab('selected_term').value = term;
+	grab('selected_payment').value = payment;
+	grab('selected_balancef').value = balancef;
 
 	type = Number(type);
 	if (type === 0) {type = "Personal Loan";}
@@ -758,10 +762,12 @@ function populate_viewer(index)
 	var b_name = "li" + String(index) + "_balance";
 	var d_name = "li" + String(index) + "_date";
 	var a_name = "li" + String(index) + "_account_number";
+
 	var m_type = grab(t_name).value;
 	var m_balc = grab(b_name).value;
 	var m_date = grab(d_name).value;
 	var m_acct = grab(a_name).value;
+
 	parent.grab('selType').innerHTML = m_type;
 	parent.grab('selBaln').innerHTML = m_balc;
 	parent.grab('selDate').innerHTML = m_date;
@@ -779,11 +785,13 @@ function populate_loan_viewer(index)
 	var a_name = "li" + String(index) + "_account_number";
 	var b_name = "li" + String(index) + "_format_balance";
 	var r_name = "li" + String(index) + "_balance";
+	var p_name = "li" + String(index) + "_payment";
 
 	var m_type = String(grab(t_name).value);
 	var m_account = String(grab(a_name).value);
 	var m_balance = String(grab(b_name).value);
 	var real_balance = String(grab(r_name).value);
+	var m_paym = grab(p_name).value;
 
 	if (m_type === "0") {m_type = "Personal Loan";}
 	else if (m_type === "1") {m_type = "Business Loan";}
@@ -796,7 +804,8 @@ function populate_loan_viewer(index)
 	parent.grab('selected_type').value = m_type;
 	parent.grab('selected_account_number').value = m_account;
 	parent.grab('selected_balance').value = real_balance;
-
+	parent.grab('selected_payment').value = m_paym;
+	parent.grab('selected_balancef').value = m_balance;
 }
 
 function clearSelectedLI_child(index)
@@ -872,6 +881,40 @@ function set_frame_list()
 	win.grab('frame_form').submit();
 }
 
+function load_loan_viewer()
+{
+	var win = frame('iframe_list');
+	var selected_account_number = win.grab('li0_account_number').value;
+	var selected_balancef 		= win.grab('li0_format_balance').value;
+	var selected_balance 		= win.grab('li0_balance').value;
+	var selected_rate 			= win.grab('li0_rate').value;
+	var selected_payment 		= win.grab('li0_payment').value;
+	var selected_principal 		= win.grab('li0_principal').value;
+	var selected_term 			= win.grab('li0_term').value;
+	var selected_date 			= win.grab('li0_start_date').value;
+	var selected_type 			= win.grab('li0_type').value;
+
+	// grab('selected_account_number').value = selected_account_number;
+	// grab('selected_principal').value = selected_principal;
+	// grab('selected_balance').value = selected_balance;
+	// grab('selected_balancef').value = selected_balancef;
+	// grab('selected_payment').value = selected_payment;
+	// grab('selected_rate').value = selected_rate;
+	// grab('selected_term').value = selected_term;
+	// grab('selected_date').value = selected_date;
+	// grab('selected_date').value = selected_type;
+
+	// selected_type = Number(selected_type);
+
+	// if (selected_type === 0) {selected_type = "Personal";}
+	// else if (selected_type === 1) {selected_type = "Business";}
+	// else {selected_type = "Student";}
+
+	// grab('selType').innerHTML = selected_type;
+	// grab('selBaln').innerHTML = selected_balancef;
+	// grab('selAcct').innerHTML = selected_account_number;
+}
+
 function load_frame(action)
 {
 	grab('frame1').setAttribute('src', action);
@@ -918,6 +961,77 @@ function init_delete_W()
 	grab('account_number').value = account_number;
 	grab('d_type').value = w_type;
 }
+
+function init_payment()
+{
+	var balance = parent.grab('selected_balancef').value;
+	var payment = parent.grab('selected_payment').value;
+	var account_number = parent.grab('selected_account_number').value;
+
+	grab('loan_balance').innerHTML = balance;
+	grab('min_payment').innerHTML = payment;
+	grab('account_number').value = account_number;
+	grab('minimim_payment').value = payment;
+}
+
+function load_refinance_data()
+{
+	var account_number = parent.grab('selected_account_number').value;
+	grab('account_number').value = account_number;
+	grab('bank_form').submit();
+}
+
+function g_error(form)
+{
+	proceed = true;
+	var dollars = String(grab('dollars').value);
+	var minimum = String(grab('minimim_payment').value);
+	var min = "";
+	var cents = grab('cents');
+
+	for (var i = 0; i < minimum.length; i++)
+	{
+		if (minimum.charAt(i) !== ",")
+		{
+			min += minimum.charAt(i);
+		}
+	}
+
+	grab('minimim_payment').value = min;
+
+	if (dollars.length === 0 && String(cents.value).length === 0)
+	{
+		parent.grab('messageContent').innerHTML = "You must enter a valid dollar amount";
+		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		var e_win = parent.grab('messageWindow');
+		e_win.style.height = "260px";
+		win_visibility(2, "show");
+		proceed = false;
+	}
+
+	if (String(cents.value).length === 0)
+	{
+		cents.value = "00";
+	}
+
+	dollars = dollars + "." + String(cents.value);
+
+	if (parseFloat(dollars) < parseFloat(min))
+	{
+		parent.grab('messageContent').innerHTML = "Payment must be at least $" + String(min);
+		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
+		var e_win = parent.grab('messageWindow');
+		e_win.style.height = "260px";
+		win_visibility(2, "show");
+		proceed = false;
+	}
+
+	if (proceed === true)
+	{
+		grab('bank_form').submit();
+	}
+}
+
 
 function w_error()
 {

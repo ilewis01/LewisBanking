@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
 </head>
 
-<body class="window_sub_body" onload="init_delete_W();">
+<body class="window_sub_body" onload="init_payment();">
 
 		<div class="sub_wrapper_deep_purple">
 			<div class="sub_win_close">
@@ -30,9 +30,9 @@
 				<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-xs'>
 			</div>
 			
-			<form action="/withdraw/" method="post" id="bank_form"> {% csrf_token %}
+			<form action="/make_payment/" method="post" id="bank_form"> {% csrf_token %}
 				<input type="hidden" name="account_number" id="account_number" value="">
-				<input type="hidden" name="d_type" id="d_type" value="">
+				<input type="hidden" name="minimim_payment" id="minimim_payment" value="">
 
 				<div class="loan_head_sm" style="margin-bottom:4px;">Current Balance: $<span id="loan_balance"></span></div>
 				<div class="loan_head_sm">Minimum Payment: $<span id="min_payment"></span></div>
@@ -62,7 +62,7 @@
 				</div>
 
 				<div class="w_btns">
-					<button type="button" onCLick="javascript: w_error();">Proceed</button>
+					<button type="button" onCLick="javascript: g_error(bank_form);">Proceed</button>
 					<button type="button" onCLick="javascript: win_visibility(1, 'hide');">Cancel</button>
 				</div>
 			</form>				

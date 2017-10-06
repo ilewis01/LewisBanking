@@ -23,7 +23,7 @@
             </div>
 
             <div class="w_sub_head" style="margin-bottom:5%; margin-top:4%;">
-                Withdrawal Completed
+                Payment Accepted
             </div>
 
             <div class="cuny-logo2">
@@ -32,9 +32,8 @@
 
             
             <div class="make_sure" style="font-size:10px;">
-                <span style="color:#cccccc">{{type}}: {{account.account_number}}</span><br>
-                <span style="color:#cccccc">Previous Balance: {{previous}}</span><br>
-                <span><span>New Balance: </span>${{account.balance}}</span>
+                <span style="color:#cccccc">Loan ID: {{loan.account_number}}</span><br>
+                <span><span style="color:#cccccc">New Balance: </span>${{loan.balance}}</span>
             </div>
 
             <form action="/withdraw/" method="post" id="bank_form"> {% csrf_token %}

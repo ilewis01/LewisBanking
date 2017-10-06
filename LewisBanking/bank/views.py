@@ -297,8 +297,14 @@ def user_new_loan_complete(request):
 	return render_to_response("loans/user_new_loan_complete.html", content)
 
 @login_required(login_url='/index')
-def refinance0(request):
+def refinanceload(request):
 	content = {}
+	content.update(csrf(request))
+	return render_to_response('loans/refinanceload.html', content)
+
+@login_required(login_url='/index')
+def refinance0(request):
+	content = fetch_content(request, "load_refinance")
 	content.update(csrf(request))
 	return render_to_response('loans/refinance0.html', content)
 

@@ -23,7 +23,7 @@
 
 <!-- onLoad="javascript: load_index(0);" -->
 
-<body class="list_frame_body">
+<body class="list_frame_body" onLoad="javascript: load_loan_item('li0', 0);">
 	<form action="/load_loan_list/" method="post" id="frame_form"> {% csrf_token %}
 		<input type="hidden" name="sort" id="sort" value="{{sort}}">
 		<input type="hidden" name="direction" id="direction" value="{{direction}}">
@@ -40,6 +40,7 @@
 						<input type="hidden" id="{{l.account_no_id}}" value="{{l.account.account_number}}">
 						<input type="hidden" id="{{l.balance_id}}" value="{{l.account.balance}}">
 						<input type="hidden" id="{{l.start_date_id}}" value="{{l.account.start_date}}">
+						<input type="hidden" id="{{l.item_id}}payment" value="{{l.payment}}">
 						<input type="hidden" id="{{l.loan_amount_id}}" value="{{l.account.loan_amount}}">
 						<input type="hidden" id="{{l.type_id}}" value="{{l.account.loan_type}}">
 						<input type="hidden" id="{{l.rate_id}}" value="{{l.account.rate}}">

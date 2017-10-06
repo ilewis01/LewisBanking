@@ -17,13 +17,13 @@
 
 <body class="window_sub_body" onload="init_withdrawal();">
 
-        <div class="sub_wrapper_deep_purple">
+        <div class="sub_wrapper_blue">
             <div class="sub_win_close" style="border-bottom:1px solid #cccccc; padding-bottom:1%;">
                 <a href="javascript: reload_li_list();"><i class="fa fa-window-close" aria-hidden="true"></i></a>
             </div>
 
             <div class="w_sub_head" style="margin-bottom:5%; margin-top:4%;">
-                Withdrawal Completed
+                Loan {{loan.account_number}} Successfully Refinanced
             </div>
 
             <div class="cuny-logo2">
@@ -32,15 +32,12 @@
 
             
             <div class="make_sure" style="font-size:10px;">
-                <span style="color:#cccccc">{{type}}: {{account.account_number}}</span><br>
-                <span style="color:#cccccc">Previous Balance: {{previous}}</span><br>
-                <span><span>New Balance: </span>${{account.balance}}</span>
+                <span style="color:#cccccc">New Rate: {{loan.rate}}</span><br>
+                <span style="color:#cccccc">Total Interest: {{loan.total_interest}}</span><br>
+                <span><span>New Balance: </span>${{loan.balance}}</span>
             </div>
 
-            <form action="/withdraw/" method="post" id="bank_form"> {% csrf_token %}
-            </form>
-
-            <div class="w_btns">
+            <div class="w_btns" style="margin-top:-15px;">
                 <button type="button" style="width:100%;" onCLick="javascript: reload_li_list();">Continue</button>
             </div>
         </div>

@@ -772,6 +772,16 @@ def creditCheck():
 
 	return loan
 
+def newInterestRate():
+	index = random.randrange(0, 5)
+	rates = []
+	rates.append(0.01)
+	rates.append(0.02)
+	rates.append(0.03)
+	rates.append(0.04)
+	rates.append(0.05)
+	return rates[index]
+
 def loanDates_newLoan(term):
 	data = {}
 	term = int(term) + 1
@@ -1901,6 +1911,9 @@ def fetch_content(request, url):
 	elif url == "make_payment":
 		content = make_payment(request)
 
+	elif url == "load_refinance":
+		content = init_refinance(request)
+
 	return content
 
 def user_new_loan_only(request):
@@ -2064,12 +2077,95 @@ def fetchAccount(account_number):
 			break
 	return account
 
+def fetchDLoan(loan_id):
+	loan = None
+	l_list = Loan.objects.all()
+
+	for l in l_list:
+		if str(loan_id) == str(l.account_number):
+			loan = l
+			break
+	return loan
+
+def init_refinance(request):
+	content = {}
+	loan_id = str(request.POST.get('account_number'))
+	loan = fetchDLoan(loan_id)
+
+	new_rate = newInterestRate()
+	term = Decimal(loan.term)
+	principal = Decimal(loan.loan_amount)
+	monthly_payment = calculatePayments(new_rate, term, principal)
+	monthly_payment = Decimal(format(float(monthly_payment), '.2f'))
+	monthly_interest = Decimal(format(float(monthly_payment - (principal/term)), '.2f'))
+	total_interest = Decimal(format(float(monthly_interest * term), '.2f'))
+	total = principal + total_interest
+
+	content['account_number'] = loan_id
+	content['principal'] = format_currency(loan.loan_amount)
+	content['rate'] = str(int(loan.rate * 100)) + "%"
+	content['newRate'] = str(int(new_rate * 100)) + "%"
+	content['new_rate'] = new_rate
+	content['monthly_payments'] = format_currency(monthly_payment)
+	content['total_interest'] = format_currency(total_interest)
+	content['loan_total'] = format_currency(total)
+
+	return content
+
 def refinance(request):
 	content = {}
+	account_number = request.POST.get('account_number')
+	rate = request.POST.get('new_rate')
+	monthly_payments = request.POST.get('monthly_payments')
+	total_interest = request.POST.get('total_interest')
+	loan_total = request.POST.get('loan_total')
+	start_date = datetime.now().date()
+
+	loan = fetchDLoan(str(account_number))
+	b_balance = Decimal(loan.balance)
+	loan.rate = Decimal(rate)
+	loan.balance = Decimal(loan_total)
+	loan.payment = Decimal(monthly_payments)
+	loan.total_interest = Decimal(total_interest)
+	term = int(loan.term)
+	end_date = start_date + relativedelta(months=+term)
+	loan.end_date = end_date
+	loan.save()
+
+	rate = float(str(rate)) * 100
+	rate = str(rate) + "%"
+
+	history = History(user_id=loan.user_id, date=start_date, account_number=loan.account_number)
+	history.b_balance = b_balance
+	history.e_balance = loan_total
+	history.action = get_action_from_index(7)
+	history.account_type = "Loan"
+	history.description = "New loan rate of " + rate + " was applied to account"
+	history.save()
+
+	content['loan'] = loan
 	return content
 
 def make_payment(request):
 	content = {}
+	loan_id = request.POST.get('account_number')
+	payment = decoderCurrency(request, 'dollars', 'cents')
+	loan = fetchDLoan(loan_id)
+	curr_bal = loan.balance
+	new_bal = curr_bal - payment
+	loan.balance = new_bal
+	loan.save()
+
+	user_id = str(request.user.id)
+	date = datetime.now().date()
+
+	history = History(user_id=user_id, date=date, b_balance=curr_bal, e_balance=new_bal, account_number=loan_id)
+	history.account_type = "Loan"
+	history.action = get_action_from_index(6)
+	history.description = "Payment received in the amount of $" +  str(format_currency(payment))
+	history.save()
+	content['payment'] = format_currency(payment)
+	content['loan'] = loan
 	return content
 
 
