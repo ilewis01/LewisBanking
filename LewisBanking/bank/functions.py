@@ -2169,7 +2169,60 @@ def fetch_content(request, url):
 	elif url == "view_Payment_dates":
 		content = fetch_payment_dates(request)
 
+	elif url == "view_loan_history":
+		content = fetch_loan_history(request)
+
 	return content
+
+def fetch_loan_history(request):
+	content = {}
+	history = []
+	loan_id = str(request.POST.get("account_number"))
+	sort = str(request.POST.get("sort"))
+	direction = str(request.POST.get("direction"))
+	m_sort = sort
+	index = 0
+
+	loan = fetchDLoan(loan_id)
+	l_type = int(loan.loan_type)
+
+	if l_type == 0:
+		l_type = "Personal"
+	elif l_type == 1:
+		l_type = "Business"
+	else:
+		l_type = "Student"
+
+	if direction == "descend":
+		m_sort = "-" + sort
+
+	h_list = getLoanHIstory(loan_id, m_sort)
+
+	for h in h_list:
+		d = {}
+		d['index'] = index
+		d['starting_balance'] = format_currency(h.b_balance)
+		d['ending_balance'] = format_currency(h.e_balance)
+		d['history'] = h
+		history.append(d)
+		index += 1
+
+	content['sort'] = sort
+	content['direction'] = direction
+	content['loan_type'] = l_type
+	content['account_number'] = loan_id
+	content['history'] = history
+	return content
+
+def getLoanHIstory(loan_id, sort):
+	history = History.objects.all().order_by(sort)
+	loan_id = str(loan_id)
+	data = []
+
+	for h in history:
+		if loan_id == str(h.account_number):
+			data.append(h)
+	return data
 
 def fetch_payment_dates(request):
 	content = {}

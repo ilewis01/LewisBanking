@@ -334,7 +334,7 @@ def view_loan_history0(request):
 
 @login_required(login_url='/index')
 def view_loan_history(request):
-	content = fetch_content(request, 'account_search')
+	content = fetch_content(request, 'view_loan_history')
 	content.update(csrf(request))
 	return render_to_response('loans/view_loan_history.html', content)
 

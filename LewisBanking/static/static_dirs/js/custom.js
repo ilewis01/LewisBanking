@@ -1630,6 +1630,55 @@ function load_payment_data()
 	grab('bank_form').submit();
 }
 
+function load_loan_history()
+{
+	grab('direction_history').value = "descend";
+	grab('sort_history').value = "date";
+	grab('dir_text_history').innerHTML = "Descending";
+	grab('icon_history').innerHTML = "<i class=\"fa fa-chevron-circle-down\" aria-hidden=\"true\"></i>";
+	grab('frame2').src = '/view_loan_history0/';
+	visibility(6, 'show');
+}
+
+function load_load_id()
+{
+	grab('account_number').value = parent.grab('selected_account_number').value;
+	grab('sort').value = "date";
+	grab('direction').value = "descend";
+	grab('bank_form').submit()
+}
+
+function toggle_carat_history()
+{
+	var icon = grab('icon_history');
+	var title = grab('dir_text_history');
+	var hidden = grab('direction_history')
+	var current = String(hidden.value);
+
+	if (current === "descend")
+	{
+		title.innerHTML = "Ascending";
+		icon.innerHTML = "<i class=\"fa fa-chevron-circle-up\" aria-hidden=\"true\"></i>"
+		hidden.value = "ascend";
+	}
+
+	else if (current === "ascend")
+	{
+		title.innerHTML = "Descending";
+		icon.innerHTML = "<i class=\"fa fa-chevron-circle-down\" aria-hidden=\"true\"></i>";
+		hidden.value = "descend";
+	}
+}
+
+function reload_mega_history()
+{
+	var win = frame('frame2');
+	win.grab('sort').value = grab('sort2').value;
+	win.grab('direction').value = grab('direction_history').value;
+	win.grab('history_form').submit();
+}
+
+
 
 
 

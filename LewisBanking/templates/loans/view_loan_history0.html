@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Banking Application">
+    <meta name="author" content="Immanuel Lewis">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
+</head>
+
+<body onload="javascript: load_load_id();">
+	<form action="/view_loan_history/" method='post' id='bank_form'> {% csrf_token %}
+		<input type="hidden" name="account_number" id="account_number" value="">
+		<input type="hidden" name="sort" id="sort" value="date">
+		<input type="hidden" name="direction" id="direction" value="descend">
+		Loading...
+	</form>
+
+	<!-- Custom JS -->
+    <script src="{% static 'js/custom.js' %}" type="text/javascript"></script>
+</body>
