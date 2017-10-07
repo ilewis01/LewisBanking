@@ -1689,10 +1689,20 @@ iframe {
 
 .sub_wrapper_white {
 	width:100%;
-	height:100%;
+	height:250px;
 	border-radius: 8px;
 	background-color: white;
 	opacity: 0.7;
+	font-family: arial;
+	color:black;
+}
+
+.sub_wrapper_gray {
+	width:100%;
+	height:280px;
+	border-radius: 8px;
+	background-color: #333333;
+	opacity: 0.9;
 	font-family: arial;
 }
 
@@ -2081,6 +2091,44 @@ iframe {
 	font-weight: bold;
 	font-style: italic;
 	width:80px;
+}
+
+.payment_date_wrap {
+	width:82%;
+	height:35%;
+	margin:auto;
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 5px;
+
+}
+
+.payment_date_content {
+	width:100%;
+	height:100%;
+	overflow-y: scroll;
+	border-radius: 5px;
+}
+
+.p_clear {
+	font-size: 12px;
+	height:20px;
+	padding-left:5%;
+	/*font-weight: bold;*/
+	font-style: italic;
+	line-height: 22px;
+	border-bottom:1px solid #666666;
+}
+
+.p_shade {
+	font-size: 12px;
+	height:20px;
+	padding-left:5%;
+	/*font-weight: bold;*/
+	font-style: italic;
+	line-height: 22px;
+	border-bottom:1px solid #666666;
+	background-color: #8ab0d3;
 }
 
 

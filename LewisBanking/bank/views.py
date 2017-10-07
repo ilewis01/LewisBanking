@@ -315,16 +315,16 @@ def refinance(request):
 	return render_to_response('loans/refinance.html', content)
 
 @login_required(login_url='/index')
-def view_Payment_dates0(request):
+def loadPaymentDates(request):
 	content = {}
 	content.update(csrf(request))
-	return render_to_response('loans/view_Payment_dates0.html', content)
+	return render_to_response('loans/loadPaymentDates.html', content)
 
 @login_required(login_url='/index')
-def view_Payment_dates(request):
-	content = fetch_content(request, 'account_search')
+def view_Payment_dates0(request):
+	content = fetch_content(request, 'view_Payment_dates')
 	content.update(csrf(request))
-	return render_to_response('loans/view_Payment_dates.html', content)
+	return render_to_response('loans/view_Payment_dates0.html', content)
 
 @login_required(login_url='/index')
 def view_loan_history0(request):

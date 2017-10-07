@@ -881,40 +881,6 @@ function set_frame_list()
 	win.grab('frame_form').submit();
 }
 
-function load_loan_viewer()
-{
-	var win = frame('iframe_list');
-	var selected_account_number = win.grab('li0_account_number').value;
-	var selected_balancef 		= win.grab('li0_format_balance').value;
-	var selected_balance 		= win.grab('li0_balance').value;
-	var selected_rate 			= win.grab('li0_rate').value;
-	var selected_payment 		= win.grab('li0_payment').value;
-	var selected_principal 		= win.grab('li0_principal').value;
-	var selected_term 			= win.grab('li0_term').value;
-	var selected_date 			= win.grab('li0_start_date').value;
-	var selected_type 			= win.grab('li0_type').value;
-
-	// grab('selected_account_number').value = selected_account_number;
-	// grab('selected_principal').value = selected_principal;
-	// grab('selected_balance').value = selected_balance;
-	// grab('selected_balancef').value = selected_balancef;
-	// grab('selected_payment').value = selected_payment;
-	// grab('selected_rate').value = selected_rate;
-	// grab('selected_term').value = selected_term;
-	// grab('selected_date').value = selected_date;
-	// grab('selected_date').value = selected_type;
-
-	// selected_type = Number(selected_type);
-
-	// if (selected_type === 0) {selected_type = "Personal";}
-	// else if (selected_type === 1) {selected_type = "Business";}
-	// else {selected_type = "Student";}
-
-	// grab('selType').innerHTML = selected_type;
-	// grab('selBaln').innerHTML = selected_balancef;
-	// grab('selAcct').innerHTML = selected_account_number;
-}
-
 function load_frame(action)
 {
 	grab('frame1').setAttribute('src', action);
@@ -1656,6 +1622,12 @@ function init_user_loan_input(action, a_list)
 	}
 
 	grab('loan_decision_input').innerHTML = html;
+}
+
+function load_payment_data()
+{
+	grab('account_number').value = parent.grab('selected_account_number').value;
+	grab('bank_form').submit();
 }
 
 
