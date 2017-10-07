@@ -2175,6 +2175,7 @@ iframe {
 	background-color: white;
 	border:1px solid #666666;
 	border-radius: 5px;
+	margin-top:-30px;
 }
 
 .hf_buttons {
@@ -2197,7 +2198,10 @@ iframe {
 	height:100%;
 	position: relative;
 	float:left;
-	background-color: yellow;
+}
+
+.hf_end a {
+	color:#0e4976;
 }
 
 .hf_end a:hover {
@@ -2209,7 +2213,10 @@ iframe {
 	height:100%;
 	position: relative;
 	float:left;
-	background-color: orange;
+	font-size: 11px;
+	font-style: italic;
+	padding-top:3px;
+	color:#0e4976;
 }
 
 .frame2_body {
@@ -2220,6 +2227,35 @@ iframe {
 .sorting_label {
 	font-size: 11px;
 	font-weight: bold;
+}
+
+.mhi_clear {
+
+}
+
+.mhi_shade {
+	background-color: #9dbbc3;
+}
+
+.history_mega_class ul {
+	list-style: none;
+	padding-left: 0px;
+}
+
+.history_mega_class li {
+	font-size: 12px;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	padding-left:1%;
+	border-bottom: 1px solid #666666;
+}
+
+.history_mega_head {
+	color: #333333;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	font-family: impact;
 }
 
 

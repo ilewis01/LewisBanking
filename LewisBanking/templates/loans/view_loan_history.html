@@ -15,21 +15,24 @@
     <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
 </head>
 
-<body class="frame2_body" onload="javascript: load_history_val(0);">
+<body class="frame2_body" onload="javascript: load_history_val();">
     <form action="/view_loan_history/" method="post" id="history_form"> {% csrf_token %}
         <input type="hidden" name='sort' id='sort' value="{{sort}}">
         <input type="hidden" name='direction' id='direction' value="{{direction}}">
         <input type="hidden" name="account_number" id="account_number" value="{{account_number}}">
+        <input type="hidden" name="history_size" id="history_size" value="{{size}}">
 
-        <div class="">
+        <div class="history_mega_class">
             <ul>
                 {% for h in history %}
-                    <li>
-                        <div>{{h.history.date}}</div>
-                        <div>{{h.history.action.action}}</div>
-                        <div>Starting Balance: <span>${{h.starting_balance}}</span></div>
-                        <div>Ending Balance: <span>${{h.ending_balance}}</span></div>
-                        <div>Description: <span>{{h.history.description}}</span></div>
+                    <li class="{{h.class}}">
+                        <div>
+                            <div><b>{{h.history.date}}</b></div>
+                            <div><em style="color:#0e6d76"><b>{{h.history.action.action}}</b></em></div>
+                            <div>Starting Balance: <em style="color:#07244e;"><b>${{h.starting_balance}}</b></em></div>
+                            <div>Ending Balance: <em style="color:#07244e;"><b>${{h.ending_balance}}</b></em></div>
+                            <div>Description: <em>{{h.history.description}}</em></div>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>

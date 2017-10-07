@@ -1678,6 +1678,16 @@ function reload_mega_history()
 	win.grab('history_form').submit();
 }
 
+function load_history_val()
+{
+	var tp = Number(parent.grab('selected_type').value);
+	if (tp === 0) {tp = "Personal";}
+	else if (tp === 1) {tp = "Business";}
+	else {tp = "Student";}
+	parent.grab('history_type').innerHTML = tp;
+	parent.grab('history_acct').innerHTML = parent.grab('selected_account_number').value;
+}
+
 
 
 

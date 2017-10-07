@@ -2204,10 +2204,16 @@ def fetch_loan_history(request):
 		d['starting_balance'] = format_currency(h.b_balance)
 		d['ending_balance'] = format_currency(h.e_balance)
 		d['history'] = h
+
+		if index % 2 == 0:
+			d['class'] = "mhi_clear"
+		else:
+			d['class'] = "mhi_shade"
 		history.append(d)
 		index += 1
 
 	content['sort'] = sort
+	content['size'] = index
 	content['direction'] = direction
 	content['loan_type'] = l_type
 	content['account_number'] = loan_id
