@@ -1365,6 +1365,7 @@ function advanced_search_loans()
 	win.grab('searchMethod').value = method;
 	win.grab('search').value = fm_search;
 	win.grab('search2').value = to_search;
+	visibility(3, "hide");
 	initialize_loan_search();
 }
 

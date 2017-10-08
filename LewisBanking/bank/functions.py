@@ -1449,6 +1449,9 @@ def refinance(request):
 	loan_total = request.POST.get('loan_total')
 	start_date = datetime.now().date()
 
+	monthly_payments = clear_format(monthly_payments)
+	loan_total = clear_format(loan_total)
+
 	loan = fetchDLoan(str(account_number))
 	b_balance = Decimal(loan.balance)
 	loan.rate = Decimal(rate)
@@ -2291,7 +2294,44 @@ def initiate_loan_search(request):
 			elif search_algorithm(search.lower(), t_search) == True:
 				d = getLoanListData(l, count)
 				results.append(d)
-				count += 1		
+				count += 1
+
+	elif searchType == "advanced":
+		search2 = str(request.POST.get('search2'))
+		method = str(request.POST.get('searchMethod'))
+		
+		if method == 'date':
+			fm_date = convertPythonDate(search)
+			to_date = convertPythonDate(search2)
+			for l2 in loans:
+				if l2.start_date >= fm_date and l2.start_date <= to_date:
+					d = getLoanListData(l2, count)
+					results.append(d)
+					count += 1
+				elif l2.end_date >= fm_date and l2.end_date <= to_date:
+					d = getLoanListData(l2, count)
+					results.append(d)
+					count += 1
+		elif method == 'money':
+			fm_amt = Decimal(search)
+			to_amt = Decimal(search2)
+			for l3 in loans:
+				if Decimal(l3.payment) >= fm_amt and Decimal(l3.payment) <= to_amt:
+					d = getLoanListData(l3, count)
+					results.append(d)
+					count += 1
+				elif Decimal(l3.balance) >= fm_amt and Decimal(l3.balance) <= to_amt:
+					d = getLoanListData(l3, count)
+					results.append(d)
+					count += 1
+				elif Decimal(l3.loan_amount) >= fm_amt and Decimal(l3.loan_amount) <= to_amt:
+					d = getLoanListData(l3, count)
+					results.append(d)
+					count += 1
+				elif Decimal(l3.total_interest) >= fm_amt and Decimal(l3.total_interest) <= to_amt:
+					d = getLoanListData(l3, count)
+					results.append(d)
+					count += 1
 
 	content['load_type'] = 1
 
@@ -2308,6 +2348,29 @@ def initiate_loan_search(request):
 	content['loans'] = results
 	content['title'] = "Lewis Bank | Manage Loans"
 	return content
+
+def convertPythonDate(date):
+	result = None
+	date = str(date)
+	yy = ""
+	mm = ""
+	dd = ""
+	temp = ""
+	count = 0
+
+	for d in date:
+		if d == "-":
+			if count == 0:
+				mm = int(temp)
+				temp = ""
+				count += 1
+			elif count == 1:
+				dd = int(temp)
+				temp = ""
+		else:
+			temp += d
+	yy = int(temp)
+	return datetime(yy, mm, dd).date()
 
 def adv_lower(value):
 	value = str(value)
