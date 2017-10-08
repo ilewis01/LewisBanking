@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Banking Application">
+    <meta name="author" content="Immanuel Lewis">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
+</head>
+
+<body onLoad="javascript: update_parent_phone('{{phone}}');">
+
+		<div class="update_ph">
+			<form action="/update_phone_loader/" method="post" id="bank_form"> {% csrf_token %}
+				<input type="hidden" name="user_id" id="user_id" value="">
+                <div style="text-align:center; font-family:arial; color:#666666; font-size:16px; margin-bottom:7px;">
+                    <b><em>Phone number successfully updated</em></b>
+                </div>
+
+                <div class="p-btn-short">
+                    <button type="submit">Update Phone Number</button>
+                </div>
+			</form>				
+		</div>
+
+	<!-- Custom JS -->
+    <script src="{% static 'js/custom.js' %}" type="text/javascript"></script>
+</body>

@@ -2204,6 +2204,22 @@ def fetch_content(request, url):
 	elif url == "loan_search":
 		content = initiate_loan_search(request)
 
+	elif url == "update_phone":
+		content = update_user_phone(request)
+
+	return content
+
+def update_user_phone(request):
+	content = {}
+	user = request.user
+	phone1 = str(request.POST.get('ph1'))
+	phone2 = str(request.POST.get('ph2'))
+	phone3 = str(request.POST.get('ph3'))
+	phone = "(" + phone1 + ") " + phone2 + "-" + phone3
+	profile = getUserProfile(user)
+	profile.phone = phone
+	profile.save()
+	content['phone'] = phone
 	return content
 
 def search_algorithm(search, value):

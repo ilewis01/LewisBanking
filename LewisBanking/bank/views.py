@@ -364,7 +364,7 @@ def update_phone_loader(request):
 
 @login_required(login_url='/index')
 def update_phone(request):
-	content = {}
+	content = fetch_content(request, 'update_phone')
 	content.update(csrf(request))
 	return render_to_response('admin/update_phone.html', content)
 

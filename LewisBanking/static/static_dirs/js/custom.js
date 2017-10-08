@@ -1799,6 +1799,11 @@ function clear_d_search()
 	visibility(7, "hide");
 }
 
+function update_parent_phone(phone)
+{
+	parent.grab('phone_span').innerHTML = phone;
+}
+
 function load_profile_data()
 {
 	// alert("loading profile info")
