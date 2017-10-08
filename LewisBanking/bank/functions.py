@@ -683,6 +683,7 @@ def fetchProfileContent(request):
 	name = name_abv(user)
 
 	content['name'] = name
+	content['since'] = user.date_joined.date()
 	content['user'] = user
 	content['profile'] = profile
 	content['title'] = "Lewis Bank | Edit Profile"

@@ -6,7 +6,7 @@
 	<form action="" method="post" id="bank_form"> {% csrf_token %}
 		<input type="hidden" name="user_id" id="user_id" value="{{user.id}}">
 		<div class="data-wrap">
-			<div class="url-wrap">Edit Profile</div>
+			<div class="url-wrap">Delete Account</div>
 
 			<div class="p_left" style="margin-top:8%;">
 				<div class="line-vert_lg">
@@ -20,20 +20,9 @@
 
 			<div class="p_right">
 				<div style="margin-top:15%; margin-left:0%;">
-					<div class="p_align">
-						<table>
-							<tr><td>Name: <span>{{user.first_name}} {{user.last_name}}</span></td></tr>
-							<tr><td>Email: <span>{{user.email}}</span></td></tr>
-							<tr><td>phone: <span>{{profile.phone}}</span></td></tr>
-							<tr><td>Member Since: <span>{{since}}</span></td></tr>
-						</table>
-
-						<div class="divider" style="width:230px; margin-top:20px;"></div>
-					</div>
-
-					<div>
-						<iframe src="/update_phone_loader/" id="frame3"></iframe>
-					</div>
+					<div class="del1">Are you sure you want to delete your profile?</div>
+					<div class="del2">This cannot be undone</div>
+					<div class="delbtn"><button type="submit">Delete Profile</button></div>
 				</div>
 			</div>
 

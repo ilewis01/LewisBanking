@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Banking Application">
+    <meta name="author" content="Immanuel Lewis">
+
+    <!-- Custom CSS -->
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/font_awesome/css/font-awesome.min.css' %}" type="text/css">
+</head>
+
+<body class="" onload="load_profile_data();">
+
+		<div class="update_ph">
+			<form action="/update_phone/" method="post" id="bank_form"> {% csrf_token %}
+				<input type="hidden" name="user_id" id="user_id" value="">
+                <div style="text-align:center; font-family:arial; color:#666666; font-size:16px; margin-bottom:7px;">
+                    <b><em>Update Phone Number</em></b>
+                </div>
+
+				<div class="ph1"><input type="text" name="ph1" id="ph1" oninput="javascript: entry_error(ph1, 'number', 3);"></div>
+                <div class="ph1"><input type="text" name="ph2" id="ph2" oninput="javascript: entry_error(ph2, 'number', 3);"></div>
+                <div class="pht">-</div>
+                <div class="ph2"><input type="text" name="ph3" id="ph3" oninput="javascript: entry_error(ph3, 'number', 4);"></div><br>
+
+                <div class="p-btn-short">
+                    <button type="button" onClick="javascript: visibility(2, 'show')">Submit</button>
+                </div>
+			</form>				
+		</div>
+
+	<!-- Custom JS -->
+    <script src="{% static 'js/custom.js' %}" type="text/javascript"></script>
+</body>

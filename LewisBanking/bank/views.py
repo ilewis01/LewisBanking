@@ -146,7 +146,7 @@ def updatePassword(request):
 def deleteAccount(request):
 	content = fetch_content(request, "delete")
 	content.update(csrf(request))
-	return render_to_response('deleteAccount.html', content)
+	return render_to_response('admin/deleteAccount.html', content)
 
 @login_required(login_url='/index')
 def load_sorted(request):
@@ -355,6 +355,18 @@ def loan_search(request):
 	content = fetch_content(request, 'loan_search')
 	content.update(csrf(request))
 	return render_to_response('loans/loan_search.html', content)
+
+@login_required(login_url='/index')
+def update_phone_loader(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('admin/update_phone_loader.html', content)
+
+@login_required(login_url='/index')
+def update_phone(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('admin/update_phone.html', content)
 
 
 
