@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: set_base_select('btn3', 'text3'); initialize_loans(0);">
+<body onLoad="javascript: set_base_select('btn3', 'text3'); initialize_loans(0); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}});">
 	<div class="fadeOut" id="z2">
 			<div class="messageWindow" id="messageWindow">
 				<div class="messageNav-short">
@@ -37,7 +37,7 @@
 					</a>
 				</div>
 
-				<div class="messageHeader" id="messageHeader" style="color:#993333;">Error Detected</div>
+				<div class="messageHeader" id="messageHeader2" style="color:#993333;">Error Detected</div>
 
 				<div class="hold_logo">
 					<div class="class_left">
@@ -52,6 +52,24 @@
 				</div>
 
 				<button type="button" onClick="javascript: visibility(5, 'hide');">Close</button>
+			</div>
+		</div>
+
+		<div class="fadeOut" id="z7" style="z-index:7;">
+			<div class="results_div_size">
+				<div class="cuny-logo2" style="margin-top:5%;">
+					<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-small'>
+				</div>
+				
+				<div>
+					<b>
+						<em>0</em> Results Found for <br> <em style="font-size:18px;">"<span id="search0"></span>"</em>
+					</b>
+				</div>
+
+				<div style="margin-top:4%;">
+					<button type="button" onCLick="javascript: clear_d_search();">Continue</button>
+				</div>
 			</div>
 		</div>
 
@@ -194,7 +212,7 @@
 			</div>
 
 			<div class="adv_pop_buttons">
-				<button type="button" onClick="javascript: a_adv_search_init();">Submit</button>
+				<button type="button" onClick="javascript: advanced_search_loans();">Submit</button>
 				<button type="button" onClick="javascript: visibility(3, 'hide');">Cancel</button>
 			</div>
 		</div>
@@ -273,6 +291,7 @@
 		<input type="hidden" name="searchType" id="searchType" value="">
 		<input type="hidden" name="advType" id="advType" value="">
 		<input type="hidden" name="adv_search_crit" id="adv_search_crit" value="">
+		<input type="hidden" name="size" id="size" value="{{size}}">
 
 		<div class="fadeOut" id="z1">
 			<div class="window1">
@@ -344,9 +363,9 @@
 						<a href="javascript: visibility(3,'show');">Advanced Search</a>
 					</div>
 					<div class="search_icon">
-						<input type="search" placeholder="Search Loans" id="search" name="search">
+						<input type="search" placeholder="Search Loans" id="search" name="search" oninput="">
 						<div class="search_span">
-							<a href="javascript: normal_search();"><span class="fa fa-search"></span></a>
+							<a href="javascript: normal_search_loans();"><span class="fa fa-search"></span></a>
 						</div>
 					</div>
 				</div>

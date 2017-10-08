@@ -1307,10 +1307,102 @@ function get_sort_options_html(mode)
 	return html
 }
 
-function normal_search()
+function normal_search_loans()
 {
-	grab('searchType').value = "normal";
-	initialize_account_search();
+	var win = frame('iframe_list');
+	win.grab('searchType').value = "normal";
+	var search = String(grab('search').value);
+	win.grab('search').value = search;
+	initialize_loan_search();
+}
+
+function advanced_search_loans()
+{
+	var win = frame('iframe_list');
+	var method = grab('amt_range').checked;
+	var fm_search = "";
+	var to_search = "";
+	win.grab('searchType').value = "advanced";
+
+	if (method === true)
+	{
+		method = "money";
+		var fm_cents = String(grab('cents_fm').value);
+		var to_cents = String(grab('cents_to').value);
+		var dollars_fm = String(grab('dollars_fm').value);
+		var dollars_to = String(grab('dollars_to').value);
+
+		if (dollars_fm.length === 0)
+		{
+			dollars_fm = "0";
+		}
+
+		if (fm_cents.length === 0) {fm_cents = "00";}
+		if (to_cents.length === 0) {to_cents = "00";}
+
+		if (dollars_to.length === 0 || Number(dollars_to) < Number(dollars_fm))
+		{
+			alert("ERROR: SEND A ERROR MESSAGE TO SCREEN");
+		}
+
+		fm_search =  dollars_fm + "." + fm_cents;
+		to_search =  dollars_to + "." + to_cents;
+	}
+
+	else
+	{
+		method = "date";
+		var mm_fm = String(grab('mm_fm').value);
+		var dd_fm = String(grab('dd_fm').value);
+		var yy_fm = String(grab('yy_fm').value);
+		var mm_to = String(grab('mm_to').value);
+		var dd_to = String(grab('dd_to').value);
+		var yy_to = String(grab('yy_to').value);
+		fm_search = mm_fm + "-" + dd_fm + "-" + yy_fm;
+		to_search = mm_to + "-" + dd_to + "-" + yy_to;
+	}
+
+	win.grab('searchMethod').value = method;
+	win.grab('search').value = fm_search;
+	win.grab('search2').value = to_search;
+	initialize_loan_search();
+}
+
+function initialize_loan_search()
+{
+	var win = frame('iframe_list');
+	var search = String(win.grab('search').value);
+
+	if (search.length !== 0)
+	{
+		var form = win.grab('frame_form');
+		form.action = "/loan_search/";
+		form.submit();
+	}
+}
+
+function load_loan_search()
+{
+	var searchType = String(parent.grab('searchType').value);
+	var search = parent.grab('search').value;
+	var size = parent.grab('size').value;
+	grab('search').value = search;
+	grab('searchType').value = searchType;
+	grab('size').value = size;
+	
+	if (searchType === "advanced")
+	{
+		var search2 = parent.grab('search2').value;
+		var method = parent.grab('date_range').checked;
+
+		if (method === false) {method = "money";}
+		else {method = "date";}
+
+		grab('searchMethod').value = method;
+		grab('search2').value = search2;
+	}
+
+	grab('bank_form').submit();
 }
 
 function initialize_account_search()
@@ -1686,6 +1778,22 @@ function load_history_val()
 	else {tp = "Student";}
 	parent.grab('history_type').innerHTML = tp;
 	parent.grab('history_acct').innerHTML = parent.grab('selected_account_number').value;
+}
+
+function check_loan_results(size, load_type)
+{
+	if (Number(load_type) === -1)
+	{
+		var search0 = parent.grab('search').value;
+		parent.grab('search0').innerHTML = search0;
+		parent.visibility(7, 'show')
+	}
+}
+
+function clear_d_search()
+{
+	parent.grab('search').value = "";
+	visibility(7, "hide");
 }
 
 

@@ -522,16 +522,58 @@ def getDays(mm, yy):
 
 def fetchLoansContent(request):
 	content = {}
+	years = []
+	days_from = []
+	days_to = []
+	months = []
 	user = request.user
 	user_id = str(user.id)
 	profile = getUserProfile(user)
 	name = name_abv(user)
 	sort = request.POST.get('sort')
 	direction = request.POST.get('direction')
+	today = datetime.now()
 	index = 0
 	sorted_list = []
 	user_loans = []
 	m_sort = sort
+
+	yy_joined = user.date_joined.year
+	mm_joined = user.date_joined.month
+	dd_joined = user.date_joined.day
+	yy = today.year
+	mm = today.month
+	dd = today.day 
+
+	if yy - yy_joined == 0:
+		years.append(yy)
+
+		for i in range(mm - mm_joined + 1):
+			d = {}
+			d['value'] = mm_joined
+			d['option'] = convert_month_toString(mm_joined)
+			months.append(d)
+			mm_joined += 1
+	else:
+		for j in range(yy - yy_joined + 1):
+			years.append(yy_joined)
+			yy_joined += 1
+
+		for k in range(12):
+			d = {}
+			tm = k + 1
+			d['value'] = tm
+			d['option'] = convert_month_toString(tm)
+			months.append(d)
+
+	num_days_fm = getDays(mm_joined, yy_joined)
+	num_days_to = getDays(mm, yy)
+
+	for l in range(num_days_fm):
+		days_from.append(l + 1)
+
+	for m in range(num_days_to):
+		days_to.append(m + 1)
 
 	if direction == None or direction == "None" or direction == "null" or len(direction) == 0:
 		direction = "descend"
@@ -561,11 +603,6 @@ def fetchLoansContent(request):
 			loan_type = "BUSINESS"
 		else:
 			loan_type = "STUDENT"
-
-		today = datetime.now().date()
-		dd = today.day
-		mm = today.month
-		yy = today.year
 
 		if dd > 15:
 			mm += 1
@@ -608,6 +645,12 @@ def fetchLoansContent(request):
 		sorted_list.append(d)
 		index += 1
 
+	content['size'] = index
+	content['load_type'] = 0
+	content['years'] = json.dumps(years)
+	content['months'] = json.dumps(months)
+	content['days_from'] = json.dumps(days_from)
+	content['days_to'] = json.dumps(days_to)
 	content['direction'] = direction
 	content['sort'] = sort
 	content['name'] = name
@@ -1470,28 +1513,6 @@ def get_user_accounts(user_id):
 			data.append(a)
 	return data
 
-def search_algorithm(search, value):
-	match 		= False
-	size 		= len(value)
-	search_size = len(search)
-
-	if search_size <= size:
-		last_char 	= search_size - 1
-		search 		= str(search)
-		for i in range(size):
-			t = ""
-			if last_char != size:
-				index = i
-				for j in range(search_size):
-					t += str(value[index])
-					index += 1
-				if t == search:
-					match = True
-					break
-				else:
-					last_char += 1
-	return match
-
 def account_search_test(request):
 	content = {}
 	search = str(request.POST.get('search'))
@@ -2172,7 +2193,178 @@ def fetch_content(request, url):
 	elif url == "view_loan_history":
 		content = fetch_loan_history(request)
 
+	elif url == "loan_search":
+		content = initiate_loan_search(request)
+
 	return content
+
+def search_algorithm(search, value):
+	match 		= False
+	size 		= len(value)
+	search_size = len(search)
+
+	if search_size <= size:
+		last_char 	= search_size - 1
+		search 		= str(search)
+		for i in range(size):
+			t = ""
+			if last_char != size:
+				index = i
+				for j in range(search_size):
+					t += str(value[index])
+					index += 1
+				if t == search:
+					match = True
+					break
+				else:
+					last_char += 1
+	return match
+
+def initiate_loan_search(request):
+	content = {}
+	searchType = str(request.POST.get('searchType'))
+	search = str(request.POST.get('search'))
+	size = int(request.POST.get('size'))
+	direction = str(request.POST.get('direction'))
+	sort = str(request.POST.get('sort'))
+	m_sort = sort
+	user_id = str(request.user.id)
+	loans = []
+	results = []
+	count = 0
+
+	if direction == 'descend':
+		m_sort = "-" + sort
+
+	a_list = Loan.objects.all().order_by(m_sort)
+
+	for a in a_list:
+		if str(a.user_id) == user_id:
+			loans.append(a)
+
+	if searchType == "normal":
+		for l in loans:
+			t_search = int(l.loan_type)
+			if t_search == 0:
+				t_search = "personal"
+			elif t_search == 1:
+				t_search = 'business'
+			else:
+				t_search = "student"
+
+			if search_algorithm(search, str(l.start_date)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(adv_lower(search), adv_lower(l.account_number)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(search, str(l.end_date)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(search, str(l.term)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(search, str(l.rate)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(search, str(l.balance)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(search, str(l.total_interest)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(search, str(l.loan_amount)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(search, str(l.account_number)) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1
+			elif search_algorithm(search.lower(), t_search) == True:
+				d = getLoanListData(l, count)
+				results.append(d)
+				count += 1		
+
+	content['load_type'] = 1
+
+	if len(results) == 0 or count == 0:
+		content['load_type'] = -1
+		for zl in loans:
+			d = getLoanListData(zl, count)
+			results.append(d)
+			count += 1
+
+	content['size'] = count
+	content['direction'] = direction
+	content['sort'] = sort
+	content['loans'] = results
+	content['title'] = "Lewis Bank | Manage Loans"
+	return content
+
+def adv_lower(value):
+	value = str(value)
+	temp = ""
+
+	for v in value:
+		if v!="0" and v!="1" and v!="2" and v!="3" and v!="4" and v!="5" and v!="6" and v!="7" and v!="8" and v!="9":
+			temp += v.lower()
+		else:
+			temp += v
+	return temp
+
+def getLoanListData(loan, index):
+	d = {}
+
+	if index % 2 == 0:
+		d['class'] = 'lo_shade'
+		d['class2'] = 'right_loan_balance'
+	else:
+		d['class'] = 'lo_clear'
+		d['class2'] = 'right_loan_balance2'
+
+	if index == 0:
+		d['class'] = 'lo_select'
+		d['class2'] = 'rl_selected'
+
+	loan_type = int(loan.loan_type)
+
+	if loan_type == 0:
+		loan_type = "Personal"
+	elif loan_type == 1:
+		loan_type = "Business"
+	else:
+		loan_type = "Student"
+
+	d['account'] = loan
+	d['balance'] = format_currency(loan.balance)
+	d['principal'] = format_currency(loan.loan_amount)
+	d['rate'] = str(float(loan.rate) * 100) + "%"
+	d['total_interest'] = format_currency(loan.total_interest)
+	d['payment'] = format_currency(loan.payment)
+	d['term'] = str(loan.term) + " months"
+	d['loan_type'] = loan_type
+
+	item_id = "li" + str(index) + "_"
+	d['index'] = index
+	d['item_id'] = item_id
+	d['account_no_id'] = item_id + "account_number"
+	d['start_date_id'] = item_id + "start_date"
+	d['loan_amount_id'] = item_id + "principal"
+	d['balance_id'] = item_id + "balance"
+	d['type_id'] = item_id + "type"
+	d['rate_id'] = item_id + "rate"
+	d['term_id'] = item_id + "term"
+
+	return d
+
 
 def fetch_loan_history(request):
 	content = {}

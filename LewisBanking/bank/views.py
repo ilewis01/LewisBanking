@@ -350,6 +350,12 @@ def make_payment(request):
 	content.update(csrf(request))
 	return render_to_response('loans/make_payment.html', content)
 
+@login_required(login_url='/index')
+def loan_search(request):
+	content = fetch_content(request, 'loan_search')
+	content.update(csrf(request))
+	return render_to_response('loans/loan_search.html', content)
+
 
 
 
