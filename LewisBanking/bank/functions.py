@@ -426,7 +426,11 @@ def welcome_content(request):
 
 def fetchAccountSummary(request):
 	content = {}
-	
+	user = request.user
+	name = name_abv(user)
+	content['name'] = name
+	content['user'] = user
+	content['title'] = "Welcome to Lewis Bank"
 	return content
 
 def fetch_sorted_content(request):

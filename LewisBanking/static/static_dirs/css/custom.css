@@ -2282,6 +2282,56 @@ iframe {
 	background-color: #999999;
 }
 
+.summary_content_wrap {
+	width:85%;
+	height: 70%;
+	border-radius: 8px;
+	border: 1px solid #666666;
+	margin: auto;
+	background-color: white;
+	margin-top:5%;
+	padding-left: 3%;
+	padding-right: 3%;
+	padding-top:3%;
+	text-align: justify;
+	overflow-y: scroll; 
+}
+
+.summary_content_wrap span {
+	font-size: 22px;
+	font-style: italic;
+	font-weight: bold;
+}
+
+.pdf_wrap {
+	width:700px;
+	height:600px;
+	background-color: white;
+	margin: auto;
+	border: 1px solid black;
+	box-shadow: 2px 2px 5px #666666;
+	border-radius: 5px;
+	margin-top:-5%;
+}
+
+.pdf_nav1 {
+	width:100%;
+	font-size: 18px;
+	text-align: left;
+	padding-left:1%;
+}
+
+.pdf_info {
+	width:90%;
+	height:90%;
+	margin: auto;
+	margin-left:5%;
+	font-family: times;
+	text-align: left;
+	font-size: 15px;
+	overflow-y:scroll;
+}
+
 
 
 
