@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: set_base_select('btn4', 'text4'); init_history_radio(); load_premium_dates({{years}}, {{months}});">
+<body onLoad="javascript: set_base_select('btn4', 'text4'); init_history_radio(); load_premium_dates({{years}}, {{months}}, '{{day}}');">
 	<div class="fadeOut" id="z1">
 	</div>
 
@@ -16,6 +16,33 @@
 		<input type="hidden" name="searchType" id="searchType" value="">
 		<input type="hidden" name="searchMethod" id="searchMethod" value="">
 		<input type="hidden" name="size" id="size" value="{{size}}">
+		<input type="hidden" name="search_phrase" id="search_phrase" value="">
+
+		<div class="fadeOut" id="z5" style="z-index:1;">
+			<div class="singleErrorWrapLG">
+				<div class="messageNav-short" style="font-size:20px;">
+					<a href="javascript: visibility(5, 'hide');">
+						<i class="fa fa-window-close" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="er_align">
+					<div class="warning_iconLG">
+						<img src="{% static 'images/warning.png' %}" alt="error-ico" class=''>
+					</div>
+
+					<div class="warning_ptextLG">
+						<span>ERROR:</span>
+					</div>
+
+					<div id="th_error_message" class="th_error_message"></div>
+
+					<div class="warning_pbtn">
+						<button type="button" onClick="javascript: visibility(5, 'hide');">Continue</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<div class="data-wrap-solid">
 			<div class="url-wrap">Transaction History</div>
@@ -67,7 +94,10 @@
 			<div class="summary-boxes2 summary-selected-data">
 				<div class="a_page_selected">
 					<div class="selected-item-wrap" id="tv_builder">
-						<!-- THIS IS THE DISPLAY WINDOW -->
+						<div id="ts_all" class="ts_all"></div>
+						<div id="ts_title"></div>
+						<div id="ts_results"></div>
+						<div id="ts_message"></div>
 					</div>
 				</div>
 
@@ -203,8 +233,8 @@
 
 				<div class="a_right_btm">
 					<div class="hold_trans_buttons">
-						<button>Search</button>
-						<button>Clear</button>
+						<button type="button" onClick="javascript: fetch_tsearch_errors();">Search</button>
+						<button type="button" onClick="javascript: clear_transaction_search();">Clear</button>
 					</div>
 				</div>
 			</div>

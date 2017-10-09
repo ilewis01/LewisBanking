@@ -143,6 +143,12 @@ def load_history_list(request):
 	return render_to_response('transactions/load_history_list.html', content)
 
 @login_required(login_url='/index')
+def load_history_search(request):
+	content = fetch_content(request, "load_history_search")
+	content.update(csrf(request))
+	return render_to_response('transactions/load_history_list.html', content)
+
+@login_required(login_url='/index')
 def profile(request):
 	content = fetch_content(request, "profile")
 	content.update(csrf(request))

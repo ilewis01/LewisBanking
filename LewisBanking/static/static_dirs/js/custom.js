@@ -1859,13 +1859,6 @@ function init_history_radio() {
 
 	if (normal === true)
 	{
-		grab('fm_mm').selectedIndex = 0;
-		grab('fm_dd').selectedIndex = 0;
-		grab('fm_yy').selectedIndex = 0;
-		grab('to_mm').selectedIndex = 0;
-		grab('to_dd').selectedIndex = 0;
-		grab('to_yy').selectedIndex = 0;
-
 		grab('fm_mm').disabled = true;
 		grab('fm_dd').disabled = true;
 		grab('fm_yy').disabled = true;
@@ -1923,13 +1916,6 @@ function init_history_radio() {
 
 	else if (money === true)
 	{
-		grab('fm_mm').selectedIndex = 0;
-		grab('fm_dd').selectedIndex = 0;
-		grab('fm_yy').selectedIndex = 0;
-		grab('to_mm').selectedIndex = 0;
-		grab('to_dd').selectedIndex = 0;
-		grab('to_yy').selectedIndex = 0;
-
 		grab('fm_mm').disabled = true;
 		grab('fm_dd').disabled = true;
 		grab('fm_yy').disabled = true;
@@ -1953,11 +1939,12 @@ function init_history_radio() {
 	}
 }
 
-function load_premium_dates(years, months)
+function load_premium_dates(years, months, day)
 {
 	var mm_html = "";
 	var yy_html = "";
 	var i = 0;
+	day = Number(day) - 1;
 
 	for (i = 0; i < months.length; i++)
 	{
@@ -1979,6 +1966,9 @@ function load_premium_dates(years, months)
 
 	load_days(grab('fm_dd'), grab('fm_mm'), grab('fm_yy'));
 	load_days(grab('to_dd'), grab('to_mm'), grab('to_yy'));
+
+	grab('fm_dd').selectedIndex = day;
+	grab('to_dd').selectedIndex = grab('to_dd').length - 1;
 }
 
 function load_days(div, mm_div, yy_div)
@@ -1996,9 +1986,11 @@ function load_days(div, mm_div, yy_div)
 	div.innerHTML = html;
 }
 
+
 function fetch_days(mm, yy)
 {
 	var num_days = 31;
+	var today = new Date();
 	mm = Number(mm);
 	yy = Number(yy);
 
@@ -2016,7 +2008,155 @@ function fetch_days(mm, yy)
 	{
 		num_days = 30;
 	}
+
+	if (mm === (today.getMonth() + 1) && yy === today.getFullYear())
+	{
+		num_days = today.getDate();
+	}
 	return num_days
+}
+
+function fetch_tsearch_errors()
+{
+	var proceed = true;
+	var message_div = grab('th_error_message');
+	var method = "";
+	var search_type = "";
+	var fm_search = "";
+	var to_search = "";
+	var search_phrase = "";
+
+	if (grab('normal').checked === true)
+	{
+		search_type = "normal";
+		var search = String(grab('search').value);
+
+		if (search.length === 0)
+		{
+			message_div.innerHTML = "You must valid enter search criteria"
+			visibility(5, 'show');
+			proceed = false;
+		}
+		else
+		{
+			fm_search = search;
+			search_phrase = "Search for: <em>\"" + String(search) + "\"</em";
+		}
+	}
+
+	else if (grab('date').checked === true)
+	{
+		method = "date";
+		search_type = "advanced";
+		var f1 = String(grab('fm_mm').value) + String(grab('fm_dd').value) + String(grab('fm_yy').value);
+		var f2 = String(grab('to_mm').value) + String(grab('to_dd').value) + String(grab('to_yy').value);
+		f1 = Number(f1);
+		f2 = Number(f2);
+
+		if (f2 < f1)
+		{
+			message_div.innerHTML = "The max date cannot be before the min date";
+			visibility(5, 'show');
+			proceed = false;
+		}
+
+		else
+		{
+			sp1 = String(grab('fm_mm').value) + "/" + String(grab('fm_dd').value) + "/" + String(grab('fm_yy').value);
+			sp2 = String(grab('to_mm').value) + "/" + String(grab('to_dd').value) + "/" + String(grab('to_yy').value);
+			fm_search = String(grab('fm_mm').value) + "-" + String(grab('fm_dd').value) + "-" + String(grab('fm_yy').value);
+			to_search = String(grab('to_mm').value) + "-" + String(grab('to_dd').value) + "-" + String(grab('to_yy').value);
+			search_phrase = "Dates between <em>" + sp1 + "</em> and <em>" + sp2 + "</em>";
+		}
+	}
+
+	else if (grab('money').checked === true)
+	{
+		method = "money";
+		search_type = "advanced";
+		var fm_dollar 	= grab('fm_dollar');
+		var to_dollar 	= grab('to_dollar');
+		var fm_cents 	= grab('fm_cents');
+		var to_cents 	= grab('to_cents');
+
+		if (String(fm_cents.value).length === 0) {fm_cents.value = "00";}
+		if (String(to_cents.value).length === 0) {to_cents.value = "00";}
+		if (String(fm_dollar.value).length === 0) {fm_dollar.value = "0";}
+
+		if (String(to_dollar.value).length === 0)
+		{
+			message_div.innerHTML = "You must enter a valid value for the upper bound"
+			visibility(5, 'show');
+			proceed = false;
+		}
+
+		var fm1 = String(fm_dollar.value) + "." + String(fm_cents.value);
+		var fm2 = String(to_dollar.value) + "." + String(to_cents.value);
+		fm_search = parseFloat(fm1);
+		to_search = parseFloat(fm2);
+		search_phrase = "Transactions between <em>$" + fm_search + "</em> and <em>$" + to_search + "</em>";
+		
+		if (fm_search > to_search)
+		{
+			message_div.innerHTML = "The upper bound cannot be smaller than the lower bound";
+			visibility(5, 'show');
+			proceed = false;
+		}
+	}
+
+	if (proceed === true)
+	{
+		grab('search_phrase').value = search_phrase;
+		var win = frame('tFrame');
+		win.grab('sort').value
+
+		win.grab('searchMethod').value = method;
+		win.grab('searchType').value = search_type;
+		win.grab('search').value = fm_search;
+		win.grab('search2').value = to_search;
+		win.grab('frame_form').action = "/load_history_search/";
+		win.grab('frame_form').submit();
+	}
+}
+
+function initialize_transaction_search(isSearch, size)
+{
+	isSearch = Number(isSearch);
+	size = Number(size)
+
+	if (isSearch === -1)
+	{		
+		parent.grab('ts_all').innerHTML = "All Transactions"
+		parent.grab('ts_results').innerHTML = "";
+		parent.grab('ts_title').innerHTML = "";
+		parent.grab('ts_message').innerHTML = "";
+	}
+	else if (isSearch === 1)
+	{
+		if (size === 0)
+		{
+			parent.grab('ts_all').innerHTML = "";
+			parent.grab('ts_results').innerHTML = "<em>0</em> records found for <em>\"" + String(parent.grab('search').value) + "\"</em>";
+			parent.grab('ts_message').innerHTML = "Click the clear button to continue";
+			parent.grab('ts_title').innerHTML = "";
+		}
+		else
+		{
+			var phrase = " matches ";
+			if (size === 1) {phrase = " match ";}
+
+			parent.grab('ts_results').innerHTML = "<em>" + String(size) + "</em>" + phrase + "found";
+			parent.grab('ts_message').innerHTML = "Click the clear button to view all";
+			parent.grab('ts_title').innerHTML = parent.grab('search_phrase').value;
+			parent.grab('ts_all').innerHTML = "";
+		}
+	}
+	parent.grab('search').value = "";
+}
+
+function clear_transaction_search()
+{
+	grab('tFrame').src = "/t_history_list/";
 }
 
 function load_profile_data()

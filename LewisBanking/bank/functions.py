@@ -672,6 +672,7 @@ def fetchTransactionsContent(request):
 	name = name_abv(user)
 	dates = fetch_date_ranges(user)
 
+	content['day'] = dates['day']
 	content['years'] = dates['years']
 	content['months'] = dates['months']
 	content['name'] = name
@@ -2164,6 +2165,9 @@ def fetch_content(request, url):
 	elif url == "load_Thistory_list":
 		content = load_Thistory_list(request)
 
+	elif url == "load_history_search":
+		content = mega_transaction_search(request)
+
 	elif url == "profile":
 		content = fetchProfileContent(request)
 
@@ -2275,6 +2279,7 @@ def fetch_date_ranges(user):
 			d['option'] = convert_month_toString(k + 1)
 			months.append(d)
 
+	dates['day'] = joined.day 
 	dates['years'] = json.dumps(years)
 	dates['months'] = json.dumps(months)
 	return dates
@@ -2340,6 +2345,7 @@ def load_Thistory_list(request):
 		sorted_list.append(d)
 		count += 1
 
+	content['isSearch'] = -1
 	content['size'] = count
 	content['history'] = sorted_list
 	content['sort'] = sort
@@ -2361,6 +2367,8 @@ def update_user_phone(request):
 
 def search_algorithm(search, value):
 	match 		= False
+	search 		= str(search)
+	value 		= str(value)
 	size 		= len(value)
 	search_size = len(search)
 
@@ -2784,8 +2792,9 @@ def mega_transaction_search(request):
 	elif search_type == "advanced":
 		search2 = str(request.POST.get('search2'))
 		method = str(request.POST.get('searchMethod'))
-		sorted_list = transaction_advanced_search(transactions, fm_search, to_search, method)
+		sorted_list = transaction_advanced_search(h_list, search, search2, method)
 
+	content['isSearch'] = 1
 	content['sort'] = sort
 	content['direction'] = direction
 	content['history'] = sorted_list
@@ -2812,7 +2821,7 @@ def convert_search_to_date(value):
 				count += 1
 		else:
 			tp += v
-	yy = int(temp)
+	yy = int(tp)
 	mm = int(mm)
 	dd = int(dd)
 	return datetime(yy, mm, dd).date()
