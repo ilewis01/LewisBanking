@@ -131,6 +131,18 @@ def transactions(request):
 	return render_to_response('transactions.html', content)
 
 @login_required(login_url='/index')
+def t_history_list(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('transactions/t_history_list.html', content)
+
+@login_required(login_url='/index')
+def load_history_list(request):
+	content = fetch_content(request, "load_Thistory_list")
+	content.update(csrf(request))
+	return render_to_response('transactions/load_history_list.html', content)
+
+@login_required(login_url='/index')
 def profile(request):
 	content = fetch_content(request, "profile")
 	content.update(csrf(request))

@@ -2158,6 +2158,9 @@ def fetch_content(request, url):
 	elif url == "transactions":
 		content = fetchTransactionsContent(request)
 
+	elif url == "load_Thistory_list":
+		content = load_Thistory_list(request)
+
 	elif url == "profile":
 		content = fetchProfileContent(request)
 
@@ -2230,6 +2233,46 @@ def fetch_content(request, url):
 	elif url == "update_phone":
 		content = update_user_phone(request)
 
+	return content
+
+def load_Thistory_list(request):
+	content = {}
+	user_id = str(request.user.id)
+	sort = str(request.POST.get('sort'))
+	direction = str(request.POST.get('direction'))
+	m_sort = sort
+	h_list = []
+	sorted_list = []
+	count = 0
+
+	if direction == 'descend':
+		m_sort = "-" + sort
+
+	history = History.objects.all().order_by(m_sort)
+
+	for h in history:
+		if user_id == str(h.user_id):
+			h_list.append(h)
+
+	for h in h_list:
+		d = {}
+		d['index'] = count
+
+		if count % 2 == 0:
+			d['class'] = 'history_clear'
+		else:
+			d['class'] = 'history_shade'
+
+		d['b_balancef'] = format_currency(h.b_balance)
+		d['e_balancef'] = format_currency(h.e_balance)
+		d['history'] = h
+		sorted_list.append(d)
+		count += 1
+
+	content['size'] = count
+	content['history'] = sorted_list
+	content['sort'] = sort
+	content['direction'] = direction
 	return content
 
 def update_user_phone(request):

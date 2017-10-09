@@ -2,12 +2,110 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: set_base_select('btn4', 'text4');">
+<body onLoad="javascript: ;">
+	<div class="fadeOut" id="z1">
+	</div>
+
+
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
-		<input type='hidden' name="btn" id='btn' value="btn4">
-		<input type='hidden' name="txn" id='txn' value="text4">
-		<div class="data-wrap">
+		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
+		<input type="hidden" name="selected_account_number" id="selected_account_number" value="">
+		<input type="hidden" name="selected_date" id="selected_date" value="">
+		<input type="hidden" name="selected_principal" id="selected_principal" value="">
+		<input type="hidden" name="selected_balance" id="selected_balance" value="">
+		<input type="hidden" name="selected_balancef" id="selected_balancef" value="">
+		<input type="hidden" name="selected_payment" id="selected_payment" value="">
+		<input type="hidden" name="selected_type" id="selected_type" value="">
+		<input type="hidden" name="selected_rate" id="selected_rate" value="">
+		<input type="hidden" name="selected_term" id="selected_term" value="">
+		<input type="hidden" name="view_mode" id="view_mode" value="0">
+		<input type="hidden" name="selected_index" id="selected_index" value="0">
+		<input type='hidden' name="btn" id='btn' value="btn3">
+		<input type='hidden' name="txn" id='txn' value="text3">
+		<input type="hidden" name="search2" id="search2" value="">
+		<input type="hidden" name="searchType" id="searchType" value="">
+		<input type="hidden" name="advType" id="advType" value="">
+		<input type="hidden" name="adv_search_crit" id="adv_search_crit" value="">
+		<input type="hidden" name="size" id="size" value="{{size}}">
+
+		<div class="data-wrap-solid">
 			<div class="url-wrap">Transaction History</div>
+
+			<div class="summary-boxes">
+				<div class='item-list-nav'>
+					<div class='item-list-nav-inner'>
+						<div class="tri-edge">
+							<table>
+								<tr>
+									<td><div class="sortBy1" id="sort_label">Sort By:</div></td>
+
+									<td>
+										<div id="select_builder">
+											<select name="sort_parent" id="sort_parent" onChange="javascript: sort_h_list();">
+												<option value="date">Date</option>
+												<option value="action">Action</option>
+												<option value="account_number">Account Number</option>
+												<option value="account_type">Account Type</option>
+												<option value="b_balance">Starting Balance</option>
+												<option value="e_balance">Ending Balance</option>
+											</select>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div class="tri-center"></div>
+
+						<div class="tri-edge" id="carat">
+							<a href="javascript: toggle_carat(); sort_h_list();">
+								<div class="direction-holder">
+									<div class="carat-holder" id="icon"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></div>
+									<div class="dir_text" id="dir_text">Descending</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="mega-list-holder">
+					<iframe src="/t_history_list/" id="tFrame"></iframe>
+				</div>
+
+				<div class="a_right_btm" style="width:100%;"></div>
+			</div>
+
+			<div class="summary-boxes2 summary-selected-data">
+				<div class="a_page_selected">
+					<div class="selected-item-wrap" id="tv_builder">
+						<!-- THIS IS THE DISPLAY WINDOW -->
+					</div>
+				</div>
+
+				<div class="h_page_search">
+					<div class="h_search_content">
+						<span>Search Options:</span>
+						<table>
+							<tr>
+								<td><div><input type="radio" name="searchType" id="normal" checked></div></td>
+							</tr>
+
+							<tr>
+								<td><div><input type="radio" name="searchType" id="date"></div></td>
+							</tr>
+
+							<tr>
+								<td><div><input type="radio" name="searchType" id="money"></div></td>
+							</tr>
+						</table>
+
+						<button>Search</button>
+						<button>Clear</button>
+					</div>
+				</div>
+
+				<div class="a_right_btm"></div>
+			</div>
 		</div>
 	</form>
 </body>

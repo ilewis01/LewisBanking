@@ -1832,6 +1832,23 @@ function changePasswordButton()
 	else {grab('bank_form').submit();}
 }
 
+function init_transaction_history()
+{
+	grab('sort').value = "date";
+	grab('direction').value = "descend";
+	grab('frame_form').submit();
+}
+
+function sort_h_list()
+{
+	var win = frame('tFrame');
+	var sort = grab('sort_parent').value;
+	var direction = grab('direction_parent').value;
+	win.grab('sort').value = sort;
+	win.grab('direction').value = direction;
+	win.grab('frame_form').submit();
+}
+
 function load_profile_data()
 {
 	// alert("loading profile info")
