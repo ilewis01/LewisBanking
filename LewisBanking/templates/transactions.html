@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: ;">
+<body onLoad="javascript: set_base_select('btn4', 'text4'); init_history_radio(); load_premium_dates({{years}}, {{months}});">
 	<div class="fadeOut" id="z1">
 	</div>
 
@@ -10,22 +10,11 @@
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
 		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
 		<input type="hidden" name="selected_account_number" id="selected_account_number" value="">
-		<input type="hidden" name="selected_date" id="selected_date" value="">
-		<input type="hidden" name="selected_principal" id="selected_principal" value="">
-		<input type="hidden" name="selected_balance" id="selected_balance" value="">
-		<input type="hidden" name="selected_balancef" id="selected_balancef" value="">
-		<input type="hidden" name="selected_payment" id="selected_payment" value="">
-		<input type="hidden" name="selected_type" id="selected_type" value="">
-		<input type="hidden" name="selected_rate" id="selected_rate" value="">
-		<input type="hidden" name="selected_term" id="selected_term" value="">
-		<input type="hidden" name="view_mode" id="view_mode" value="0">
-		<input type="hidden" name="selected_index" id="selected_index" value="0">
-		<input type='hidden' name="btn" id='btn' value="btn3">
-		<input type='hidden' name="txn" id='txn' value="text3">
+		<input type='hidden' name="btn" id='btn' value="btn4">
+		<input type='hidden' name="txn" id='txn' value="text4">
 		<input type="hidden" name="search2" id="search2" value="">
 		<input type="hidden" name="searchType" id="searchType" value="">
-		<input type="hidden" name="advType" id="advType" value="">
-		<input type="hidden" name="adv_search_crit" id="adv_search_crit" value="">
+		<input type="hidden" name="searchMethod" id="searchMethod" value="">
 		<input type="hidden" name="size" id="size" value="{{size}}">
 
 		<div class="data-wrap-solid">
@@ -84,27 +73,140 @@
 
 				<div class="h_page_search">
 					<div class="h_search_content">
-						<span>Search Options:</span>
+						<span><div style="padding-bottom:5%;">Search Options:</div></span>
 						<table>
 							<tr>
-								<td><div><input type="radio" name="searchType" id="normal" checked></div></td>
+								<td><div style="width:20px;"><input type="radio" name="searchType" id="normal" checked onCLick="javascript: init_history_radio();"></div></td>
+								<td>
+									<div class="float_this">
+										<div class="h_search_holdThis">
+											<input type="search" name="search" id="search" placeholder="Search Transactions">
+										</div>
+
+										<div class="placeDicon">
+											<i class="fa fa-search" aria-hidden="true"></i>
+										</div>
+									</div>
+								</td>
+							</tr>
+
+							<tr><td><div style="height:11px;"></div></td></tr>
+
+							<tr>
+								<td>
+									<div class="h_span_search"><input type="radio" name="searchType" id="date" onCLick="javascript: init_history_radio();"></div>
+								</td>
+
+								<td><div class="make_soup">Date Range</div></td>
 							</tr>
 
 							<tr>
-								<td><div><input type="radio" name="searchType" id="date"></div></td>
+								<td></td>
+								<td>
+									<div id="delv1">
+										<table>
+										    <tr>
+											    <td><div class="soupLabel">From:</div></td>
+
+											    <td>
+											    	<div>
+											    		<select name="fm_mm" id="fm_mm" onChange="javascript: load_days(fm_dd, fm_mm, fm_yy);">
+											    		</select>
+											    	</div>
+											    </td>
+
+											    <td>
+											    	<div><select name="fm_dd" id="fm_dd"></select></div>
+											    </td>
+
+											    <td>
+											    	<div>
+											    		<select name="fm_yy" id="fm_yy" onChange="javascript: load_days(fm_dd, fm_mm, fm_yy);">
+											    		</select>
+											    	</div>
+											    </td>
+										    </tr>
+
+										    <tr>
+											    <td><div class="soupLabel">To:</div></td>
+
+											    <td>
+											    	<div>
+											    		<select name="to_mm" id="to_mm" onChange="javascript: load_days(to_dd, to_mm, to_yy);">
+											    		</select>
+											    	</div>
+											    </td>
+
+											    <td>
+											    	<div><select name="to_dd" id="to_dd"></select></div>
+											    </td>
+
+											    <td>
+											    	<div>
+											    		<select name="to_yy" id="to_yy" onChange="javascript: load_days(to_dd, to_mm, to_yy);">
+											    		</select>
+											    	</div>
+											    </td>
+										    </tr>
+									    </table>
+									</div>
+								</td>
+							</tr>
+
+							<tr><td><div style="height:11px;"></div></td></tr>
+
+							<tr>
+								<td><div><input type="radio" name="searchType" id="money" onCLick="javascript: init_history_radio();"></div></td>
+
+								<td><div class="make_soup">Dollar Range</div></td>
 							</tr>
 
 							<tr>
-								<td><div><input type="radio" name="searchType" id="money"></div></td>
+								<td></td>
+								<td>
+									<div id="delv2">
+										<table>
+										    <tr>
+											    <td><div class="soupLabel">From:</div></td>
+
+											    <td><div class="soup_money"><span>$</span><input type="text" name="fm_dollar" id="fm_dollar" oninput="javascript: entry_error(fm_dollar, 'number', 10);"></div></td>
+
+											    <td><div>.</div></td>
+
+											    <td>
+											    	<div class="soup_cents">
+											    		<input type="text" name="fm_cents" id="fm_cents" placeholder="00" oninput="javascript: entry_error(fm_cents, 'number', 2);">
+											    	</div>
+											    </td>
+										    </tr>
+
+										    <tr>
+											    <td><div class="soupLabel">To:</div></td>
+
+											    <td><div class="soup_money"><span>$</span><input type="text" name="to_dollar" id="to_dollar" oninput="javascript: entry_error(to_dollar, 'number', 10);"></div></td>
+
+											    <td><div>.</div></td>
+
+											    <td>
+											    	<div class="soup_cents">
+											    		<input type="text" name="to_cents" id="to_cents" placeholder="00" oninput="javascript: entry_error(to_cents, 'number', 2);">
+											    	</div>
+											    </td>
+										    </tr>
+									    </table>
+									</div>
+								</td>
 							</tr>
 						</table>
+					</div>
+				</div>
 
+				<div class="a_right_btm">
+					<div class="hold_trans_buttons">
 						<button>Search</button>
 						<button>Clear</button>
 					</div>
 				</div>
-
-				<div class="a_right_btm"></div>
 			</div>
 		</div>
 	</form>

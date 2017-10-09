@@ -1849,6 +1849,176 @@ function sort_h_list()
 	win.grab('frame_form').submit();
 }
 
+function init_history_radio() {
+	var date_div = grab('delv1');
+	var money_div = grab('delv2');
+	var search_div = grab('search');
+	var normal = grab('normal').checked;
+	var date = grab('date').checked;
+	var money = grab('money').checked;
+
+	if (normal === true)
+	{
+		grab('fm_mm').selectedIndex = 0;
+		grab('fm_dd').selectedIndex = 0;
+		grab('fm_yy').selectedIndex = 0;
+		grab('to_mm').selectedIndex = 0;
+		grab('to_dd').selectedIndex = 0;
+		grab('to_yy').selectedIndex = 0;
+
+		grab('fm_mm').disabled = true;
+		grab('fm_dd').disabled = true;
+		grab('fm_yy').disabled = true;
+		grab('to_mm').disabled = true;
+		grab('to_dd').disabled = true;
+		grab('to_yy').disabled = true;
+
+		grab('fm_dollar').disabled = true;
+		grab('to_dollar').disabled = true;
+		grab('fm_cents').disabled = true;
+		grab('to_cents').disabled = true;
+
+		grab('fm_dollar').value = "";
+		grab('to_dollar').value = "";
+		grab('fm_cents').value = "";
+		grab('to_cents').value = "";
+
+		date_div.style.opacity = "0.5";
+		money_div.style.opacity = "0.5";
+
+		grab('search').disabled = false;
+		grab('search').style.opacity = "1.0";
+
+		grab('searchType').value = "normal";
+	}
+
+	else if (date === true)
+	{
+		grab('fm_mm').disabled = false;
+		grab('fm_dd').disabled = false;
+		grab('fm_yy').disabled = false;
+		grab('to_mm').disabled = false;
+		grab('to_dd').disabled = false;
+		grab('to_yy').disabled = false;
+
+		grab('fm_dollar').disabled = true;
+		grab('to_dollar').disabled = true;
+		grab('fm_cents').disabled = true;
+		grab('to_cents').disabled = true;
+
+		grab('fm_dollar').value = "";
+		grab('to_dollar').value = "";
+		grab('fm_cents').value = "";
+		grab('to_cents').value = "";
+
+		date_div.style.opacity = "1.0";
+		money_div.style.opacity = "0.5";
+
+		grab('search').disabled = true;
+		grab('search').style.opacity = "0.5";
+
+		grab('searchType').value = "advanced";
+		grab('searchMethod').value = "date";
+	}
+
+	else if (money === true)
+	{
+		grab('fm_mm').selectedIndex = 0;
+		grab('fm_dd').selectedIndex = 0;
+		grab('fm_yy').selectedIndex = 0;
+		grab('to_mm').selectedIndex = 0;
+		grab('to_dd').selectedIndex = 0;
+		grab('to_yy').selectedIndex = 0;
+
+		grab('fm_mm').disabled = true;
+		grab('fm_dd').disabled = true;
+		grab('fm_yy').disabled = true;
+		grab('to_mm').disabled = true;
+		grab('to_dd').disabled = true;
+		grab('to_yy').disabled = true;
+
+		grab('fm_dollar').disabled = false;
+		grab('to_dollar').disabled = false;
+		grab('fm_cents').disabled = false;
+		grab('to_cents').disabled = false;
+
+		date_div.style.opacity = "0.5";
+		money_div.style.opacity = "1.0";
+
+		grab('search').disabled = true;
+		grab('search').style.opacity = "0.5";
+
+		grab('searchType').value = "advanced";
+		grab('searchMethod').value = "money";
+	}
+}
+
+function load_premium_dates(years, months)
+{
+	var mm_html = "";
+	var yy_html = "";
+	var i = 0;
+
+	for (i = 0; i < months.length; i++)
+	{
+		mm_html += "<option value=\"" + months[i]['value'] + "\">" + months[i]['option'] + "</option>";
+	}
+
+	for (i = 0; i < years.length; i++)
+	{
+		yy_html += "<option value=\"" + years[i] + "\">" + years[i] + "</option>";
+	}
+
+	grab('fm_mm').innerHTML = mm_html;
+	grab('to_mm').innerHTML = mm_html;
+	grab('fm_yy').innerHTML = yy_html;
+	grab('to_yy').innerHTML = yy_html;
+
+	grab('to_mm').selectedIndex = months.length - 1;
+	grab('to_yy').selectedIndex = years.length - 1;
+
+	load_days(grab('fm_dd'), grab('fm_mm'), grab('fm_yy'));
+	load_days(grab('to_dd'), grab('to_mm'), grab('to_yy'));
+}
+
+function load_days(div, mm_div, yy_div)
+{
+	var html = "";
+	var mm = Number(mm_div.value);
+	var yy = Number(yy_div.value);
+	var num_days = fetch_days(mm, yy);
+
+	for (var i = 1; i <= num_days; i++)
+	{
+		html += "<option value\"" + String(i) + "\">" + String(i) + "</option>";
+	}
+
+	div.innerHTML = html;
+}
+
+function fetch_days(mm, yy)
+{
+	var num_days = 31;
+	mm = Number(mm);
+	yy = Number(yy);
+
+	if (mm === 2)
+	{
+		num_days = 28;
+
+		if (yy % 4 === 0)
+		{
+			num_days = 29;
+		}
+	}
+
+	else if (mm === 4 || mm === 6 || mm === 9 || mm === 11)
+	{
+		num_days = 30;
+	}
+	return num_days
+}
+
 function load_profile_data()
 {
 	// alert("loading profile info")

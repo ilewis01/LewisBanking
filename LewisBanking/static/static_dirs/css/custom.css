@@ -1546,7 +1546,7 @@ iframe {
 
 .h_page_search {
 	width:85%;
-	height:40%;
+	height:51%;
 	margin: auto;
 	border-radius: 5px;
 	border-left: 2px solid white;
@@ -2606,13 +2606,15 @@ iframe {
 	height:100%;
 	margin:auto;
 	text-align: left;
+	padding-top:5%;
 }
 
 .h_search_content button {
 	width:49%;
 	border-radius: 5px;
-	font-size: 12px;
+	font-size: 10px;
 	font-weight: bold;
+	margin-top:5px;
 }
 
 .h_search_content button:hover {
@@ -2693,6 +2695,89 @@ iframe {
 
 .hl_qa3 span {
 	color:#641722;
+}
+
+.float_this {
+	width:222px;
+	height:26px;
+}
+
+.h_search_holdThis {
+	width:100%;
+	height:100%;
+	position: relative;
+	float:left;
+}
+
+.h_search_holdThis input {
+	width:100%;
+	border-radius: 5px;
+	padding-left: 2%;
+}
+
+.placeDicon {
+	position:relative;
+	float: left;	
+	margin-left: -20px;
+	line-height: 25px;
+	z-index:2;
+	color:#3f96d2;
+}
+
+.make_soup {
+	padding-top: 1.4%;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 12px;
+	text-align: left;
+}
+
+.soupLabel {
+	text-align: right;
+	font-size: 11px;
+	font-weight: bold;
+	font-style: italic;
+	color:#3f96d2;
+	width:32px;
+	padding-right:5px;
+}
+
+.soup_money {
+	font-size: 11px;
+}
+
+.soup_money span {
+	font-size: 11px;
+}
+
+.soup_money input {
+	border-radius: 5px;
+	text-align: right;
+	width:87px;
+}
+
+.soup_cents input {
+	text-align: center;
+	width:30px;
+	border-radius: 5px;
+	font-size: 11px;
+}
+
+.hold_trans_buttons {
+	width:90%;
+	margin:auto;
+}
+
+.hold_trans_buttons button {
+	border-radius: 5px;
+	font-size: 11px;
+	font-weight: bold;
+	width:49%;
+	margin-top:4%;
+}
+
+.hold_trans_buttons button:hover {
+	background-color: #999999;
 }
 
 

@@ -670,7 +670,10 @@ def fetchTransactionsContent(request):
 	user = request.user
 	profile = getUserProfile(user)
 	name = name_abv(user)
+	dates = fetch_date_ranges(user)
 
+	content['years'] = dates['years']
+	content['months'] = dates['months']
 	content['name'] = name
 	content['user'] = user
 	content['profile'] = profile
@@ -2238,6 +2241,44 @@ def fetch_content(request, url):
 
 	return content
 
+def fetch_date_ranges(user):
+	dates 		= {}
+	years 		= []
+	months 		= []
+
+	today 		= datetime.now().date()
+	joined 		= user.date_joined.date()
+	yy_joined 	= joined.year
+	mm_joined 	= joined.month
+	yy_now 		= today.year
+	mm_now 		= today.month
+
+	if yy_now == yy_joined:
+		years.append(yy_now)
+		no_months = abs(mm_now - mm_joined + 1)
+		for i in range(no_months):
+			d = {}
+			d['value'] = mm_joined
+			d['option'] = convert_month_toString(mm_joined)
+			months.append(d)
+			mm_joined += 1
+	else:
+		no_years = abs(yy_now - yy_joined + 1)
+		for j in range(no_years):
+			d = {}
+			years.append(yy_joined)
+			yy_joined += 1
+
+		for k in range(12):
+			d = {}
+			d['value'] = k + 1
+			d['option'] = convert_month_toString(k + 1)
+			months.append(d)
+
+	dates['years'] = json.dumps(years)
+	dates['months'] = json.dumps(months)
+	return dates
+
 def commitDelete(request):
 	content = {}
 	user = request.user
@@ -2646,6 +2687,135 @@ def fetch_payment_dates(request):
 	content['account_number'] = loan.account_number
 	return content
 
+def get_transaction_list_data(item, count):
+	data = {}
+	data['index'] = count
+
+	if count % 2 == 0:
+		data['class'] = 'history_clear'
+	else:
+		data['class'] = 'history_shade'
+
+	data['b_balancef'] = format_currency(item.b_balance)
+	data['e_balancef'] = format_currency(item.e_balance)
+	data['history'] = item
+	return data
+
+def transaction_normal_search(transactions, search):
+	results = []
+	count = 0
+
+	for t in transactions:
+		if search_algorithm(search, t.account_number) == True:
+			d = get_transaction_list_data(t, count)
+			results.append(d)
+			count += 1
+		elif search_algorithm(search, t.b_balance) == True:
+			d = get_transaction_list_data(t, count)
+			results.append(d)
+			count += 1
+		elif search_algorithm(search, t.e_balance) == True:
+			d = get_transaction_list_data(t, count)
+			results.append(d)
+			count += 1
+		elif search_algorithm(search, t.date) == True:
+			d = get_transaction_list_data(t, count)
+			results.append(d)
+			count += 1
+		elif search_algorithm(search, t.account_type) == True:
+			d = get_transaction_list_data(t, count)
+			results.append(d)
+			count += 1
+		elif search_algorithm(search, t.action.action) == True:
+			d = get_transaction_list_data(t, count)
+			results.append(d)
+			count += 1
+	return results
+
+def transaction_advanced_search(transactions, search, search2, method):
+	results = []
+	fm_search = None
+	to_search = None
+	method = str(method)
+	count = 0
+
+	if method == 'date':
+		fm_search = convert_search_to_date(search)
+		to_search = convert_search_to_date(search2)
+		for t in transactions:
+			if t.date >= fm_search and t.date <= to_search:
+				d = get_transaction_list_data(t, count)
+				results.append(d)
+				count += 1
+	elif method == 'money':
+		fm_search = Decimal(search)
+		to_search = Decimal(search2)
+		for t in transactions:
+			amount = abs(t.e_balance - t.b_balance)
+			amount = Decimal(amount)
+			if amount >= fm_search and amount <= to_search:
+				d = get_transaction_list_data(t, count)
+				results.append(d)
+				count += 1
+	return results
+
+def mega_transaction_search(request):
+	content = {}
+	h_list = []
+	sorted_list = []
+	user_id = str(request.user.id)
+	search_type = str(request.POST.get('searchType'))
+	search = str(request.POST.get('search'))
+	sort = str(request.POST.get('sort'))
+	direction = str(request.POST.get('direction'))
+	m_sort = sort
+
+	if direction == "descend":
+		m_sort = "-" + sort
+
+	history = History.objects.all().order_by(m_sort)
+
+	for h in history:
+		if user_id == str(h.user_id):
+			h_list.append(h)
+
+	if search_type == "normal":
+		sorted_list = transaction_normal_search(h_list, search)
+	elif search_type == "advanced":
+		search2 = str(request.POST.get('search2'))
+		method = str(request.POST.get('searchMethod'))
+		sorted_list = transaction_advanced_search(transactions, fm_search, to_search, method)
+
+	content['sort'] = sort
+	content['direction'] = direction
+	content['history'] = sorted_list
+	content['size'] = len(sorted_list)
+	return content
+
+def convert_search_to_date(value):
+	value = str(value)
+	count = 0
+	tp = ""
+	yy = 0
+	mm = 0
+	dd = 0
+
+	for v in value:
+		if v == "-":
+			if count == 0:
+				mm = tp
+				tp = ""
+				count += 1
+			elif count == 1:
+				dd = tp
+				tp = ""
+				count += 1
+		else:
+			tp += v
+	yy = int(temp)
+	mm = int(mm)
+	dd = int(dd)
+	return datetime(yy, mm, dd).date()
 
 
 
