@@ -2066,7 +2066,7 @@ function fetch_tsearch_errors()
 			sp2 = String(grab('to_mm').value) + "/" + String(grab('to_dd').value) + "/" + String(grab('to_yy').value);
 			fm_search = String(grab('fm_mm').value) + "-" + String(grab('fm_dd').value) + "-" + String(grab('fm_yy').value);
 			to_search = String(grab('to_mm').value) + "-" + String(grab('to_dd').value) + "-" + String(grab('to_yy').value);
-			search_phrase = "Dates between <em>" + sp1 + "</em> and <em>" + sp2 + "</em>";
+			search_phrase = "<span>DATES BETWEEN:</span><br><em>" + sp1 + "</em> and <em>" + sp2 + "</em>";
 		}
 	}
 
@@ -2094,7 +2094,7 @@ function fetch_tsearch_errors()
 		var fm2 = String(to_dollar.value) + "." + String(to_cents.value);
 		fm_search = parseFloat(fm1);
 		to_search = parseFloat(fm2);
-		search_phrase = "Transactions between <em>$" + fm_search + "</em> and <em>$" + to_search + "</em>";
+		search_phrase = "TRANSACTIONS BETWEEN:<br><em>$" + fm_search + "</em> and <em>$" + to_search + "</em>";
 		
 		if (fm_search > to_search)
 		{
@@ -2126,7 +2126,7 @@ function initialize_transaction_search(isSearch, size)
 
 	if (isSearch === -1)
 	{		
-		parent.grab('ts_all').innerHTML = "All Transactions"
+		parent.grab('ts_all').innerHTML = "<span>{</span> All Transaction History <span>}</span>";
 		parent.grab('ts_results').innerHTML = "";
 		parent.grab('ts_title').innerHTML = "";
 		parent.grab('ts_message').innerHTML = "";
@@ -2137,7 +2137,7 @@ function initialize_transaction_search(isSearch, size)
 		{
 			parent.grab('ts_all').innerHTML = "";
 			parent.grab('ts_results').innerHTML = "<em>0</em> records found for <em>\"" + String(parent.grab('search').value) + "\"</em>";
-			parent.grab('ts_message').innerHTML = "Click the clear button to continue";
+			parent.grab('ts_message').innerHTML = "<i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i> Click the clear button to continue";
 			parent.grab('ts_title').innerHTML = "";
 		}
 		else
@@ -2146,9 +2146,10 @@ function initialize_transaction_search(isSearch, size)
 			if (size === 1) {phrase = " match ";}
 
 			parent.grab('ts_results').innerHTML = "<em>" + String(size) + "</em>" + phrase + "found";
-			parent.grab('ts_message').innerHTML = "Click the clear button to view all";
+			parent.grab('ts_message').innerHTML = "<i class=\"fa fa-info-circle\" aria-hidden=\"true\"></i> Click the clear button to view all";
 			parent.grab('ts_title').innerHTML = parent.grab('search_phrase').value;
 			parent.grab('ts_all').innerHTML = "";
+			grab('frame_form').action = "/load_history_search/";
 		}
 	}
 	parent.grab('search').value = "";
@@ -2156,6 +2157,8 @@ function initialize_transaction_search(isSearch, size)
 
 function clear_transaction_search()
 {
+	grab('normal').checked = true;
+	init_history_radio();
 	grab('tFrame').src = "/t_history_list/";
 }
 
