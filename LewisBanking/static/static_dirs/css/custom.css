@@ -2517,6 +2517,76 @@ iframe {
 	background-color: #999999;
 }
 
+.singleErrorWrap {
+	width:450px;
+	height:180px;
+	margin:auto;
+	border:1px solid #999999;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px black;
+	background: url('/static/images/gray_grad.png');
+	background-size:100% 100%;
+	margin-top:12%;
+	opacity: 0.93;
+}
+
+.singleErrorWrap a {
+	color:#666666;
+}
+
+.singleErrorWrap a:hover {
+	color:#cccccc;
+}
+
+.warning_icon {
+	width:45px;
+	height:45px;
+	position: relative;
+	float:left;
+}
+
+.warning_icon img {
+	width:100%;
+	height:100%;
+}
+
+.warning_ptext {
+	font-weight: bold;
+	font-style: italic;
+	font-size: 18px;
+	color:#666666;
+	position: relative;
+	float:left;
+	padding-top:3%;
+	padding-left:3%;
+	text-shadow:1px 1px #cccccc;
+}
+
+.warning_pbtn button {
+	font-size: 13px;
+	font-style: normal;
+	font-weight: normal;
+	border-radius: 5px;
+	width:100%;
+	margin-top:7%;
+}
+
+.warning_pbtn button:hover {
+	background-color: #999999;
+}
+
+.warning_ptext span {
+	color:#d66b04;
+	text-shadow:1px 1px black;
+}
+
+.er_align {
+	width:88%;
+	height:45px;
+	margin:auto;
+	margin-top:4%;
+}
+
 
 
 

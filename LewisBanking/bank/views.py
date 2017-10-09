@@ -143,6 +143,12 @@ def updatePassword(request):
 	return render_to_response('updatePassword.html', content)
 
 @login_required(login_url='/index')
+def loadNewPassword(request):
+	content = fetch_content(request, "loadNewPassword")
+	content.update(csrf(request))
+	return render_to_response('admin/loadNewPassword.html', content)
+
+@login_required(login_url='/index')
 def deleteAccount(request):
 	content = fetch_content(request, "delete")
 	content.update(csrf(request))
@@ -272,11 +278,6 @@ def account_results_loader(request):
 	content = fetch_content(request, 'account_search')
 	content.update(csrf(request))
 	return render_to_response('account_results_loader.html', content)
-
-
-
-
-
 
 @login_required(login_url='/index')
 def user_new_loan0(request):

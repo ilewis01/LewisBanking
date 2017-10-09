@@ -1804,6 +1804,34 @@ function update_parent_phone(phone)
 	parent.grab('phone_span').innerHTML = phone;
 }
 
+function track_pInput()
+{
+	var btn = grab('btn');
+	var p0 	= String(grab('old').value);
+	var p1 	= String(grab('password1').value);
+	var p2 	= String(grab('password2').value);
+
+	if (p0.length !== 0 && p1.length !== 0 && p2.length !== 0)
+	{
+		btn.setAttribute('type', 'button');
+		btn.setAttribute('onClick', 'javascript: changePasswordButton();')
+	}
+	else
+	{
+		btn.removeAttribute('onClick');
+		btn.setAttribute('type', 'submit');
+	}
+}
+
+function changePasswordButton()
+{
+	var p1 	= String(grab('password1').value);
+	var p2 	= String(grab('password2').value);
+
+	if (p1 !== p2) {visibility(1, 'show');}
+	else {grab('bank_form').submit();}
+}
+
 function load_profile_data()
 {
 	// alert("loading profile info")

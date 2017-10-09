@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.auth import update_session_auth_hash
 from datetime import datetime
 from datetime import date
 from dateutil.relativedelta import relativedelta
@@ -694,6 +695,25 @@ def fetchPasswordContent(request):
 	user = request.user
 	profile = getUserProfile(user)
 	name = name_abv(user)
+
+	content['name'] = name
+	content['user'] = user
+	content['profile'] = profile
+	content['title'] = "Lewis Bank | Update Password"
+	return content
+
+def loadNewPassword(request):
+	content = {}
+	user = request.user
+	profile = getUserProfile(user)
+	name = name_abv(user)
+	old = str(request.POST.get('old'))
+
+	if user.check_password(old) == True:
+		password = str(request.POST.get('password1'))
+		user.set_password(password)
+		user.save()
+		update_session_auth_hash(request, user)
 
 	content['name'] = name
 	content['user'] = user
@@ -2143,6 +2163,9 @@ def fetch_content(request, url):
 
 	elif url == "password":
 		content = fetchPasswordContent(request)
+
+	elif url == "loadNewPassword":
+		content = loadNewPassword(request)
 
 	elif url == "delete":
 		content = fetchDeleteContent(request)
