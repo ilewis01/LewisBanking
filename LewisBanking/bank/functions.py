@@ -2173,6 +2173,9 @@ def fetch_content(request, url):
 	elif url == "delete":
 		content = fetchDeleteContent(request)
 
+	elif url == "commitDelete":
+		content = commitDelete(request)
+
 	elif url == "sorted":
 		content = fetch_sorted_content(request)
 
@@ -2233,6 +2236,33 @@ def fetch_content(request, url):
 	elif url == "update_phone":
 		content = update_user_phone(request)
 
+	return content
+
+def commitDelete(request):
+	content = {}
+	user = request.user
+	content['user'] = user
+	user_id = str(user.id)
+
+	history = History.objects.all()
+	accounts = Account.objects.all()
+	loans = Loan.objects.all()
+	profile = getUserProfile(user)
+
+	for h in history:
+		if user_id == str(h.user_id):
+			h.delete()
+
+	for a in accounts:
+		if user_id == str(a.user_id):
+			a.delete()
+
+	for l in loans:
+		if user_id == str(l.user_id):
+			l.delete
+
+	profile.delete()
+	user.delete()
 	return content
 
 def load_Thistory_list(request):

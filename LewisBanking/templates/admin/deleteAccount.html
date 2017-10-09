@@ -3,7 +3,23 @@
 {% load staticfiles %}
 
 <body onLoad="javascript: set_base_select('btn5', 'text5');">
-	<form action="" method="post" id="bank_form"> {% csrf_token %}
+	<form action="/commitDelete/" method="post" id="bank_form"> {% csrf_token %}
+		<div class="fadeOut" id="z1" style="z-index:7;">
+			<div class="results_div_size">
+				<div class="cuny-logo2" style="margin-top:5%;">
+					<img src="{% static 'images/logo.png' %}" alt="logo-nav" class='logo-nav-small'>
+				</div>
+				
+				<div>
+					All data associated with your profile will be permanently deleted.
+				</div>
+
+				<div style="margin-top:4%;">
+					<button type="submit">Continue</button>
+				</div>
+			</div>
+		</div>
+
 		<input type="hidden" name="user_id" id="user_id" value="{{user.id}}">
 		<div class="data-wrap">
 			<div class="url-wrap">Delete Account</div>
@@ -22,7 +38,7 @@
 				<div style="margin-top:15%; margin-left:0%;">
 					<div class="del1">Are you sure you want to delete your profile?</div>
 					<div class="del2">This action cannot be undone</div>
-					<div class="delbtn"><button type="submit">Delete Profile</button></div>
+					<div class="delbtn"><button type="button" onClick="javascript: visibility(1, 'show');">Delete Profile</button></div>
 				</div>
 			</div>
 

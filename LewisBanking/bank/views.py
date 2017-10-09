@@ -167,6 +167,12 @@ def deleteAccount(request):
 	return render_to_response('admin/deleteAccount.html', content)
 
 @login_required(login_url='/index')
+def commitDelete(request):
+	content = fetch_content(request, "commitDelete")
+	content.update(csrf(request))
+	return render_to_response('admin/commitDelete.html', content)
+
+@login_required(login_url='/index')
 def load_sorted(request):
 	content = fetch_content(request, "sorted")
 	content.update(csrf(request))
