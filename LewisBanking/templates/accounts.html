@@ -200,6 +200,66 @@
 			</div>
 		</div>
 
+
+
+
+	<div class="fadeOut" id="z6" style="z-index:6;">
+		<div class="history_frame">
+			<input type="hidden" name="direction_history" id="direction_history" value="descend">
+			<input type="hidden" name="sort_history" id="sort_history" value="{{sort_history}}">
+
+			<div class="hf_nav">
+				<a href="javascript: visibility(6, 'hide');"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+			</div>
+
+			<div class="hf_nav2">
+				<div class="history_mega_head">
+					Account History
+				</div>
+
+				<div class="hf_end">
+					<table>
+						<tr>
+							<td><div class="sorting_label" style="margin-right:5px;"><a href="#">Sort:</a></div></td>
+
+							<td>
+								<div>
+									<select name="sort2" id="sort2" onChange="javascript: reload_mega_history();">
+										<option value="date">Transaction Date</option>
+										<option value="action">Transaction Type</option>
+										<option value="b_balance">Starting Balance</option>
+										<option value="e_balance">Ending Balance</option>
+									</select>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<div class="hf_center">
+					Showing <span id="history_type"></span> <span id="history_acct"></span>
+				</div>
+
+				<div class="hf_end">
+					<a href="javascript: toggle_carat_history(); reload_mega_history();">
+						<div class="direction-holder">
+							<div class="carat-holder" id="icon_history"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></div>
+							<div class="sorting_label" id="dir_text_history">Descending</div>
+						</div>
+					</a>
+				</div>
+			</div>
+
+			<iframe src="" class="frame2" id="frame2"></iframe>
+
+			<div class="hf_buttons">
+				<button type="button" onClick="javascript: visibility(6, 'hide');">Close</button>
+			</div>
+		</div>
+	</div>
+
+
+
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
 		<input type='hidden' name="btn" id='btn' value="btn2">
 		<input type='hidden' name="txn" id='txn' value="text2">
@@ -309,7 +369,7 @@
 					<button type="button" class="a-button-top" onCLick="javascript: load_frame('/withdraw0/');">Withdrawal</button>
 					<button type="button" onCLick="javascript: load_frame('/deposit0/');">Deposit</button>
 					<button type="button" onCLick="javascript: load_frame('/transfer0/');">Transfer</button>
-					<button type="button" id="hi_btn" onCLick="javascript: init_history('/view_history0/');">View Selected Account's History</button>
+					<button type="button" id="hi_btn" onCLick="javascript: init_history();">View History</button>
 					<button type="button" class="a-button-bottom" onCLick="javascript: load_frame('/delete_account0/');">Deactivate Account</button>
 				</div>
 

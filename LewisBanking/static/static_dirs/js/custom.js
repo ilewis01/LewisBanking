@@ -1100,66 +1100,26 @@ function reload_li_list()
 	parent.grab('selected_index').value = 0;
 }
 
-function init_history(url)
+function init_history()
 {
-	var btn = grab('hi_btn');
-	btn.innerHTML = "View All";
-	btn.setAttribute('onCLick', 'javascript: view_all();')
-	grab('tv_head').innerHTML = "Viewing History:";
-	grab('selType2').innerHTML = grab('selected_type').value;
-	grab('selAcct2').innerHTML = grab('selected_account_number').value;
-	// grab('active_div').style.visibility = "hidden";
-	// grab('selDate').style.visibility = "hidden";
-
-	var iframe = grab('iframe_list');
-	iframe.src = url;
-
-	grab('active_div').innerHTML = "";
-	grab('selDate').innerHTML = "";
-}
-
-function view_all()
-{
-	var btn = grab('hi_btn');
-	display_tv();
-	btn.innerHTML = "View Selected Account's History";
-	btn.setAttribute('onCLick', "javascript: load_account_sort_options(\'1\'); init_history(\'/view_history0/\');");
-	var iframe = grab('iframe_list');
-	iframe.src = "/load_account_list/";
-	grab('icon').style.visibility = "visible";
-	grab('sort_label').style.visibility = "visible";
-	grab('sort_parent').style.visibility = "visible";
-	grab('dir_text').style.visibility = "visible";
-	load_account_sort_options(0)
-}
-
-function display_tv()
-{
-	html =  "<div class=\"Selcted_Item\" id=\"tv_head\" style=\"margin-top:3.5%;\"><span id=\"selType\"></span> <span id=\"selAcct\"></span></div>"
-	html += "<div class=\"divider\"></div>"
-	html += "<div class=\"inner_class si1\"><span id=\"selType2\"></span> <span id=\"selAcct2\"></span></div>"
-	html += "<div class=\"inner_class si2\" id=\"active_div\">Active Since <span id=\"selDate\"></span></div>"
-	html += "<div class=\"inner_class si3\">Available Now:<br><span>$</span><span id=\"selBaln\"></span></div>"
-	html += "<div class=\"selected-item-content\"></div>"
-	grab('tv_builder').innerHTML = html;
+	grab('frame2').src = "/view_history0/";
+	visibility(6, 'show');
 }
 
 function load_history()
 {
-	var selected = parent.grab('selected_account_number').value;
-	grab('selected_account').value = selected;
+	var selected_index = String(parent.grab('selected_index').value);
+	var win = parent.frame('iframe_list');
+	acct_name = "li" + selected_index + "_account_number";
+	var account_number = win.grab(acct_name).value;
+	grab('account_number').value = account_number;
 	grab('load_form').submit();
 }
 
-function initialize_account_history(options)
+function initialize_account_history(account_type, account_number)
 {
-	alert('initializing')
-	var select = parent.grab('sort_parent');
-
-	for (var i = 0; i < options.length; i++)
-	{
-		alert(select[0]);
-	}
+	parent.grab('history_type').innerHTML = account_type;
+	parent.grab('history_acct').innerHTML = account_number;
 }
 
 function loadTransferSelect(changed)
