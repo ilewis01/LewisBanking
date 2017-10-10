@@ -467,6 +467,8 @@ def fetchAccountContent(request):
 	name = name_abv(user)
 	today = datetime.now()
 
+	# dates = fetch_date_ranges(user)
+
 	yy_joined = user.date_joined.year
 	mm_joined = user.date_joined.month
 	dd_joined = user.date_joined.day
@@ -504,6 +506,7 @@ def fetchAccountContent(request):
 	for m in range(num_days_to):
 		days_to.append(m + 1)
 
+	content['joined'] = dd_joined
 	content['years'] = json.dumps(years)
 	content['months'] = json.dumps(months)
 	content['days_from'] = json.dumps(days_from)
@@ -1140,6 +1143,101 @@ def account_data_items(account, index):
 	data['balancef'] = format_currency(account.balance)
 	return data
 
+def advanced_account_search(accounts, search, search2, method, user_id):
+	data = []
+	count = 0
+
+	if str(method) == 'money':
+		fm_search = Decimal(str(search))
+		to_search = Decimal(str(search2))
+
+		for a in accounts:
+			if str(user_id) == str(a.user_id):
+				if a.balance >= fm_search and a.balance <= to_search:
+					d = account_data_items(a, count)
+					data.append(d)
+					count += 1
+
+	elif str(method) == 'date':
+		fm_search = convert_search_to_date(search)
+		to_search = convert_search_to_date(search2)
+
+		for a in accounts:
+			if str(user_id) == str(a.user_id):
+				if a.date >= fm_search and a.date <= to_search:
+					d = account_data_items(a, count)
+					data.append(d)
+					count += 1
+	return data
+
+def normal_account_search(accounts, search, user_id):
+	data = []
+	count = 0
+
+	for a in accounts:
+		if str(user_id) == str(a.user_id):
+			m_type = get_account_type_text(a.isSavings)
+			m_type = m_type.lower()
+
+			if search_algorithm(search, a.account_number) == True:
+				d = account_data_items(a, count)
+				data.append(d)
+				count += 1
+			elif search_algorithm(search, Decimal(a.balance)) == True:
+				d = account_data_items(a, count)
+				data.append(d)
+				count += 1
+			elif search_algorithm(search, a.date) == True:
+				d = account_data_items(a, count)
+				data.append(d)
+				count += 1
+			elif search_algorithm(str(search).lower(), m_type) == True:
+				d = account_data_items(a, count)
+				data.append(d)
+				count += 1
+	return data
+
+def super_account_search(request):
+	content = {}
+	data = []
+	a_list = []
+	user_id = str(request.user.id)
+	search = str(request.POST.get('search'))
+	sort = str(request.POST.get('sort'))
+	direction = str(request.POST.get('direction'))
+	search_type = str(request.POST.get('searchType'))
+	method = ""
+	search2 = ""
+	m_sort = sort
+
+	if direction == "descend":
+		m_sort = "-" + sort
+
+	accounts = Account.objects.all().order_by(m_sort)
+
+	if search_type == 'normal':
+		data = normal_account_search(accounts, search, user_id)
+	elif search_type == 'advanced':
+		method = str(request.POST.get('searchMethod'))
+		search2 = str(request.POST.get('search2'))
+		data = advanced_account_search(accounts, search, search2, method, user_id)
+
+	content['status'] = 1
+
+	if len(data) == 0:
+		content['status'] = -1
+
+	content['sort'] = sort
+	content['direction'] = direction
+	content['search'] = search
+	content['search2'] = search2
+	content['searchMethod'] = method
+	content['searchType'] = search_type
+	content['accounts'] = data
+	content['isSearch'] = 1
+	content['size'] = len(data)
+	return content
+
 def full_account(user, sort, direction):
 	user_id = str(user.id)
 	sorted_list = []
@@ -1168,13 +1266,17 @@ def fetch_account_List(request):
 		sort = "date"
 		direction = "descend"
 
-	print "SORT: " + sort
-
 	sorted_list = full_account(user, sort, direction)
+	content['status'] = 1
+
+	if len(sorted_list) == 0:
+		content['status'] = -1
+
 	content['isSearch'] = -1
 	content['accounts'] = sorted_list
 	content['sort'] = sort;
 	content['direction'] = direction;
+	content['size'] = len(sorted_list)
 	return content
 
 def Withdrawal(request):
@@ -1504,119 +1606,6 @@ def get_user_accounts(user_id):
 			data.append(a)
 	return data
 
-def account_search_test(request):
-	content = {}
-	search = str(request.POST.get('search'))
-	user_id = str(request.user.id)
-	searchType = str(request.POST.get('searchType'))
-	accounts = get_user_accounts(user_id)
-	history = None
-	match = False
-
-	if searchType == "normal":
-		for a1 in accounts:
-			if search_algorithm(search, a1.account_number) == True:
-				match = True
-
-		if match == False:
-			for a2 in accounts:
-				if search_algorithm(search, str(a2.balance)) == True:
-					match = True
-
-		if match == False:
-			for a4 in accounts:
-				if search_algorithm(search, str(a4.date)) == True:
-					match = True
-
-		if match == False:
-			for a5 in accounts:
-				m_type = get_account_type_text(a5.isSavings)
-				m_type = str(m_type).lower()
-				search = search.lower()
-				if search_algorithm(search, m_type) == True:
-					match = True
-
-		if match == False:
-			for a in accounts:
-				history = get_all_history(a, 'date', 'descend')
-
-				if match == False:
-					for h1 in history:
-						if search_algorithm(search, str(h1.date)) == True:
-							match = True
-
-				if match == False:
-					for h2 in history:
-						if search_algorithm(search, str(h2.e_balance)) == True:
-							match = True
-
-				if match == False:
-					for h3 in history:
-						if search_algorithm(search, str(h3.e_balance)) == True:
-							match = True
-
-				if match == False:
-					for h4 in history:
-						if search_algorithm(search, str(h4.b_balance)) == True:
-							match = True
-
-				if match == False:
-					for h5 in history:
-						if search_algorithm(search.lower(), str(h5.action.action).lower()) == True:
-							match = True
-
-	elif searchType == "advanced":
-		search2 = str(request.POST.get('search2'))
-		advType = str(request.POST.get('advType'))
-		content['search2'] = search2
-		content['advType'] = advType
-		history = None
-
-		for a in accounts:
-			m_fm = None
-			m_to = None
-			if advType == "date":
-				history = get_all_history(a, 'date', 'descend')
-				m_fm = convert_str_toDate(search)
-				m_to = convert_str_toDate(search2)
-				for h in history:
-					if (h.date >= m_fm) and (h.date <= m_to):
-						match = True
-						break				
-			elif advType == "money":
-				history = grab_all_user_history(user_id, 'e_balance', 'descend')
-				m_fm = str(search)
-				m_to = str(search2)
-				m_fm = Decimal(m_fm)
-				m_to = Decimal(m_to)
-				for h in history:
-					transaction = abs(h.e_balance - h.b_balance)
-					if (transaction >= m_fm) and (transaction <= m_to):
-						match = True
-						break
-	content['search'] = search
-	content['searchType'] = searchType
-	content['match'] = match
-	return content
-
-def advanced_search(value, s_type, s_fm, s_to):
-	match = False
-	s_type = str(s_type)
-
-	if s_type == "date":
-		if value >= s_fm and value <= s_to:
-			match = True 	
-	return match
-
-def super_account_search(request):
-	content = {}
-	searchType = str(request.POST.get('searchType'))
-	if searchType == "normal":
-		content = account_search_algorithm(request)
-	elif searchType == "advanced":
-		content = advanced_search_algorithm(request)
-	return content
-
 def grab_all_user_history(user_id, sort, direction):
 	result = []
 	sort = str(sort)
@@ -1646,284 +1635,6 @@ def get_h_acct(history):
 		if str(history.account_number) == str(l.account_number):
 			return l
 	return None
-
-def advanced_search_algorithm(request):
-	content = {}
-	user_id = str(request.user.id)
-	search = str(request.POST.get('search'))
-	search2 = str(request.POST.get('search2'))
-	user_id = str(request.user.id)
-	advType = str(request.POST.get('advType'))
-	matches = []
-	count = 0
-	m_fm = None
-	m_to = None
-
-	if advType == "date":
-		m_fm = convert_str_toDate(search)
-		m_to = convert_str_toDate(search2)
-		content['adv_search_crit'] = str(m_fm) + " - " + str(m_to)
-	
-	if advType == "date":
-		history = grab_all_user_history(user_id, 'date', 'descend')		
-			
-		for h in history:
-			if (h.date >= m_fm) and (h.date <= m_to):
-				account = get_h_acct(h)
-				d = {}
-				d['index'] = count
-				d['account'] = h
-				d['disp_account'] = str(h.account_number)
-				d['disp_balance_b_head'] = "Starting Balance:"
-				d['disp_balance_b_amt'] = "$" + format_currency(h.b_balance)
-				d['disp_balance_e_head'] = "Ending Balance:"
-				d['disp_balance_e_amt'] = "$" + format_currency(h.e_balance)
-				d['m_type2'] = "Type: " + str(get_account_type_text(account))
-				d['available'] = "Available Now:"
-				d['format'] = format_currency(account.balance)
-				d['description'] = str(h.action.action) + ": " + str(h.description)
-				if count % 2 == 0:
-					d['class'] = 'si_clear'
-				else:
-					d['class'] = 'si_shade'
-
-				if str(h.account_type) == "Loan":
-					d['m_type2'] = "Type: Loan"
-					d['available'] = "Balance:"
-				count += 1
-				matches.append(d)				
-	elif advType == "money":
-		history = grab_all_user_history(user_id, 'e_balance', 'descend')
-		m_fm = str(search)
-		m_to = str(search2)
-		content['adv_search_crit'] = str(m_fm) + " - " + str(m_to)
-		m_fm = float(m_fm)
-		m_to = float(m_to)
-		for h in history:
-			transaction = abs(h.e_balance - h.b_balance)
-			if (transaction >= m_fm) and (transaction <= m_to):
-				account = get_h_acct(h)
-				d = {}
-				d['index'] = count
-				d['account'] = h
-				d['disp_account'] = str(h.account_number)
-				d['disp_balance_b_head'] = "Starting Balance:"
-				d['disp_balance_b_amt'] = "$" + str(h.b_balance)
-				d['disp_balance_e_head'] = "Ending Balance:"
-				d['disp_balance_e_amt'] = "$" + str(h.e_balance)
-				d['m_type2'] = "Type: " + str(get_account_type_text(account))
-				d['format'] = format_currency(account.balance)
-				d['description'] = str(h.action.action) + ": " + str(h.description)
-				if count % 2 == 0:
-					d['class'] = 'si_clear'
-				else:
-					d['class'] = 'si_shade'
-				count += 1
-				matches.append(d)
-				
-	content['matches'] = matches
-	content['number'] = count
-	content['phrase'] = "Results"
-	if len(matches) == 1:
-		content['phrase'] = "Result"
-	return content
-
-def account_search_algorithm(request):
-	content = {}
-	search = str(request.POST.get('search'))
-	user_id = str(request.user.id)
-	accounts = get_user_accounts(user_id)
-	matches = []
-	count = 0
-
-	for a1 in accounts:
-		if search_algorithm(search, a1.account_number) == True:
-			d = {}
-			d['index'] = count
-			d['item_id'] = "s" + str(count) + "_"
-			d['account'] = a1
-			d['type'] = get_account_type_text(a1.isSavings) + ": " + str(a1.account_number)
-			d['available'] = "Available Now:"
-			d['m_type'] = get_account_type_text(a1.isSavings)
-			d['format'] = format_currency(a1.balance)
-			if count % 2 == 0:
-				d['class'] = 'si_clear'
-			else:
-				d['class'] = 'si_shade'
-			count += 1
-			matches.append(d)
-
-	for a2 in accounts:
-		if search_algorithm(search, str(a2.balance)) == True:
-			d = {}
-			d['index'] = count
-			d['item_id'] = "s" + str(count) + "_"
-			d['account'] = a2
-			d['type'] = get_account_type_text(a2.isSavings) + ": " + str(a2.account_number)
-			d['available'] = "Available Now:"
-			d['m_type'] = get_account_type_text(a2.isSavings)
-			d['format'] = format_currency(a2.balance)
-			if count % 2 == 0:
-				d['class'] = 'si_clear'
-			else:
-				d['class'] = 'si_shade'
-			count += 1
-			matches.append(d)
-
-	for a4 in accounts:
-		if search_algorithm(search, str(a4.date)) == True:
-			d = {}
-			d['index'] = count
-			d['item_id'] = "s" + str(count) + "_"
-			d['account'] = a4
-			d['available'] = "Available Now:"
-			d['type'] = get_account_type_text(a4.isSavings) + ": " + str(a4.account_number)
-			d['available'] = "Available Now:"
-			d['m_type'] = get_account_type_text(a4.isSavings)
-			d['format'] = format_currency(a4.balance)
-			if count % 2 == 0:
-				d['class'] = 'si_clear'
-			else:
-				d['class'] = 'si_shade'
-			count += 1
-			matches.append(d)
-
-	for a5 in accounts:
-		m_type = get_account_type_text(a5.isSavings)
-		m_type = str(m_type).lower()
-		search = search.lower()
-		if search_algorithm(search, m_type) == True:
-			d = {}
-			d['index'] = count
-			d['item_id'] = "s" + str(count) + "_"
-			d['account'] = a4
-			d['type'] = get_account_type_text(a5.isSavings) + ": " + str(a5.account_number)
-			d['available'] = "Available Now:"
-			d['m_type'] = get_account_type_text(a5.isSavings)
-			d['format'] = format_currency(a5.balance)
-			if count % 2 == 0:
-				d['class'] = 'si_clear'
-			else:
-				d['class'] = 'si_shade'
-			count += 1
-			matches.append(d)
-
-	for a in accounts:
-		history = get_all_history(a, 'date', 'descend')
-		ac_type = get_account_type_text(a.isSavings)
-
-		for h1 in history:
-			if search_algorithm(search, str(h1.date)) == True:
-				d = {}
-				d['index'] = count
-				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = ac_type
-				d['account'] = h1
-				d['m_type'] = "Transaction: " + ac_type
-				d['available'] = "Available Now:"
-				d['text_account_no'] = "Account Number: " + str(h1.account_number)
-				d['format'] = format_currency(h1.e_balance)
-				d['description'] = str(h1.action.action) + ": " + str(h1.description)
-				if count % 2 == 0:
-					d['class'] = 'si_clear'
-				else:
-					d['class'] = 'si_shade'
-				if str(h1.account_type) == "Loan":
-					d['available'] = "Balance"
-					d['m_type'] = "Loan"
-				count += 1
-				matches.append(d)
-
-		for h2 in history:
-			if search_algorithm(search, str(h2.e_balance)) == True:
-				d = {}
-				d['index'] = count
-				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = ac_type
-				d['account'] = h2
-				d['m_type'] = "Transaction: " + ac_type
-				d['available'] = "Available Now:"
-				d['format'] = format_currency(h2.e_balance)
-				d['description'] = str(h2.action.action) + ": " + str(h2.description)
-				if count % 2 == 0:
-					d['class'] = 'si_clear'
-				else:
-					d['class'] = 'si_shade'
-				if str(h2.account_type) == "Loan":
-					d['available'] = "Balance"
-					d['m_type'] = "Loan"
-				count += 1
-				matches.append(d)
-
-		for h3 in history:
-			if search_algorithm(search, str(h3.b_balance)) == True:
-				d = {}
-				d['index'] = count
-				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = ac_type
-				d['account'] = h3
-				d['m_type'] = "Transaction: " + ac_type
-				d['available'] = "Available Now:"
-				d['formatb'] = format_currency(h3.b_balance)
-				d['description'] = str(h3.action.action) + ": " + str(h3.description)
-				if count % 2 == 0:
-					d['class'] = 'si_clear'
-				else:
-					d['class'] = 'si_shade'
-				if str(h3.account_type) == "Loan":
-					d['available'] = "Balance"
-					d['m_type'] = "Loan"
-				count += 1
-				matches.append(d)
-
-		for h4 in history:
-			if search_algorithm(search, str(h4.account_number)) == True:
-				d = {}
-				d['index'] = count
-				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = ac_type
-				d['account'] = h4
-				d['m_type'] = "Transaction: " + ac_type
-				d['available'] = "Available Now:"
-				d['format'] = format_currency(h4.e_balance)
-				d['description'] = str(h4.action.action) + ": " + str(h4.description)
-				if count % 2 == 0:
-					d['class'] = 'si_clear'
-				else:
-					d['class'] = 'si_shade'
-				if str(h4.account_type) == "Loan":
-					d['available'] = "Balance"
-					d['m_type'] = "Loan"
-				count += 1
-				matches.append(d)
-
-		for h5 in history:
-			if search_algorithm(search.lower(), str(h5.action.action).lower()) == True:
-				d = {}
-				d['index'] = count
-				d['item_id'] = "s" + str(count) + "_"
-				d['type'] = ac_type
-				d['account'] = h5
-				d['m_type'] = "Transaction: " + ac_type
-				d['available'] = "Available Now:"
-				d['format'] = format_currency(h5.e_balance)
-				d['description'] = str(h5.action.action) + ": " + str(h5.description)
-				if count % 2 == 0:
-					d['class'] = 'si_shade'
-				else:
-					d['class'] = 'si_clear'
-				if str(h5.account_type) == "Loan":
-					d['available'] = "Balance"
-					d['m_type'] = "Loan"
-				count += 1
-				matches.append(d)
-	content['matches'] = matches
-	content['number'] = count
-	content['phrase'] = "Results"
-	content['search'] = search
-	if len(matches) == 1:
-		content['phrase'] = "Result"
-	return content
 
 def propagateTransferOptions(request):
 	options = {}
@@ -2177,9 +1888,6 @@ def fetch_content(request, url):
 
 	elif url == "account_search":
 		content = super_account_search(request)
-
-	elif url == "account_search_test":
-		content = account_search_test(request)
 
 	elif url == "user_new_loan":
 		content = user_new_loan_only(request)
@@ -2761,7 +2469,6 @@ def mega_transaction_search(request):
 		method = str(request.POST.get('searchMethod'))
 		sorted_list = transaction_advanced_search(h_list, search, search2, method)
 
-	print method
 	content['isSearch'] = 1
 	content['sort'] = sort
 	content['search'] = search

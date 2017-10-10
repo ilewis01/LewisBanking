@@ -21,12 +21,17 @@
     <title></title>
 </head>
 
-<body class="list_frame_body" onLoad="javascript: load_index(0); initialize_acct_parent({{isSearch}})">
+<body class="list_frame_body" onLoad="javascript: initialize_acct_parent({{isSearch}}, {{status}}, {{size}}); load_index(0);">
 	<form action="/load_account_list/" method="post" id="frame_form"> {% csrf_token %}
 		<input type="hidden" name="sort" id="sort" value="{{sort}}">
 		<input type="hidden" name="direction" id="direction" value="{{direction}}">
 		<input type="hidden" name="return_class" id="return_class" value="li_clear">
 		<input type="hidden" name="selected_index" id="selected_index" value="0">
+
+		<input type="hidden" name="search" id="search" value="{{search}}">
+		<input type="hidden" name="search2" id="search2" value="{{search2}}">
+		<input type="hidden" name="searchMethod" id="searchMethod" value="{{searchMethod}}">
+		<input type="hidden" name="searchType" id="searchType" value="{{searchType}}">
 
 		<ul>
 			{% for a in accounts %}

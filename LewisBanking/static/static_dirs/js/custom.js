@@ -536,19 +536,73 @@ function initialize_accounts()
 	grab('sort_parent').selectedIndex = 3;
 }
 
-function initialize_acct_parent(isSearch)
+function initialize_acct_parent(isSearch, status, size)
 {
 	isSearch = Number(isSearch);
+	status = Number(status);
+	size = String(size);
 
 	if (isSearch === -1)
 	{
-		var message = "{ <span>All Accounts</span> }";
-		parent.grab('ts_all_a').innerHTML = message;
+		parent.grab('tv_as_search_adv1').innerHTML = "";
+		parent.grab('tv_as_search_adv2').innerHTML = "";
+		parent.grab('tv_as_results').innerHTML = "";
+
+		if (status === 1)
+		{
+			var message = "{ <span>All Accounts</span> }";
+			parent.grab('ts_all_a').innerHTML = message;
+			parent.grab('tv_as_results').innerHTML = "<em>" + size + "</em> Results Found";
+		}
+		else
+		{
+			//open error window
+			//reload list
+		}
 	}
 
 	else if (isSearch === 1)
 	{
-		// Load the viewer with search data
+		if (status === 1)
+		{
+			var search_type = String(parent.grab('send_sType').value);
+			var search = String(parent.grab('send_search').value);
+			parent.grab('ts_all_a').innerHTML = "";
+
+			if (search_type === 'normal')
+			{
+				parent.grab('tv_as_search_adv1').innerHTML = "<span style=\"font-size:17px; line-height:50px;\">Search for <span><em>\"" + search + "\"</em></span></span>";
+				parent.grab('tv_as_results').innerHTML = "<em>" + size + "</em> Results Found";
+				parent.grab('tv_as_search_adv2').innerHTML = "";
+			}
+
+			else if (search_type === 'advanced')
+			{
+				var method = String(parent.grab('send_method').value);
+				var search2 = String(parent.grab('send_search2').value);
+
+				if (method === "money")
+				{
+					parent.grab('tv_as_search_adv1').innerHTML = "ACCOUNT BALANCE:";
+					parent.grab('tv_as_search_adv2').innerHTML = "from <em>$" + search + "</em> to <em>$" + search2 + "</em>";
+					parent.grab('tv_as_results').innerHTML = "<em>" + size + "</em> Results Found";
+				}
+
+				else if (method === 'date')
+				{
+					search = search.replace(/-/g, "/");
+					search2 = search2.replace(/-/g, "/");
+					parent.grab('tv_as_search_adv1').innerHTML = "ACCOUNT OPENED:";
+					parent.grab('tv_as_search_adv2').innerHTML = "from <em>" + search + "</em> to <em>" + search2 + "</em>";
+					parent.grab('tv_as_results').innerHTML = "<em>" + size + "</em> Results Found";
+				}
+			}
+		}
+		else
+		{
+			//open no results window
+			//reload list
+		}
 	}
 }
 
@@ -1328,31 +1382,20 @@ function load_loan_search()
 
 function initialize_account_search()
 {
-	var search = String(grab('search').value);
-	var searchType = String(grab('searchType').value)
-
-	if (search.length !== 0)
-	{
-		grab('frame1').src = "/account_search/";
-	}
+	grab('iframe_list').src = "/account_search/";
 }
 
-function load_a_search_data()
+function load_account_search_data()
 {
-	var search = parent.grab('search').value;
-	var searchType = String(parent.grab('searchType').value);
+	var search = parent.grab('send_search').value;
+	var search2 = parent.grab('send_search2').value;
+	var method = parent.grab('send_method').value;
+	var s_type = parent.grab('send_sType').value;
 	grab('search').value = search;
-	grab('searchType').value = searchType;
-
-	if (searchType === 'advanced')
-	{
-		var search2 = parent.grab('search2').value
-		var advType = parent.grab('advType').value
-		grab('search2').value = search2;
-		grab('advType').value = advType
-	}
-
-	grab('search_form').submit();
+	grab('search2').value = search2;
+	grab('searchType').value = s_type;
+	grab('searchMethod').value = method;
+	grab('frame_form').submit();
 }
 
 function account_search_test()
@@ -1419,7 +1462,7 @@ function set_search_setting()
 	parent.grab('search').value = "";
 }
 
-function set_adv_dates(months, days_from, days_to, years)
+function set_adv_dates(months, days_from, days_to, years, joined)
 {
 	var i = 0;
 	html = "";
@@ -1462,6 +1505,15 @@ function set_adv_dates(months, days_from, days_to, years)
 	grab('mm_to').selectedIndex = months.length - 1;
 	grab('yy_to').selectedIndex = years.length - 1;
 	grab('dd_to').selectedIndex = today - 1;
+	grab('dd_fm').selectedIndex = Number(joined) - 1
+	adv_visibility('money');
+}
+
+function reset_adv_win()
+{
+	grab('amt_range').checked = true;
+	adv_visibility("money");
+	visibility(3, 'hide');
 }
 
 function adv_visibility(mode)
@@ -1486,6 +1538,11 @@ function adv_visibility(mode)
 		grab("yy_fm").disabled = false;
 		grab("yy_to").disabled = false;
 
+		grab('dollars_fm').value = "";
+		grab('dollars_to').value = "";
+		grab('cents_fm').value = "";
+		grab('cents_to').value = "";
+
 	}
 	else if (mode === "money")
 	{
@@ -1504,7 +1561,19 @@ function adv_visibility(mode)
 		grab("cents_fm").disabled = false;
 		grab("cents_to").disabled = false;
 	}
-	grab('advType').value = mode;
+}
+
+function normal_search_init()
+{
+	var search = String(grab('search').value);
+	grab('send_search').value = search;
+	grab('send_sType').value = "normal";
+	grab('searchType').value = "normal";
+
+	if (search.length !== 0)
+	{
+		initialize_account_search();
+	}
 }
 
 function a_adv_search_init()
@@ -1513,29 +1582,46 @@ function a_adv_search_init()
 	var s_fm = "";
 	var s_to = "";
 	var isDate = grab('date_range').checked;
-	parent.grab('searchType').value = 'advanced';
+	grab('searchType').value = 'advanced';
+	grab('send_sType').value = 'advanced';
 
 	if (isDate === true)
 	{
-		s_fm += String(grab('yy_fm').value);
-		s_fm += "-";
+		grab('searchMethod').value = "date";
+		grab('send_method').value = "date";
 		s_fm += String(grab('mm_fm').value);
 		s_fm += "-";
 		s_fm += String(grab('dd_fm').value);
+		s_fm += "-";
+		s_fm += String(grab('yy_fm').value);
 
-		s_to += String(grab('yy_to').value);
-		s_to += "-";
 		s_to += String(grab('mm_to').value);
 		s_to += "-";
 		s_to += String(grab('dd_to').value);
+		s_to += "-";
+		s_to += String(grab('yy_to').value);
 
-		adv_s_date_fm = convert_js_months_toString(Number(grab('mm_fm').value)) + String(grab('dd_fm').value) + "/" + String(grab('yy_fm').value)
-		adv_s_date_to = convert_js_months_toString(Number(grab('mm_to').value)) + String(grab('dd_to').value) + "/" + String(grab('yy_to').value)
-		parent.grab('adv_search_crit').value = adv_s_date_fm + " - " + adv_s_date_to
+		t1 = String(mm_fm.value) + String(dd_fm.value) + String(yy_fm.value);
+		t2 = String(mm_to.value) + String(dd_to.value) + String(yy_to.value);
+
+		t1 = Number(t1);
+		t2 = Number(t2);
+
+		if (t2 < t1)
+		{
+			grab('messageContent5').innerHTML = "The upper bound date must be greater than the lower bound date";
+			visibility(5, "show");
+			proceed = false;
+		}
+
+		adv_s_date_fm = convert_js_months_toString(Number(grab('mm_fm').value)) + String(grab('dd_fm').value) + ", " + String(grab('yy_fm').value)
+		adv_s_date_to = convert_js_months_toString(Number(grab('mm_to').value)) + String(grab('dd_to').value) + ", " + String(grab('yy_to').value)
 	}
 
 	else
 	{
+		grab('searchMethod').value = "money";
+		grab('send_method').value = "money";
 		var fm_cents = String(grab('cents_fm').value);
 		var to_cents = String(grab('cents_to').value);
 		var fm_dollars = String(grab('dollars_fm').value);
@@ -1556,26 +1642,29 @@ function a_adv_search_init()
 
 			s_fm = fm_dollars + "." + fm_cents;
 			s_to = to_dollars + "." + to_cents;
-			parent.grab('adv_search_crit').value = "$" + s_fm + " - $" + s_to
+
+			if (parseFloat(s_fm) > parseFloat(s_to))
+			{
+				grab('messageContent5').innerHTML = "The upper bound value must be greater or equal to the lower bound value";
+				visibility(5, "show");
+				proceed = false;
+			}
 		}	
 	}
+
+	grab('send_search').value = s_fm;
+	grab('send_search2').value = s_to;
+	grab('search').value = s_fm;
+	grab('search2').value = s_to;
 
 	if (proceed === true)
 	{
 		var now = new Date();
-		grab('search').value = s_fm;
-		grab('search2').value = s_to;
 		grab('dollars_fm').value = "";
 		grab('dollars_to').value = "";
 		grab('cents_fm').value = "";
 		grab('dollars_to').value = "";
-		grab('mm_fm').selectedIndex = 0;
-		grab('dd_fm').selectedIndex = 0;
-		grab('yy_fm').selectedIndex = 0;
-		grab('mm_to').selectedIndex = (grab('mm_to').length) - 1;
-		grab('dd_to').selectedIndex = now.getDate() - 1;
-		grab('yy_to').selectedIndex = 0;
-		visibility(3, 'hide');
+		reset_adv_win();
 		initialize_account_search();
 	}
 }

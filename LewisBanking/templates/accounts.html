@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: set_base_select('btn2', 'text2'); initialize_accounts(); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}});">
+<body onLoad="javascript: set_base_select('btn2', 'text2'); initialize_accounts(); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}}, {{joined}});">
 
 	<div class="fadeOut" id="z2">
 			<div class="messageWindow" id="messageWindow">
@@ -196,7 +196,7 @@
 
 			<div class="adv_pop_buttons">
 				<button type="button" onClick="javascript: a_adv_search_init();">Submit</button>
-				<button type="button" onClick="javascript: visibility(3, 'hide');">Cancel</button>
+				<button type="button" onClick="javascript: reset_adv_win();">Cancel</button>
 			</div>
 		</div>
 
@@ -340,9 +340,15 @@
 							<div class="now_viewing">Now Viewing...</div>
 							<div class="divider"></div>
 
-							<div id="ts_all_a" class="ts_all_a"></div>
+							<div class="account_view_format">
+								<div id="ts_all_a" class="ts_all_a"></div>
 
-							<div class="viewer_selected">Selected: <span id="curr_selected"></span></div>
+								<div id="tv_as_search_adv1" class="tv_as_search_adv1"></div>
+								<div id="tv_as_search_adv2" class="tv_as_search_adv2"></div>
+								<div id="tv_as_results" class="tv_as_results"></div>
+
+								<div class="viewer_selected">Selected: <span id="curr_selected"></span></div>
+							</div>
 						</div>
 						<!-- <div class="Selcted_Item" id="tv_head" style="margin-top:3.5%;"><span id="selType"></span> <span id="selAcct"></span></div>
 						<div class="divider"></div>
@@ -360,7 +366,7 @@
 					<div class="search_icon">
 						<input type="search" placeholder="Search Accounts" id="search" name="search">
 						<div class="search_span">
-							<a href="javascript: normal_search();"><span class="fa fa-search"></span></a>
+							<a href="javascript: normal_search_init();"><span class="fa fa-search"></span></a>
 						</div>
 					</div>
 				</div>

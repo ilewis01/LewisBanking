@@ -38,8 +38,7 @@ urlpatterns = patterns('',
     url(r'^view_history/$', 'bank.views.view_history'),
     url(r'^view_history0/$', 'bank.views.view_history0'),
     url(r'^account_search/$', 'bank.views.account_search'),
-    url(r'^accountResults/$', 'bank.views.accountResults'),
-    url(r'^account_search_test/$', 'bank.views.account_search_test'),    
+    url(r'^accountResults/$', 'bank.views.accountResults'),   
     url(r'^account_results_loader/$', 'bank.views.account_results_loader'),
     url(r'^final_a_loader/$', 'bank.views.final_a_loader'),
     url(r'^load_loan_list/$', 'bank.views.load_loan_list'),
@@ -66,7 +65,7 @@ urlpatterns = patterns('',
     url(r'^pr0/$', 'bank.views.pr0'),
     url(r'^pr1/$', 'bank.views.pr1'),
     url(r'^pr2/$', 'bank.views.pr2'),
-     url(r'^prSuccess/$', 'bank.views.prSuccess'),
+    url(r'^prSuccess/$', 'bank.views.prSuccess'),
 
 
 

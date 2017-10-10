@@ -3050,6 +3050,43 @@ iframe {
 	font-size: 13px;
 }
 
+.account_view_format {
+	width: 100%;
+	height:70%;
+	margin:auto;
+	text-align: center;
+}
+
+.tv_as_search_adv1 {
+	font-size: 13px;
+	font-weight: bold;
+	color:#4a0f6c;
+	line-height: 30px;
+}
+
+.tv_as_search_adv1 em {
+	color:#a71d1d;
+}
+
+.tv_as_search_adv2 {
+	font-size: 13px;
+	color:#666666;
+}
+
+.tv_as_search_adv2 em {
+	color:#179fed;
+	font-weight: bold;
+}
+
+.tv_as_results {
+	font-size: 12px;
+}
+
+.tv_as_results em {
+	font-weight: bold;
+	color:#a71d1d;
+}
+
 
 
 

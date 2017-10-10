@@ -275,18 +275,10 @@ def account_search(request):
 	return render_to_response('account_search.html', content)
 
 @login_required(login_url='/index')
-def account_search_test(request):
-	content = {}
-	content = fetch_content(request, 'account_search_test')
-	content.update(csrf(request))
-	return render_to_response('account_search_test.html', content)
-
-@login_required(login_url='/index')
 def accountResults(request):
-	content = {}
-	content['search'] = request.POST.get('search')
+	content = fetch_content(request, 'account_search')
 	content.update(csrf(request))
-	return render_to_response('accountResults.html', content)
+	return render_to_response('account_list.html', content)
 
 @login_required(login_url='/index')
 def final_a_loader(request):
