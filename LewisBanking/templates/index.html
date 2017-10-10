@@ -3,13 +3,24 @@
 {% load staticfiles %}
 
 <body>
-	<form>
-		<div class="fadeOut" id="z1">
-			<div class="passwordRecovery">
-				<button type="button" onClick="javascript: visibility(1, 'hide');">Close</button>
+	<div class="fadeOut" id="z1" style="z-index:1;">
+		<div class="passwordRecovery" id="passwordRecovery">
+			<div class="messageNav-short" style="font-size:20px;">
+				<a href="javascript: visibility(1, 'hide');">
+					<i class="fa fa-window-close" aria-hidden="true"></i>
+				</a>
 			</div>
+
+			<div class="pwr_tit">
+				Password Recovery
+
+				<div class="prFrameWrap">
+					<iframe src="/pr0/" id="prFrame" class="prFrame"></iframe>
+				</div>
+			</div>
+
 		</div>
-	</form>
+	</div>
 
 	<div class="logo-wrapper">
 		<div class="logo-container">

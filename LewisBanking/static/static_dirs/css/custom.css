@@ -2905,6 +2905,114 @@ iframe {
 	font-weight: bold;
 }
 
+.passwordRecovery {
+	width:400px;
+	height:200px;
+	margin:auto;
+	margin-top:7%;
+	border-radius: 9px;
+	border:1px solid black;
+	box-shadow: 2px 2px 5px black;
+	background: url('/static/images/gray_grad.png');
+	background-size:100% 100%;
+}
+
+.passwordRecovery2 {
+	width:400px;
+	height:250px;
+	margin:auto;
+	margin-top:7%;
+	border-radius: 9px;
+	border:1px solid black;
+	box-shadow: 2px 2px 5px black;
+	background: url('/static/images/gray_grad.png');
+	background-size:100% 100%;
+}
+
+.passwordRecovery a {
+	color:#305b69;
+}
+
+.passwordRecovery a:hover {
+	color:#666666;
+}
+
+.pwr_tit {
+	width:90%;
+	height:80%;
+	margin:auto;
+	font-size: 20px;
+	font-weight: bold;
+	font-style: italic;
+	text-align: center;
+	margin-top:2%;
+	color:#666666;
+}
+
+.prFrameWrap {
+	width:100%;
+	height:84%;
+	margin-top:3%;
+}
+
+.prFrame {
+	width:100%;
+	height:100%;
+	font-family: Arial;
+}
+
+.pr_init {
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.pr_init input {
+	width: 96%;
+	border-radius: 5px;
+	font-family: Arial;
+	font-size: 16px;
+	padding-left: 2%;
+	padding-top:1%;
+	padding-bottom:1%;
+	margin-top:3%;
+}
+
+.pr_init button {
+	border-radius: 5px;
+	width:49%;
+	margin-top:2%;
+	font-size: 13px;
+}
+
+.pr_init button:hover {
+	background-color: #999999;
+}
+
+.pr_init1 {
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.pr_init1 input {
+	width: 96%;
+	border-radius: 5px;
+	font-family: Arial;
+	font-size: 12px;
+	padding-left: 2%;
+	padding-top:1%;
+	padding-bottom:1%;
+}
+
+.pr_init1 button {
+	border-radius: 5px;
+	width:49%;
+	margin-top:2%;
+	font-size: 13px;
+}
 
 
 

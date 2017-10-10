@@ -18,7 +18,7 @@ from django.core import serializers
 from decimal import Decimal
 from django.http import FileResponse, Http404
 
-from bank.functions import getUserProfile, fetch_content
+from bank.functions import getUserProfile, fetch_content, locate_user, recovery_match, change_pw
 
 from bank.models import profile, Account, Loan, History, Action
 
@@ -392,6 +392,27 @@ def update_phone(request):
 	content = fetch_content(request, 'update_phone')
 	content.update(csrf(request))
 	return render_to_response('admin/update_phone.html', content)
+
+
+def pr0(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('recover/pr0.html', content)
+
+def pr1(request):
+	content = locate_user(request)
+	content.update(csrf(request))
+	return render_to_response(content['url'], content)
+
+def pr2(request):
+	content = recovery_match(request)
+	content.update(csrf(request))
+	return render_to_response(content['url'], content)
+
+def prSuccess(request):
+	content = change_pw(request)
+	content.update(csrf(request))
+	return render_to_response(content['url'], content)
 
 
 

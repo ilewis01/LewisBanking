@@ -2162,10 +2162,31 @@ function clear_transaction_search()
 	grab('tFrame').src = "/t_history_list/";
 }
 
-function load_profile_data()
+function restart_pr()
 {
-	// alert("loading profile info")
+	parent.grab('prFrame').src = "/pr0/";
 }
+
+function restore_pr_window()
+{
+	var wrapper = parent.grab('passwordRecovery');
+	wrapper.className = "passwordRecovery";
+	parent.grab('prFrame').src = "/pr0/";
+}
+
+function restore_pr_size()
+{
+	var wrapper = parent.grab('passwordRecovery');
+	wrapper.className = "passwordRecovery";
+}
+
+function change_pr_size()
+{
+	var wrapper = parent.grab('passwordRecovery');
+	wrapper.className = "passwordRecovery2";
+}
+
+
 
 
 

@@ -2777,6 +2777,8 @@ def mega_transaction_search(request):
 	sort = str(request.POST.get('sort'))
 	direction = str(request.POST.get('direction'))
 	m_sort = sort
+	method = ""
+	search2 = ""
 
 	if direction == "descend":
 		m_sort = "-" + sort
@@ -2794,8 +2796,12 @@ def mega_transaction_search(request):
 		method = str(request.POST.get('searchMethod'))
 		sorted_list = transaction_advanced_search(h_list, search, search2, method)
 
+	print method
 	content['isSearch'] = 1
 	content['sort'] = sort
+	content['search'] = search
+	content['search2'] = search
+	content['searchType'] = search_type
 	content['direction'] = direction
 	content['history'] = sorted_list
 	content['size'] = len(sorted_list)
@@ -2825,6 +2831,78 @@ def convert_search_to_date(value):
 	mm = int(mm)
 	dd = int(dd)
 	return datetime(yy, mm, dd).date()
+
+def locate_user(request):
+	content = {}
+	user = None
+	email = str(request.POST.get('email'))
+	users = User.objects.all()
+
+	for u in users:
+		if email == str(u.email):
+			user = u
+			break
+
+	if user == None:
+		content['email'] = email
+		content['url'] = "recover/error.html"
+	else:
+		content['url'] = "recover/pr1.html"
+		profile = getUserProfile(user)
+		q1_list = fetchSecurityQuestions1()
+		q2_list = fetchSecurityQuestions2()
+
+		q1 = q1_list[int(profile.question1)]['question']
+		q2 = q2_list[int(profile.question2)]['question']
+
+		content['q1'] = q1
+		content['q2'] = q2
+
+	content['user'] = user
+	return content
+
+def recovery_match(request):
+	content = {}
+	user_id = request.POST.get('user_id')
+	user = User.objects.get(id=user_id)
+	profile = getUserProfile(user)
+	answer1 = str(request.POST.get('answer1'))
+	answer2 = str(request.POST.get('answer2'))
+
+	pa1 = str(profile.answer1)
+	pa2 = str(profile.answer2)
+
+	answer1 = answer1.lower()
+	answer2 = answer2.lower()
+	pa1 = pa1.lower()
+	pa2 = pa2.lower()
+
+	if answer1 == pa1 and answer2 == pa2:
+		content['url'] = "recover/pr2.html"
+		content['answer1'] = answer1
+		content['answer2'] = answer2
+	else:
+		content['url'] = "recover/error2.html"
+	content['user'] = user
+	return content
+
+def change_pw(request):
+	content = {}
+	user_id = request.POST.get('user_id')
+	user = User.objects.get(id=user_id)
+	password1 = str(request.POST.get('password1'))
+	password2 = str(request.POST.get('password2'))
+
+	if password1 == password2:
+		user.set_password(password1)
+		user.save()
+		content['url'] = "recover/prSuccess.html"
+	else:
+		content['answer1'] = request.POST.get('answer1')
+		content['answer2'] = request.POST.get('answer2')
+		content['url'] = "recover/error3.html"
+	content['user'] = user
+	return content
 
 
 
