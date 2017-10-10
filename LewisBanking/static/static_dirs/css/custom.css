@@ -1409,19 +1409,19 @@ iframe {
 }
 
 .li_highlight {
-	background-color: orange;
-	height:26px;
+	background-color: #e0d3e8;
+	height:52px;
 	text-align: left;
 }
 
 .li_clear {
-	height:26px;
+	height:52px;
 	text-align: left;
 }
 
 .li_shade {
 	background-color: #b9d2d8;
-	height:26px;
+	height:52px;
 	text-align: left;
 }
 
@@ -1459,22 +1459,30 @@ iframe {
 	width:100px;
 }
 
+
+
 .li_date {
-	position: relative;
-	float:left;
-	width:25%;
+	/*color:#666666;*/
+	font-style: italic;
+	font-weight: bold;
 }
 
 .li_type {
 	position: relative;
 	float:left;
-	width:25%;
+	width:80px;
+	font-weight: bold;
+	font-style: italic;
+	color:blue;
+	/*color:#8d1316;*/
 }
 
 .li_available {
 	font-weight: bold;
+	font-style: italic;
 	position: relative;
 	float:left;
+	padding-left: 5%;
 	margin-right: 2%;
 }
 
@@ -1482,6 +1490,7 @@ iframe {
 	position: relative;
 	float:left;
 	width:18%;
+	font-weight: bold;
 	padding-left: 5%;
 }
 
@@ -1491,6 +1500,7 @@ iframe {
 	width:25%;
 	font-style: italic;
 	font-weight: bold;
+	color:#8d1316;
 }
 
 .a_page_selected {
@@ -2855,6 +2865,18 @@ iframe {
 	text-shadow:1px 1px #333333;
 }
 
+.viewer_selected {
+	font-weight: bold;
+	font-size: 12px;
+	text-align: center;
+	color:blue;
+}
+
+.viewer_selected span {
+	color:#666666;
+	/*color:#5c1c81;*/
+}
+
 .ts_all {
 	width: 100%;
 	text-align: center;
@@ -2866,6 +2888,20 @@ iframe {
 }
 
 .ts_all span {
+	color:#666666;
+}
+
+.ts_all_a {
+	width: 100%;
+	text-align: center;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 50px;
+	font-style: italic;
+	color:#e5971c;
+}
+
+.ts_all_a span {
 	color:#666666;
 }
 

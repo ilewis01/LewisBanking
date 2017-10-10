@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: set_base_select('btn2', 'text2'); initialize_accounts(0); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}}); adv_visibility('money');">
+<body onLoad="javascript: set_base_select('btn2', 'text2'); initialize_accounts(); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}}); adv_visibility('money');">
 
 	<div class="fadeOut" id="z2">
 			<div class="messageWindow" id="messageWindow">
@@ -201,19 +201,19 @@
 		</div>
 
 	<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
-		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
-		<input type="hidden" name="selected_account_number" id="selected_account_number" value="">
-		<input type="hidden" name="selected_date" id="selected_date" value="">
-		<input type="hidden" name="selected_balance" id="selected_balance" value="">
-		<input type="hidden" name="selected_type" id="selected_type" value="">
-		<input type="hidden" name="view_mode" id="view_mode" value="0">
-		<input type="hidden" name="selected_index" id="selected_index" value="0">
 		<input type='hidden' name="btn" id='btn' value="btn2">
 		<input type='hidden' name="txn" id='txn' value="text2">
+		<input type="hidden" name="selected_index" id="selected_index" value="0">
+
+		<input type="hidden" name="direction_parent" id="direction_parent" value="descend">
 		<input type="hidden" name="search2" id="search2" value="">
 		<input type="hidden" name="searchType" id="searchType" value="">
-		<input type="hidden" name="advType" id="advType" value="">
-		<input type="hidden" name="adv_search_crit" id="adv_search_crit" value="">
+		<input type="hidden" name="searchMethod" id="searchMethod" value="">
+
+		<input type="hidden" name="send_method" id="send_method" value="">
+		<input type="hidden" name="send_search" id="send_search" value="">
+		<input type="hidden" name="send_search2" id="send_search2" value="">
+		<input type="hidden" name="send_sType" id="send_sType" value="">
 
 		<div class="fadeOut" id="z1">
 			<div class="window1">
@@ -251,8 +251,8 @@
 						<div class="tri-edge" id="carat">
 							<a href="javascript: toggle_carat(); set_frame_list();">
 								<div class="direction-holder">
-									<div class="carat-holder" id="icon"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i></div>
-									<div class="dir_text" id="dir_text">Ascending</div>
+									<div class="carat-holder" id="icon"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></div>
+									<div class="dir_text" id="dir_text">Descending</div>
 								</div>
 							</a>
 						</div>
@@ -276,12 +276,20 @@
 			<div class="summary-boxes2 summary-selected-data">
 				<div class="a_page_selected">
 					<div class="selected-item-wrap" id="tv_builder">
-						<div class="Selcted_Item" id="tv_head" style="margin-top:3.5%;"><span id="selType"></span> <span id="selAcct"></span></div>
+						<div class="format_disp_view">
+							<div class="now_viewing">Now Viewing...</div>
+							<div class="divider"></div>
+
+							<div id="ts_all_a" class="ts_all_a"></div>
+
+							<div class="viewer_selected">Selected: <span id="curr_selected"></span></div>
+						</div>
+						<!-- <div class="Selcted_Item" id="tv_head" style="margin-top:3.5%;"><span id="selType"></span> <span id="selAcct"></span></div>
 						<div class="divider"></div>
 						<div class="inner_class si1"><span id="selType2"></span> <span id="selAcct2"></span></div>
 						<div class="inner_class si2" id="active_div">Active Since <span id="selDate"></span></div>
 						<div class="inner_class si3">Available Now:<br><span>$</span><span id="selBaln"></span></div>
-						<div class="selected-item-content"></div>
+						<div class="selected-item-content"></div> -->
 					</div>
 				</div>
 

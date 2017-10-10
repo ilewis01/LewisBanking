@@ -531,57 +531,24 @@ function initialize_loans(selected_index)
 	grab('selected_index').value = Number(selected_index);
 }
 
-function initialize_accounts(selected_index)
+function initialize_accounts()
 {
-	var win = frame('iframe_list');
-	var sort = String(win.grab('sort').value);
-	var hidden = win.grab('direction');
-	var direction = String(hidden.value);
-	var select = grab('sort_parent');
-	var dir_text = grab('dir_text');
-	var icon = grab('icon');
-
-	set_sort_select(select, sort);
-	set_direction(icon, dir_text, hidden, direction);
-
-	var acct_no = win.grab('li0_account_number').value;
-	var balance = win.grab('li0_balance').value;
-	var date = win.grab('li0_date').value;
-	var type = win.grab('li0_type').value;
-
-	grab('selected_account_number').value = acct_no;
-	grab('selected_date').value = date;
-	grab('selected_balance').value = balance;
-	grab('selected_type').value = type;
-
-	grab('selAcct').innerHTML = acct_no;
-	grab('selBaln').innerHTML = balance;
-	grab('selDate').innerHTML = date;
-	grab('selType').innerHTML = type;
-
-	grab('selected_index').value = selected_index;
+	grab('sort_parent').selectedIndex = 3;
 }
 
-function set_sort_select(select, sort)
+function initialize_acct_parent(isSearch)
 {
-	if (sort === "account_number")
+	isSearch = Number(isSearch);
+
+	if (isSearch === -1)
 	{
-		select.selectedIndex = 0;
+		var message = "{ <span>All Accounts</span> }";
+		parent.grab('ts_all_a').innerHTML = message;
 	}
 
-	else if (sort === "isSavings")
+	else if (isSearch === 1)
 	{
-		select.selectedIndex = 1;
-	}
-
-	else if (sort === "balance")
-	{
-		select.selectedIndex = 2;
-	}
-
-	else if (sort === "date")
-	{
-		select.selectedIndex = 3;
+		// Load the viewer with search data
 	}
 }
 
@@ -719,11 +686,27 @@ function load_url(url)
 	form.submit();
 }
 
-function load_list_item(item_id, index)
+function load_list_item(index)
 {
-	var prev_index = grab('selected_index').value;
-	clearSelectedLI_child(prev_index);
-	load_index(index);	
+	var selected_account = grab('selected_index');
+	var prev_index = Number(selected_index.value);
+	var prev_name = "sel" + String(prev_index) + "_div";
+	var prev = grab(prev_name);
+
+	if (prev_index % 2 == 0) {prev.className = "li_clear";}
+	else {prev.className = "li_shade";}
+
+	selected_account.value = index;
+	var sel_name = "sel" + String(index) + "_div";
+	var selected = grab(sel_name);
+	selected.className = "li_highlight";
+
+	var m_type = "li" + String(index) + "_type";
+	var m_acct = "li" + String(index) + "_account_number";
+	var type_val = String(grab(m_type).value);
+	var acct_val = String(grab(m_acct).value);
+	var message = type_val + " " + acct_val;
+	parent.grab('curr_selected').innerHTML = message;
 }
 
 function load_loan_item(item_id, index)
@@ -749,11 +732,12 @@ function load_loan(index)
 function load_index(index)
 {
 	var prefix = "li" + String(index) + "_";
-	var div_name = prefix + "change_class";
-	var div = grab(div_name);
-	div.className = "li_highlight";
-	grab('selected_index').value = index;
-	populate_viewer(index);
+	var type_name = prefix + "type";
+	var acct_name = prefix + "account_number";
+	var type_val = (grab(type_name).value);
+	var acct_val = (grab(acct_name).value);
+	var message = type_val + " " + acct_val;
+	parent.grab('curr_selected').innerHTML = message;
 }
 
 function populate_viewer(index)

@@ -236,8 +236,9 @@ def newUser_account(request):
 
 		history = History(account_number=account.account_number)
 		history.user_id = user.id
-		history.account_type = "Account"
-		history.balance = account.balance
+		history.account_type = get_account_type_text(account.isSavings)
+		history.b_balance = 0.00
+		history.e_balance = account.balance
 		history.date = datetime.now().date()
 		history.description = "Account Opened"
 		history.action = get_action_from_index(0)
@@ -330,7 +331,7 @@ def buildLoan_init(request):
 
 	history_account 				= History()
 	history_account.date 			= dates['start']
-	history_account.account_type	= get_account_type_text(account.isSaving)
+	history_account.account_type	= get_account_type_text(account.isSavings)
 	history_account.user_id			= user.id
 	history_account.description 	= "Loan " + str(loan.account_number) + " of $" + str(loan.loan_amount) + " deposited into new account"
 	history_account.account_number	= account.account_number
@@ -1123,12 +1124,26 @@ def fetch_account_history(request):
 	content['history'] = data;
 	return content
 
+def account_data_items(account, index):
+	data = {}
+	data['account'] = account
+
+	if index == 0:
+		data['class'] = "li_highlight"
+	elif index % 2 == 0:
+		data['class'] = "li_clear"
+	else:
+		data['class'] = "li_shade"
+
+	data['type'] = get_account_type_text(account.isSavings)
+	data['index'] = index
+	data['balancef'] = format_currency(account.balance)
+	return data
+
 def full_account(user, sort, direction):
 	user_id = str(user.id)
 	sorted_list = []
 	count = 0
-	class1 = "li_shade"
-	class2 = "li_clear"
 
 	if direction == "descend":
 		sort = "-" + sort
@@ -1137,83 +1152,27 @@ def full_account(user, sort, direction):
 
 	for a in a_list:
 		if str(a.user_id) == user_id:
-			d = {}
-			d['account'] = a
-			d['history'] = get_all_history(a, 'date', 'descend')
-			d['type'] = get_account_type_text(a.isSavings)
-
-			if count % 2 == 0:
-				d['class'] = class2
-			else:
-				d['class'] = class1
-
-			item_id = 'li' + str(count) + "_"
-
-			d['item_id'] = item_id
-			d['account_no_id'] = item_id + "account_number"
-			d['date_id'] = item_id + "date"
-			d['balance_id'] = item_id + "balance"
-			d['type_id'] = item_id + "type"
-			d['index'] = count
-			d['available'] = "Available Now:"
-			d['format'] = format_currency(a.balance)
+			d = account_data_items(a, count)
+			sorted_list.append(d)
 			count += 1
 
-			sorted_list.append(d)
-
 	return sorted_list
-
-def mega_account_link_raw(h_list):
-	data = []
-	a_list = None
-	count = 0
-	class1 = "li_shade"
-	class2 = "li_clear"
-
-	for h in h_list:
-		d = {}
-		a_type = str(h.account_type)
-		item_id = "li_" + str(count)
-		d['history'] = h
-
-		if count % 2 == 0:
-			d['class'] = class2
-		else:
-			d['class'] = class1
-		count += 1
-
-		if a_type == "Account":
-			a_list = Account.objects.all()
-		elif a_type == "Loan":
-			a_list = Loan.objects.all()
-
-		for a in a_list:
-			if str(a.account_number) == str(h.account_number):
-				d['account'] = a
-				break
-		data.append(d)
-	return data
 
 def fetch_account_List(request):
 	content = {}
 	user = request.user
-	sort = request.POST.get('sort')
-	direction = None
+	sort = str(request.POST.get('sort'))
+	direction = str(request.POST.get('direction'))
 
-	if sort == None:
+	if sort == None or len(sort) == 0 or sort == "None" or sort == " " or sort == "null":
 		sort = "date"
 		direction = "descend"
-	else:
-		sort = str(sort)
-		direction = str(request.POST.get('direction'))
 
-	opts = singleHistorySortOptions()
-	options = json.dumps(opts)
-	content['options'] = options
+	print "SORT: " + sort
 
 	sorted_list = full_account(user, sort, direction)
-	content['options'] = options
-	content['sorted_list'] = sorted_list
+	content['isSearch'] = -1
+	content['accounts'] = sorted_list
 	content['sort'] = sort;
 	content['direction'] = direction;
 	return content
