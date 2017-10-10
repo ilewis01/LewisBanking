@@ -707,6 +707,7 @@ function load_list_item(index)
 	var acct_val = String(grab(m_acct).value);
 	var message = type_val + " " + acct_val;
 	parent.grab('curr_selected').innerHTML = message;
+	parent.grab('selected_index').value = index;
 }
 
 function load_loan_item(item_id, index)
@@ -903,8 +904,15 @@ function init_withdrawal()
 
 function init_delete_W()
 {
-	var account_number = parent.grab('selected_account_number').value;
-	var w_type = parent.grab('selected_type').value;
+	var win = parent.frame('iframe_list');
+	var selected_index = String(parent.grab('selected_index').value);
+
+	var prefix = "li" + selected_index + "_";
+	var ac_name = prefix + "account_number";
+	var tp_name = prefix + "type";
+	
+	var account_number = win.grab(ac_name).value
+	var w_type = win.grab(tp_name).value;
 
 	grab('w_acct').innerHTML = account_number;
 	grab('w_types').innerHTML = w_type;
@@ -986,7 +994,11 @@ function g_error(form)
 function w_error()
 {
 	var dollars = String(grab('dollars').value);
-	var balance = Number(parent.grab('selected_balance').value);
+	var win = parent.frame('iframe_list');
+	var selected_index = String(parent.grab('selected_index').value);
+	var b_name = "li" + selected_index + "_balance";
+	var balance = String(win.grab(b_name).value);
+	balance = parseFloat(balance);
 	
 	if (dollars.length === 0)
 	{
@@ -1085,6 +1097,7 @@ function reload_li_list()
 	var win = parent.window.frames['iframe_list'];
 	win.grab('frame_form').submit();
 	win_visibility(1, 'hide');
+	parent.grab('selected_index').value = 0;
 }
 
 function init_history(url)
@@ -1252,44 +1265,7 @@ function get_select_index(value, select)
 	return index;
 }
 
-function load_account_sort_options(mode)
-{
-	var view_div = grab('view_mode');
-	var view_mode = String(view_div.value);
-	var html = null;
-	mode = String(mode);
 
-	if (mode !== view_mode)
-	{
-		view_div.value = mode;
-		grab('select_builder').innerHTML = get_sort_options_html(mode);
-	}
-}
-
-function get_sort_options_html(mode)
-{
-	mode = String(mode);
-	html = "<select name=\"sort_parent\" id=\"sort_parent\" onChange=\"javascript: set_frame_list();\">";
-
-	if (mode === "0")
-	{
-		html += "<option value=\"account_number\">Account Number</option>";
-		html += "<option value=\"isSavings\">Account Type</option>";
-		html += "<option value=\"balance\">Balance</option>";
-		html += "<option value=\"date\">Date Opened</option>";
-	}
-
-	else if (mode === "1")
-	{
-		html += "<option value=\"date\">Transaction Date</option>";
-		html += "<option value=\"action\">Transaction Type</option>";
-		html += "<option value=\"b_balance\">Starting Balance</option>";
-		html += "<option value=\"e_balance\">Ending Balance</option>";
-	}
-
-	html += "</select>";
-	return html
-}
 
 function normal_search_loans()
 {

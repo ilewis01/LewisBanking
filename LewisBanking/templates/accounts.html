@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: set_base_select('btn2', 'text2'); initialize_accounts(); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}}); adv_visibility('money');">
+<body onLoad="javascript: set_base_select('btn2', 'text2'); initialize_accounts(); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}});">
 
 	<div class="fadeOut" id="z2">
 			<div class="messageWindow" id="messageWindow">
@@ -306,11 +306,11 @@
 				</div>
 
 				<div class="a_page_buttons">
-					<button type="button" class="a-button-top" onCLick="javascript: load_account_sort_options('0'); load_frame('/withdraw0/');">Withdrawal</button>
-					<button type="button" onCLick="javascript: load_account_sort_options('0'); load_frame('/deposit0/');">Deposit</button>
-					<button type="button" onCLick="javascript: load_account_sort_options('0'); load_frame('/transfer0/');">Transfer</button>
-					<button type="button" id="hi_btn" onCLick="javascript: load_account_sort_options('1'); init_history('/view_history0/');">View Selected Account's History</button>
-					<button type="button" class="a-button-bottom" onCLick="javascript: load_account_sort_options('0'); load_frame('/delete_account0/');">Deactivate Account</button>
+					<button type="button" class="a-button-top" onCLick="javascript: load_frame('/withdraw0/');">Withdrawal</button>
+					<button type="button" onCLick="javascript: load_frame('/deposit0/');">Deposit</button>
+					<button type="button" onCLick="javascript: load_frame('/transfer0/');">Transfer</button>
+					<button type="button" id="hi_btn" onCLick="javascript: init_history('/view_history0/');">View Selected Account's History</button>
+					<button type="button" class="a-button-bottom" onCLick="javascript: load_frame('/delete_account0/');">Deactivate Account</button>
 				</div>
 
 				<div class="a_right_btm"></div>
