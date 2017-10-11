@@ -556,8 +556,7 @@ function initialize_acct_parent(isSearch, status, size)
 		}
 		else
 		{
-			//open error window
-			//reload list
+			clear_current_list('account');
 		}
 	}
 
@@ -565,6 +564,7 @@ function initialize_acct_parent(isSearch, status, size)
 	{
 		if (status === 1)
 		{
+			parent.grab('list_clear').style.visibility = "visible";
 			var search_type = String(parent.grab('send_sType').value);
 			var search = String(parent.grab('send_search').value);
 			parent.grab('ts_all_a').innerHTML = "";
@@ -600,10 +600,24 @@ function initialize_acct_parent(isSearch, status, size)
 		}
 		else
 		{
-			//open no results window
-			//reload list
+			clear_current_list('/load_account_list/', 10);
 		}
 	}
+	parent.grab('search').value = "";
+}
+
+function clear_current_list(target, z_index)
+{
+	parent.visibility(Number(z_index), 'show');
+	win = parent.grab('iframe_list');
+	target = String(target);
+	win.src = target;
+}
+
+function reset_account_list()
+{
+	grab('iframe_list').src = '/load_account_list/';
+	grab('list_clear').style.visibility = "hidden";
 }
 
 function set_sort_select_loans(select, sort)

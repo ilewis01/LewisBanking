@@ -275,6 +275,30 @@
 		<input type="hidden" name="send_search2" id="send_search2" value="">
 		<input type="hidden" name="send_sType" id="send_sType" value="">
 
+		<div class="fadeOut" id="z10">
+			<div class="zero_results_error">
+				<div class="x_0_results">
+					<a href="javascript: visibility(10, 'hide');">
+						<i class="fa fa-window-close" aria-hidden="true"></i>
+					</a>
+				</div>
+
+				<div class="contain_x0_data">
+					<div class="x0_data_left">
+						<i class="fa fa-search" aria-hidden="true"></i>
+					</div>
+
+					<div class="x0_data_right">
+						<em>0</em> &nbspMatches Found
+					</div>
+				</div>
+
+				<!-- <div>
+					<i class="fa fa-search" aria-hidden="true"></i>
+				</div> -->
+			</div>
+		</div>
+
 		<div class="fadeOut" id="z1">
 			<div class="window1">
 				<iframe src="" id="frame1"></iframe>
@@ -306,7 +330,11 @@
 							</table>
 						</div>
 
-						<div class="tri-center"></div>
+						<div class="tri-center">
+							<div id="list_clear">
+								<button type="button" onClick="javascript: reset_account_list();">Clear Search</button>
+							</div>
+						</div>
 
 						<div class="tri-edge" id="carat">
 							<a href="javascript: toggle_carat(); set_frame_list();">
@@ -350,12 +378,6 @@
 								<div class="viewer_selected">Selected: <span id="curr_selected"></span></div>
 							</div>
 						</div>
-						<!-- <div class="Selcted_Item" id="tv_head" style="margin-top:3.5%;"><span id="selType"></span> <span id="selAcct"></span></div>
-						<div class="divider"></div>
-						<div class="inner_class si1"><span id="selType2"></span> <span id="selAcct2"></span></div>
-						<div class="inner_class si2" id="active_div">Active Since <span id="selDate"></span></div>
-						<div class="inner_class si3">Available Now:<br><span>$</span><span id="selBaln"></span></div>
-						<div class="selected-item-content"></div> -->
 					</div>
 				</div>
 
