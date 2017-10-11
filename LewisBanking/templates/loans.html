@@ -2,7 +2,7 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: set_base_select('btn3', 'text3'); initialize_loans(0); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}});">
+<body onLoad="javascript: set_base_select('btn3', 'text3'); initialize_loans(); set_adv_dates({{months}}, {{days_from}}, {{days_to}}, {{years}}, {{joined}});">
 	<div class="fadeOut" id="z2">
 			<div class="messageWindow" id="messageWindow">
 				<div class="messageNav-short">
@@ -212,8 +212,8 @@
 			</div>
 
 			<div class="adv_pop_buttons">
-				<button type="button" onClick="javascript: advanced_search_loans();">Submit</button>
-				<button type="button" onClick="javascript: visibility(3, 'hide');">Cancel</button>
+				<button type="button" onClick="javascript: l_adv_search_init();">Submit</button>
+				<button type="button" onClick="javascript: reset_adv_win();">Cancel</button>
 			</div>
 		</div>
 
@@ -300,9 +300,7 @@
 						<i class="fa fa-search" aria-hidden="true"></i>
 					</div>
 
-					<div class="x0_data_right">
-						<em>0</em> &nbspMatches Found
-					</div>
+					<div class="x0_data_right" id="x0_message"></div>
 				</div>
 			</div>
 		</div>
@@ -341,13 +339,17 @@
 							</table>
 						</div>
 
-						<div class="tri-center"></div>
+						<div class="tri-center">
+							<div id="list_clear">
+								<button type="button" onClick="javascript: reset_loan_list();">Clear Search</button>
+							</div>
+						</div>
 
 						<div class="tri-edge" id="carat">
 							<a href="javascript: toggle_carat(); set_frame_list();">
 								<div class="direction-holder">
-									<div class="carat-holder" id="icon"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i></div>
-									<div class="dir_text" id="dir_text">Ascending</div>
+									<div class="carat-holder" id="icon"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></div>
+									<div class="dir_text" id="dir_text">Descending</div>
 								</div>
 							</a>
 						</div>
@@ -365,7 +367,7 @@
 				<div class="a_page_selected">
 					<div class="selected-item-wrap" id="tv_builder">
 						<div class="format_disp_view2">
-							<div class="now_viewing">Now Viewing...</div>
+							<div class="now_viewing2">Now Viewing...</div>
 							<div class="divider"></div>
 
 							<div class="account_view_format">
@@ -388,7 +390,7 @@
 					<div class="search_icon">
 						<input type="search" placeholder="Search Loans" id="search" name="search" oninput="">
 						<div class="search_span">
-							<a href="javascript: normal_search_loans();"><span class="fa fa-search"></span></a>
+							<a href="javascript: normal_loan_search_init();"><span class="fa fa-search"></span></a>
 						</div>
 					</div>
 				</div>

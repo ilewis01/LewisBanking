@@ -2888,6 +2888,18 @@ iframe {
 	text-shadow:1px 1px #333333;
 }
 
+.now_viewing2 {
+	font-size: 18px;
+	font-style: italic;
+	font-weight: bold;
+	padding-top:2%;
+	padding-bottom:1%;
+	color:#b3d873;
+	text-shadow:1px 1px #333333;
+	width:90%;
+	margin:auto;
+}
+
 .viewer_selected {
 	font-weight: bold;
 	font-size: 12px;

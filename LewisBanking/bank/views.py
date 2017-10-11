@@ -375,9 +375,15 @@ def make_payment(request):
 
 @login_required(login_url='/index')
 def loan_search(request):
-	content = fetch_content(request, 'loan_search')
+	content = {}
 	content.update(csrf(request))
 	return render_to_response('loans/loan_search.html', content)
+
+@login_required(login_url='/index')
+def load_loan_search_results(request):
+	content = fetch_content(request, 'loan_search')
+	content.update(csrf(request))
+	return render_to_response('load_loan_list.html', content)
 
 @login_required(login_url='/index')
 def update_phone_loader(request):

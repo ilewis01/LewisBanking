@@ -486,49 +486,9 @@ function get_error_html(error_list)
 	return html;
 }
 
-function initialize_loans(selected_index)
+function initialize_loans()
 {
-	var win = frame('iframe_list');
-	var sort = String(win.grab('sort').value);
-	var hidden = win.grab('direction');
-	var direction = String(hidden.value);
-	var select = grab('sort_parent');
-	var dir_text = parent.grab('dir_text');
-	var icon = parent.grab('icon');
-
-	set_sort_select_loans(select, sort);
-	set_direction(icon, dir_text, hidden, direction);
-
-	var acct_no = win.grab('li0_account_number').value;
-	var date = win.grab('li0_start_date').value;
-	var principal = win.grab('li0_principal').value;
-	var balance = win.grab('li0_balance').value;
-	var type = win.grab('li0_type').value;
-	var rate = win.grab('li0_rate').value;
-	var term = win.grab('li0_term').value;
-	var payment = win.grab('li0_payment').value;
-	var balancef = win.grab('li0_format_balance').value;
-
-	grab('selected_account_number').value = acct_no;
-	grab('selected_date').value = date;
-	grab('selected_principal').value = principal;
-	grab('selected_balance').value = balance;
-	grab('selected_type').value = type;
-	grab('selected_rate').value = rate;
-	grab('selected_term').value = term;
-	grab('selected_payment').value = payment;
-	grab('selected_balancef').value = balancef;
-
-	type = Number(type);
-	if (type === 0) {type = "Personal Loan";}
-	else if (type === 1) {type = "Business Loan";}
-	else if (type === 2) {type = "Student Loan";}
-
-	grab('selAcct').innerHTML = acct_no;
-	grab('selBaln').innerHTML = balance;
-	grab('selType').innerHTML = type;
-
-	grab('selected_index').value = Number(selected_index);
+	grab('sort_parent').selectedIndex = 1;
 }
 
 function initialize_accounts()
@@ -562,6 +522,7 @@ function initialize_acct_parent(isSearch, status, size)
 
 	else if (isSearch === 1)
 	{
+		grab('frame_form').action = "/accountResults/";
 		if (status === 1)
 		{
 			parent.grab('list_clear').style.visibility = "visible";
@@ -606,7 +567,7 @@ function initialize_acct_parent(isSearch, status, size)
 	parent.grab('search').value = "";
 }
 
-function check_loan_results(isSearch, status, size)
+function check_loan_results(isSearch, status, size, location)
 {
 	isSearch = Number(isSearch);
 	status = Number(status);
@@ -616,10 +577,12 @@ function check_loan_results(isSearch, status, size)
 	{
 		if (isSearch === -1)
 		{
-			//no loans error message
+			parent.grab('x0_message').innerHTML = "You currently have <em>0</em> loans";
+			parent.visibility(10, 'show');
 		}
 		else
 		{
+			parent.grab('x0_message').innerHTML = "<em>0</em> &nbspMatches Found";
 			clear_current_list('/load_loan_list/', 10);
 		}
 	}
@@ -639,9 +602,43 @@ function check_loan_results(isSearch, status, size)
 
 		else
 		{
-			//viewing search results
+			parent.grab('list_clear').style.visibility = "visible";
+			grab('frame_form').action = "/load_loan_search_results/";
+			parent.grab('ts_all_a').innerHTML = "";
+			var search_type = String(parent.grab('send_sType').value);
+			var search = String(parent.grab('send_search').value);
+
+			if (search_type === "normal")
+			{
+				parent.grab('tv_as_search_adv1').innerHTML = "<span style=\"font-size:17px; line-height:50px;\">Search for <span><em>\"" + search + "\"</em></span></span>";
+				parent.grab('tv_as_results').innerHTML = "<em>" + size + "</em> Results Found";
+				parent.grab('tv_as_search_adv2').innerHTML = "";
+			}
+
+			else if (search_type === "advanced")
+			{
+				var method = String(parent.grab('send_method').value);
+				var search2 = String(parent.grab('send_search2').value);
+
+				if (method === 'money')
+				{
+					parent.grab('tv_as_search_adv1').innerHTML = "TRANSACTIONS:";
+					parent.grab('tv_as_search_adv2').innerHTML = "from <em>$" + search + "</em> to <em>$" + search2 + "</em>";
+					parent.grab('tv_as_results').innerHTML = "<em>" + size + "</em> Results Found";
+				}
+
+				else if (method === "date")
+				{
+					search = search.replace(/-/g, "/");
+					search2 = search2.replace(/-/g, "/");
+					parent.grab('tv_as_search_adv1').innerHTML = "DATES:";
+					parent.grab('tv_as_search_adv2').innerHTML = "from <em>" + search + "</em> to <em>" + search2 + "</em>";
+					parent.grab('tv_as_results').innerHTML = "<em>" + size + "</em> Results Found";
+				}
+			}
 		}
 	}
+	parent.grab('search').value = "";
 }
 
 function clear_current_list(target, z_index)
@@ -655,6 +652,12 @@ function clear_current_list(target, z_index)
 function reset_account_list()
 {
 	grab('iframe_list').src = '/load_account_list/';
+	grab('list_clear').style.visibility = "hidden";
+}
+
+function reset_loan_list()
+{
+	grab('iframe_list').src = '/load_loan_list/';
 	grab('list_clear').style.visibility = "hidden";
 }
 
@@ -1467,6 +1470,11 @@ function initialize_account_search()
 	grab('iframe_list').src = "/account_search/";
 }
 
+function initialize_loan_search()
+{
+	grab('iframe_list').src = "/loan_search/";
+}
+
 function load_account_search_data()
 {
 	var search = parent.grab('send_search').value;
@@ -1645,6 +1653,19 @@ function adv_visibility(mode)
 	}
 }
 
+function normal_loan_search_init()
+{
+	var search = String(grab('search').value);
+	grab('send_search').value = search;
+	grab('send_sType').value = "normal";
+	grab('searchType').value = "normal";
+
+	if (search.length !== 0)
+	{
+		initialize_loan_search();
+	}
+}
+
 function normal_search_init()
 {
 	var search = String(grab('search').value);
@@ -1748,6 +1769,99 @@ function a_adv_search_init()
 		grab('dollars_to').value = "";
 		reset_adv_win();
 		initialize_account_search();
+	}
+}
+
+function l_adv_search_init()
+{
+	var proceed = true;
+	var s_fm = "";
+	var s_to = "";
+	var isDate = grab('date_range').checked;
+	grab('searchType').value = 'advanced';
+	grab('send_sType').value = 'advanced';
+
+	if (isDate === true)
+	{
+		grab('searchMethod').value = "date";
+		grab('send_method').value = "date";
+		s_fm += String(grab('mm_fm').value);
+		s_fm += "-";
+		s_fm += String(grab('dd_fm').value);
+		s_fm += "-";
+		s_fm += String(grab('yy_fm').value);
+
+		s_to += String(grab('mm_to').value);
+		s_to += "-";
+		s_to += String(grab('dd_to').value);
+		s_to += "-";
+		s_to += String(grab('yy_to').value);
+
+		t1 = String(mm_fm.value) + String(dd_fm.value) + String(yy_fm.value);
+		t2 = String(mm_to.value) + String(dd_to.value) + String(yy_to.value);
+
+		t1 = Number(t1);
+		t2 = Number(t2);
+
+		if (t2 < t1)
+		{
+			grab('messageContent5').innerHTML = "The upper bound date must be greater than the lower bound date";
+			visibility(5, "show");
+			proceed = false;
+		}
+
+		adv_s_date_fm = convert_js_months_toString(Number(grab('mm_fm').value)) + String(grab('dd_fm').value) + ", " + String(grab('yy_fm').value)
+		adv_s_date_to = convert_js_months_toString(Number(grab('mm_to').value)) + String(grab('dd_to').value) + ", " + String(grab('yy_to').value)
+	}
+
+	else
+	{
+		grab('searchMethod').value = "money";
+		grab('send_method').value = "money";
+		var fm_cents = String(grab('cents_fm').value);
+		var to_cents = String(grab('cents_to').value);
+		var fm_dollars = String(grab('dollars_fm').value);
+		var to_dollars = String(grab('dollars_to').value);
+
+		if (to_dollars.length === 0)
+		{
+			grab('messageContent5').innerHTML = "You must enter an ending search amount";
+			visibility(5, "show");
+			proceed = false;
+		}
+
+		else 
+		{
+			if (to_cents.length === 0) {to_cents = "00";}
+			if (fm_cents.length === 0) {fm_cents = "00";}
+			if (fm_dollars.length === 0) {fm_dollars = "0";}
+
+			s_fm = fm_dollars + "." + fm_cents;
+			s_to = to_dollars + "." + to_cents;
+
+			if (parseFloat(s_fm) > parseFloat(s_to))
+			{
+				grab('messageContent5').innerHTML = "The upper bound value must be greater or equal to the lower bound value";
+				visibility(5, "show");
+				proceed = false;
+			}
+		}	
+	}
+
+	grab('send_search').value = s_fm;
+	grab('send_search2').value = s_to;
+	grab('search').value = s_fm;
+	grab('search2').value = s_to;
+
+	if (proceed === true)
+	{
+		var now = new Date();
+		grab('dollars_fm').value = "";
+		grab('dollars_to').value = "";
+		grab('cents_fm').value = "";
+		grab('dollars_to').value = "";
+		reset_adv_win();
+		initialize_loan_search();
 	}
 }
 

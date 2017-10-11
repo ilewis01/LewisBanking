@@ -62,18 +62,10 @@ urlpatterns = patterns('',
     url(r'^load_history_list/$', 'bank.views.load_history_list'),
     url(r'^commitDelete/$', 'bank.views.commitDelete'),
     url(r'^load_history_search/$', 'bank.views.load_history_search'),
-    url(r'^init_loan_list/$', 'bank.views.init_loan_list'),
+    url(r'^load_loan_search_results/$', 'bank.views.load_loan_search_results'),
     url(r'^pr0/$', 'bank.views.pr0'),
     url(r'^pr1/$', 'bank.views.pr1'),
     url(r'^pr2/$', 'bank.views.pr2'),
     url(r'^prSuccess/$', 'bank.views.prSuccess'),
-
-
-
-
-
-
-
-
 
 )
