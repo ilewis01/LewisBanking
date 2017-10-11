@@ -23,38 +23,36 @@
 
 <!-- onLoad="javascript: load_index(0);" -->
 
-<body class="list_frame_body" onLoad="javascript: load_loan_item('li0', 0); check_loan_results({{size}}, {{load_type}});">
+<body class="list_frame_body" onLoad="javascript: load_loan_item(0); check_loan_results({{isSearch}}, {{status}}, {{size}});">
 	<form action="/load_loan_list/" method="post" id="frame_form"> {% csrf_token %}
 		<input type="hidden" name="sort" id="sort" value="{{sort}}">
 		<input type="hidden" name="direction" id="direction" value="{{direction}}">
 		<input type="hidden" name="return_class" id="return_class" value="li_clear">
-		<input type="hidden" name="selected_li" id="selected_li" value="li0_change_class">
-		<input type="hidden" name="selected_account" id="selected_account" value="">
 		<input type="hidden" name="selected_index" id="selected_index" value="0">
 
-		<input type="hidden" name="size" id="size" value="{{size}}">
-		<input type="hidden" name="search" id="search" value="">
-		<input type="hidden" name="search2" id="search2" value="">
-		<input type="hidden" name="searchType" id="searchType" value="">
-        <input type="hidden" name="searchMethod" id="searchMethod" value="">
+		<input type="hidden" name="search" id="search" value="{{search}}">
+		<input type="hidden" name="search2" id="search2" value="{{search2}}">
+		<input type="hidden" name="searchMethod" id="searchMethod" value="{{searchMethod}}">
+		<input type="hidden" name="searchType" id="searchType" value="{{searchType}}">
 
 		<ul>
-			{% for l in loans %}
+			{% for l in loan %}
 			<li>
-				<a href="javascript: load_loan_item('{{l.item_id}}', '{{l.index}}');" class="li_a_tag">
-					<div class="{{l.class}}" id="{{l.item_id}}change_class">
-						<input type="hidden" id="{{l.account_no_id}}" name="{{l.account_no_id}}" value="{{l.account.account_number}}">
-						<input type="hidden" id="{{l.balance_id}}" value="{{l.account.balance}}">
-						<input type="hidden" id="{{l.start_date_id}}" value="{{l.account.start_date}}">
-						<input type="hidden" id="{{l.item_id}}payment" value="{{l.payment}}">
-						<input type="hidden" id="{{l.loan_amount_id}}" value="{{l.account.loan_amount}}">
-						<input type="hidden" id="{{l.type_id}}" value="{{l.account.loan_type}}">
-						<input type="hidden" id="{{l.rate_id}}" value="{{l.account.rate}}">
-						<input type="hidden" id="{{l.term_id}}" value="{{l.account.term}}">
-						<input type="hidden" id="{{l.item_id}}format_balance" value="{{l.balance}}">
+				<a href="javascript: load_loan_item('{{l.index}}');" class="li_a_tag">
+					<div class="{{l.class}}" id="sel{{l.index}}_div">
+						<input type="hidden" id="li{{l.index}}_account_number" name="li{{l.index}}_account_" value="{{l.loan.account_number}}">
+						<input type="hidden" id="li{{l.index}}_type" value="{{l.loan_type}}">
+
+
+						<input type="hidden" id="li{{l.index}}_balancef" value="{{l.balance}}">
+						<input type="hidden" id="li{{l.index}}_payment" value="{{l.principal}}">
+						<input type="hidden" id="li{{l.index}}_rate" value="{{l.rate}}">
+						<input type="hidden" id="li{{l.index}}_total_interest" value="{{l.total_interest}}">
+						<input type="hidden" id="li{{l.index}}_payment" value="{{l.payment}}">
+						<input type="hidden" id="li{{l.index}}_term" value="{{l.term}}">
 						
-						<div class="lo_date">{{l.account.start_date}}</div>
-						<div class="lo_account">({{l.account.account_number}})</div>
+						<div class="lo_date">{{l.loan.start_date}}</div>
+						<div class="lo_account">({{l.loan.account_number}})</div>
 						<div class="lo_business">{{l.loan_type}} LOAN</div>
 						
 						<div class="lo_qa">Principal Balance: <span>${{l.principal}}</span> </div>
@@ -64,7 +62,7 @@
 						<div class="lo_qa">Monthly Payments: <span>${{l.payment}}</span></div>
 						<div class="lo_qa">Next Installment: <span>{{l.next_payment}}</span></div>
 
-						<div class="{{l.class2}}" id="{{l.item_id}}low_class"><span>Outstanding Balance: </span> ${{l.balance}}</div>
+						<div class="{{l.class2}}" id="li{{l.index}}_low_class"><span>Outstanding Balance: </span> ${{l.balance}}</div>
 					</div>
 				</a>
 			</li>

@@ -1256,6 +1256,60 @@ def full_account(user, sort, direction):
 
 	return sorted_list
 
+def full_loan(user, sort, direction):
+	user_id = str(user.id)
+	sorted_list = []
+	count = 0
+	sort = str(sort)
+	direction = str(direction)
+
+	if direction == "descend":
+		sort = "-" + sort
+
+	l_list = Loan.objects.all().order_by(sort)
+
+	for l in l_list:
+		if str(l.user_id) == user_id:
+			d = getLoanListData(l, count)
+			sorted_list.append(d)
+			count += 1
+
+	return sorted_list
+
+def getLoanListData(loan, index):
+	d = {}
+
+	if index % 2 == 0:
+		d['class'] = 'lo_shade'
+		d['class2'] = 'right_loan_balance'
+	else:
+		d['class'] = 'lo_clear'
+		d['class2'] = 'right_loan_balance2'
+
+	if index == 0:
+		d['class'] = 'lo_select'
+		d['class2'] = 'rl_selected'
+
+	loan_type = int(loan.loan_type)
+
+	if loan_type == 0:
+		loan_type = "PERSONAL"
+	elif loan_type == 1:
+		loan_type = "BUSINESS"
+	else:
+		loan_type = "STUDENT"
+
+	d['loan'] = loan
+	d['balance'] = format_currency(loan.balance)
+	d['principal'] = format_currency(loan.loan_amount)
+	d['rate'] = str(float(loan.rate) * 100) + "%"
+	d['total_interest'] = format_currency(loan.total_interest)
+	d['payment'] = format_currency(loan.payment)
+	d['term'] = str(loan.term) + " months"
+	d['loan_type'] = loan_type
+	d['index'] = index
+	return d
+
 def fetch_account_List(request):
 	content = {}
 	user = request.user
@@ -1274,6 +1328,29 @@ def fetch_account_List(request):
 
 	content['isSearch'] = -1
 	content['accounts'] = sorted_list
+	content['sort'] = sort;
+	content['direction'] = direction;
+	content['size'] = len(sorted_list)
+	return content
+
+def fetch_loan_List(request):
+	content = {}
+	user = request.user
+	sort = str(request.POST.get('sort'))
+	direction = str(request.POST.get('direction'))
+
+	if sort == None or len(sort) == 0 or sort == "None" or sort == " " or sort == "null":
+		sort = "balance"
+		direction = "descend"
+
+	sorted_list = full_loan(user, sort, direction)
+	content['status'] = 1
+
+	if len(sorted_list) == 0:
+		content['status'] = -1
+
+	content['isSearch'] = -1
+	content['loan'] = sorted_list
 	content['sort'] = sort;
 	content['direction'] = direction;
 	content['size'] = len(sorted_list)
@@ -1916,6 +1993,9 @@ def fetch_content(request, url):
 	elif url == "update_phone":
 		content = update_user_phone(request)
 
+	elif url == "loan_list":
+		content = fetch_loan_List(request)
+
 	return content
 
 def fetch_date_ranges(user):
@@ -2221,51 +2301,6 @@ def adv_lower(value):
 		else:
 			temp += v
 	return temp
-
-def getLoanListData(loan, index):
-	d = {}
-
-	if index % 2 == 0:
-		d['class'] = 'lo_shade'
-		d['class2'] = 'right_loan_balance'
-	else:
-		d['class'] = 'lo_clear'
-		d['class2'] = 'right_loan_balance2'
-
-	if index == 0:
-		d['class'] = 'lo_select'
-		d['class2'] = 'rl_selected'
-
-	loan_type = int(loan.loan_type)
-
-	if loan_type == 0:
-		loan_type = "Personal"
-	elif loan_type == 1:
-		loan_type = "Business"
-	else:
-		loan_type = "Student"
-
-	d['account'] = loan
-	d['balance'] = format_currency(loan.balance)
-	d['principal'] = format_currency(loan.loan_amount)
-	d['rate'] = str(float(loan.rate) * 100) + "%"
-	d['total_interest'] = format_currency(loan.total_interest)
-	d['payment'] = format_currency(loan.payment)
-	d['term'] = str(loan.term) + " months"
-	d['loan_type'] = loan_type
-
-	item_id = "li" + str(index) + "_"
-	d['index'] = index
-	d['item_id'] = item_id
-	d['account_no_id'] = item_id + "account_number"
-	d['start_date_id'] = item_id + "start_date"
-	d['loan_amount_id'] = item_id + "principal"
-	d['balance_id'] = item_id + "balance"
-	d['type_id'] = item_id + "type"
-	d['rate_id'] = item_id + "rate"
-	d['term_id'] = item_id + "term"
-
-	return d
 
 
 def fetch_loan_history(request):

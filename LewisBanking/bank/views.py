@@ -192,9 +192,15 @@ def load_account_list(request):
 
 @login_required(login_url='/index')
 def load_loan_list(request):
-	content = fetch_content(request, "loans")
+	content = fetch_content(request, "loan_list")
 	content.update(csrf(request))
 	return render_to_response('load_loan_list.html', content)
+
+@login_required(login_url='/index')
+def init_loan_list(request):
+	content = {}
+	content.update(csrf(request))
+	return render_to_response('init_loan_list.html', content)
 
 @login_required(login_url='/index')
 def view_history0(request):

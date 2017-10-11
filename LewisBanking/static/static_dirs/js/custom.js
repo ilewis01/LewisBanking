@@ -606,6 +606,44 @@ function initialize_acct_parent(isSearch, status, size)
 	parent.grab('search').value = "";
 }
 
+function check_loan_results(isSearch, status, size)
+{
+	isSearch = Number(isSearch);
+	status = Number(status);
+	size = String(size);
+
+	if (status === -1)
+	{
+		if (isSearch === -1)
+		{
+			//no loans error message
+		}
+		else
+		{
+			clear_current_list('/load_loan_list/', 10);
+		}
+	}
+
+	else if (status === 1)
+	{
+		if (isSearch === -1)
+		{
+			parent.grab('tv_as_search_adv1').innerHTML = "";
+			parent.grab('tv_as_search_adv2').innerHTML = "";
+			parent.grab('tv_as_results').innerHTML = "";
+
+			var message = "{ <span>All Loans</span> }";
+			parent.grab('ts_all_a').innerHTML = message;
+			parent.grab('tv_as_results').innerHTML = "<em>" + size + "</em> Results Found";
+		}
+
+		else
+		{
+			//viewing search results
+		}
+	}
+}
+
 function clear_current_list(target, z_index)
 {
 	parent.visibility(Number(z_index), 'show');
@@ -778,11 +816,41 @@ function load_list_item(index)
 	parent.grab('selected_index').value = index;
 }
 
-function load_loan_item(item_id, index)
+function load_loan_item(index)
 {
-	var prev_index = grab('selected_index').value;
-	clearSelectedLo_child(prev_index);
-	load_loan(index);
+	var selected_loan = grab('selected_index');
+	var prev_index = Number(selected_index.value);
+	var prev_name = "sel" + String(prev_index) + "_div";
+	var prev_low_name = "li" + String(prev_index) + "_low_class";
+	var prev = grab(prev_name);
+	var prev_low = grab(prev_low_name)
+
+	if (prev_index % 2 == 0)
+	{
+		prev.className = "lo_clear";
+		prev_low.className = "right_loan_balance2";
+	}
+	else 
+	{
+		prev.className = "lo_shade";
+		prev_low.className = "right_loan_balance";
+	}
+
+	selected_loan.value = index;
+	var sel_name = "sel" + String(index) + "_div";
+	var low_name = "li" + String(index) + "_low_class";
+	var selected = grab(sel_name);
+	var low_go = grab(low_name)
+	selected.className = "lo_select";
+	low_go.className = "rl_selected";
+
+	var m_type = "li" + String(index) + "_type";
+	var m_acct = "li" + String(index) + "_account_number";
+	var type_val = String(grab(m_type).value);
+	var acct_val = String(grab(m_acct).value);
+	var message = type_val + " LOAN " + acct_val;
+	parent.grab('curr_selected').innerHTML = message;
+	parent.grab('selected_index').value = index;
 }
 
 function load_loan(index)
@@ -1806,16 +1874,6 @@ function load_history_val()
 	parent.grab('history_acct').innerHTML = parent.grab('selected_account_number').value;
 }
 
-function check_loan_results(size, load_type)
-{
-	if (Number(load_type) === -1)
-	{
-		var search0 = parent.grab('search').value;
-		parent.grab('search0').innerHTML = search0;
-		parent.visibility(7, 'show')
-	}
-}
-
 function clear_d_search()
 {
 	parent.grab('search').value = "";
@@ -2207,6 +2265,11 @@ function change_pr_size()
 {
 	var wrapper = parent.grab('passwordRecovery');
 	wrapper.className = "passwordRecovery2";
+}
+
+function init_loan_list()
+{
+
 }
 
 

@@ -1257,7 +1257,7 @@ iframe {
 }
 
 .lo_shade {
-	background-color: #f2efe8;
+	/*background-color: #f2efe8;*/
 	height: 185px;
 	border-bottom: 2px solid black;
 }
@@ -2872,6 +2872,12 @@ iframe {
 	margin:auto;
 }
 
+.format_disp_view2 {
+	width:100%;
+	height:100%;
+	margin:auto;
+}
+
 .now_viewing {
 	font-size: 18px;
 	font-style: italic;
@@ -2890,6 +2896,18 @@ iframe {
 }
 
 .viewer_selected span {
+	color:#666666;
+	/*color:#5c1c81;*/
+}
+
+.viewer_selected2 {
+	font-weight: bold;
+	font-size: 11px;
+	text-align: center;
+	color:blue;
+}
+
+.viewer_selected2 span {
 	color:#666666;
 	/*color:#5c1c81;*/
 }
