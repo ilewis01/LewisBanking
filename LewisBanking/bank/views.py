@@ -40,7 +40,7 @@ def auth_view(request):
         if user.is_active == False:
         	return HttpResponseRedirect('/validationRequired/')
         else:
-	        return HttpResponseRedirect('/summary/')
+	        return HttpResponseRedirect('/home/')
     else:
         return HttpResponseRedirect('/invalid_login')
 

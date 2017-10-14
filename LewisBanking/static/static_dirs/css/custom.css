@@ -90,6 +90,42 @@ iframe {
 	visibility: visible;
 }
 
+.welcomeFade {
+	width:100%;
+	margin:auto;
+	height:80%;
+	position: absolute;
+	transition: visibility 1s linear 1s, opacity 1s linear;
+	transition-delay:1s;
+	opacity: 1.0;
+	visibility: visible;
+}
+
+.zFadeIn {
+	width:100%;
+	margin:auto;
+	height:80%;
+	position: absolute;
+	transition: visibility 1s linear 1s, opacity 1s linear;
+	transition-delay:1s;
+	opacity: 1.0;
+	visibility: visible;
+	z-index: 20;
+}
+
+.zFadeOut {
+	width:100%;
+	margin:auto;
+	height:80%;
+	position: absolute;
+	z-index: auto;
+	transition: visibility 1s linear 1s, opacity 1s linear;
+	transition-delay:1s;
+	opacity: 0.0;
+	visibility: hidden;
+	z-index: 20;
+}
+
 .logo-wrapper {
 	width:430px;
 	height:120px;

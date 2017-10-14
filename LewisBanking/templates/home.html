@@ -2,12 +2,131 @@
 {% block body %}
 {% load staticfiles %}
 
-<body onLoad="javascript: load_welcome();">
-	<form action="" method="post" id="bank_form"> {% csrf_token %}
+<body onLoad="javascript: set_base_select('btn1', 'text1'); introAnimation();">
+	<div class="zFadeIn" id="zFadeDiv">
 		<div class="welcome_holder">
 			Welcome Back, {{user.first_name}}!
 		</div>
-	</form>
+	</div>
+
+	<div class="fadeOut" id="welcomeFade">
+		<form action="/logout/" method="post" id="bank_form"> {% csrf_token %}
+			<input type='hidden' name="btn" id='btn' value="btn3">
+			<input type='hidden' name="txn" id='txn' value="text3">
+
+			<div class="fadeOut" id="z2" style="z-index:2;">
+				<div class="pdf_wrap">
+					<div class="pdf_nav1">
+						<a href="javascript: visibility(2, 'hide');"><i class="fa fa-window-close" aria-hidden="true"></i></a>
+					</div>
+
+					<div class="pdf_info">
+						<div><b>Introduction:</b></div>
+						<p>
+							Banking System is developed in Python to replaced manual System by computerized system.<br><br>This system allows to create an new account and Allows to deposit and withdrawal amount facilities.<br><br>It Also maintain Loan Transaction and Paying Loan Installment.<br><br>It also Provide Advanced searching Facilities.<br>
+						</p>
+
+						<div><b>Modules:</b></div>
+						<ol>
+							<li><b>Open Account</b><br>User to Create The New Account Of Customer</li>
+							<li><b>Deposit Amount</b><br>In This Module Customers Can Deposite Amount in their Accounts.</li>
+							<li><b>Withdraw Amount</b><br>In This Module Customers Can Withdrawal Amount from their Accounts.</li>
+							<li><b>Display All Accounts</b><br>This Module Display All The Account Information.</li>
+							<li><b>Display Transaction</b><br>This Module Display Transaction Information By Account No, By Date And All Transactions of All Accounts.</li>
+							<li><b>Delete Account</b><br>This Module Closed Account Of Customers.</li>
+							<li><b>Loan</b><br>This Module Maintain All Transaction Of Loan. Also Maintain Installment.</li>
+							<li><b>Search</b><br>This Module Provide Advanced Searching Techniques.</li>
+							<li><b>Transfer Amount</b><br>This Module Provide Facility For Transfering Amount From One Account To Another Account.</li>
+						</ol>
+
+						<div><b>Validations:</b></div>
+						<ul>
+							<li>System Generate Account No and Loan Id Automatically.</li>
+							<li>User can not Enter number In Name Field.</li>
+							<li>User can not Enter Character In Mobile No.</li>
+							<li>User can not Enter Less or More Than 10 digits in Mobile no.</li>
+							<li>User can not Enter Character In Numeric Field.</li>
+							<li>User can not Enter Invalid choice and Invalid date into the system.</li>
+							<li>Welcome Screen</li>
+							<li>Developers Name Screen</li>
+							<li>Main Menu Screen</li>
+							<li>User Can Select multiple Options.</li>
+							<li>Open An Account Form</li>
+							<li>Display All Accounts Information</li>
+							<li>Screen For Deposit Amount In A Particular Account</li>
+							<li>Screen shows Account Information After Deposited Amount</li>
+							<li>Screen For Withdraw Amount In a Particular Account</li>
+							<li>Screen shows Account Information After Withdrawal Amount</li>
+							<li>Screen For Displaying Transaction Menu</li>
+							<li>Screen For Displaying All Transaction Information</li>
+							<li>Screen For Displaying Account Wise Transaction Information</li>
+							<li>Screen For Displaying Account Wise Transaction Information</li>
+							<li>Screen For Displaying Loan Menu</li>
+							<li>Screen For selecting Loan Type</li>
+							<li>Screen For Displaying Calculation On Loan Amount And Add Interest to Loan Amount and Display Monthly Installment</li>
+							<li>Screen For Confirmation For Applying Loan</li>
+							<li>Screen For Applying Loan And Storing Detail Of Customer</li>
+							<li>Screen For Paying Loan Installment</li>
+							<li>Screen For Displaying All Loan Information</li>
+							<li>Screen For Displaying Loan Information By Loan Type</li>
+							<li>Screen For Displaying Loan Information By Loan Type</li>
+							<li>Screen For Displaying Search Menu</li>
+							<li>Screen For Searching Account Information By Account No</li>
+							<li>Screen For Searching Account Information By Date It Shows Invalid date If Date Is not correct</li>
+							<li>Screen For Searching Account Information By Date</li>
+							<li>Screen For Displaying Message If Record(s) Are not Found</li>
+							<li>Screen For Displaying Account Information BY Date</li>
+							<li>Screen For displaying Account Information Between Two Amounts</li>
+							<li>Screen For displaying Account Information Between Two Amounts</li>
+							<li>Screen For displaying Account Information By Account Type</li>
+							<li>Screen For displaying Account Information By Account Type</li>
+							<li>Screen For Transfering Amount From One Account To Another Account</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="data-wrap">
+				<div class="url-wrap">Overview</div>
+
+				<div class="summary_content_wrap">
+					<span>Hey {{user.first_name}}!</span>
+
+					<p style="margin-top:3%;">
+						This application was developed as a Python class project by Immanuel Lewis who is the sole author and owner.<br>
+						Key functionaliy includes:
+						<ul>
+							<li>User creation and data storage</li>
+							<li>Both checking and savings account creation and generation of random account numbers consisting of integers only</li>
+							<li>Loan creation. This feature randomly generates a loan decision, ramdomly generates a loan ID consisting of 8 alpha-numeric characters, a random interest rate between 0.01 abd 0.05</li>
+							<li>A general search algorithm that will return items matching a single search criteria if any exist</li>
+							<li>An advanced search algorithm that will return either items within a range of dates or a range of transaction amounts</li>
+							<li>Deposit funds into checking or savings account</li>
+							<li>Withdraw funds from checking or savings account</li>
+							<li>Transfer funds between accounts</li>
+							<li>View transaction history of loans or accounts</li>
+							<li>Make payments on outstanding loan balances</li>
+							<li>Refinance loans (The new rate is generated randomly)</li>
+							<li>View scheduled payment dates for loans</li>
+							<li>Sort results by several pertinent class members including date, balance, etc.</li>
+							<li>Store and maintain all account and loan history</li>
+							<li>Recover forgotten passwords</li>
+							<li>Change profile information</li>
+							<li>Users also have the ability to delete savings and checking accounts</li>
+							<li>User must open an account to create a profile</li>
+						</ul>
+
+						For the best experience, please use Safari or Firefox (Safari strongly recommended). <span style="color:red; font-weight:bold; font-style:italic; font-size:14px;">Please note that this application does not behave properly when using Chrome browsers.</span> To view a full description of the project details click <a href="javascript: visibility(2, 'show');"><b><em>here</em></b></a>.<br><br>
+
+						<div><b><em>Delevoper Information:</em></b></div>
+						Immanuel Lewis<br>
+						ilewis01@citymail.cuny.edu<br>
+						16143689
+					</p>
+				</div>
+			</div>
+		</form>
+	</div>
 </body>
 
 {% endblock %}

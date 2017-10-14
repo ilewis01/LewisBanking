@@ -18,6 +18,12 @@ function pframe(element)
 	return parent.window.frames[0];
 }
 
+function introAnimation()
+{
+	grab('welcomeFade').className = "welcomeFade";
+	grab('zFadeDiv').className = "zFadeOut";
+}
+
 function load_page(url, form_name)
 {
 	form = grab(form_name);
