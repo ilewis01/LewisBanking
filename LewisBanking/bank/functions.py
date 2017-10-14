@@ -2308,9 +2308,12 @@ def fetch_loan_history(request):
 			d['history'] = h
 			d['starting_balance'] = format_currency(h.b_balance)
 			d['ending_balance'] = format_currency(h.e_balance)
-			h_list.append(d)
 			count += 1
+			h_list.append(d)
 
+	content['account_number'] = loan_id
+	content['sort'] = sort
+	content['direction'] = direction
 	content['history'] = h_list
 	return content
 

@@ -1933,13 +1933,17 @@ function load_payment_data()
 
 function load_loan_history()
 {
-	var selected_index = String(grab('selected_index').value);
-	var acct_name = "li" + selected_index + "_account_number";
-	var win = frame('iframe_list');
-	var account_number = win.grab(acct_name).value;
-	// win.grab('account_number').value = account_number;
-	// win.grab('bank_form').submit()
-	// visibility(6, 'show');
+	grab('frame2').src = "/view_loan_history0/";
+	visibility(6, 'show');
+}
+
+function load_load_id()
+{
+	var si = String(parent.grab('selected_index').value);
+	var name = "li" + si + "_account_number";
+	var account_number = parent.frame('iframe_list').grab(name).value;
+	grab('account_number').value = account_number;
+	grab('bank_form').submit()
 }
 
 function set_selected_loan_items()
@@ -1972,13 +1976,6 @@ function lets_get_loan_history()
 
 }
 
-function load_load_id()
-{
-	grab('account_number').value = parent.grab('selected_account_number').value;
-	grab('sort').value = "date";
-	grab('direction').value = "descend";
-	grab('bank_form').submit()
-}
 
 function toggle_carat_history()
 {
@@ -2012,20 +2009,18 @@ function reload_mega_history()
 
 function reload_mega_loans()
 {
+	var win = frame('frame2');
 	var sort = grab('sort2').value;
 	var direction = grab('direction_history').value;
-	var win = frame('frame2');
-	var win2  = frame('iframe_list');
-	var selected_index = String(grab('selected_index').value);
-	var sn = "li" + selected_index + "_account_number";
-	var account_number = win2.grab(sn).value;
+	win.grab('sort').value = sort;
+	win.grab('direction').value = direction;
+	win.grab('history_form').submit();
+}
 
-	alert(direction)
-
-	// win.grab('sort').value = sort;
-	// win.grab('direction').value = direction;
-	// win.grab('account_number') = account_Number;
-	// win.grab('history_form').submit();
+function close_history_window()
+{
+	grab('frame2').src = "";
+	visibility(6, 'hide');
 }
 
 function load_history_val()

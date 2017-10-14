@@ -19,7 +19,7 @@
     <form action="/view_loan_history/" method="post" id="history_form"> {% csrf_token %}
         <input type="hidden" name='sort' id='sort' value="">
         <input type="hidden" name='direction' id='direction' value="">
-        <input type="hidden" name="account_number" id="account_number" value="">
+        <input type="hidden" name="account_number" id="account_number" value="{{account_number}}">
 
         <div class="history_mega_class">
             <ul>
