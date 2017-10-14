@@ -17,10 +17,9 @@
 
 <body class="frame2_body" onload="javascript: load_history_val();">
     <form action="/view_loan_history/" method="post" id="history_form"> {% csrf_token %}
-        <input type="hidden" name='sort' id='sort' value="{{sort}}">
-        <input type="hidden" name='direction' id='direction' value="{{direction}}">
-        <input type="hidden" name="account_number" id="account_number" value="{{account_number}}">
-        <input type="hidden" name="history_size" id="history_size" value="{{size}}">
+        <input type="hidden" name='sort' id='sort' value="">
+        <input type="hidden" name='direction' id='direction' value="">
+        <input type="hidden" name="account_number" id="account_number" value="">
 
         <div class="history_mega_class">
             <ul>

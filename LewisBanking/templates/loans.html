@@ -219,8 +219,8 @@
 
 	<div class="fadeOut" id="z6" style="z-index:6;">
 		<div class="history_frame">
-			<input type="hidden" name="direction_history" id="direction_history" value="{{direction_history}}">
-			<input type="hidden" name="sort_history" id="sort_history" value="{{sort_history}}">
+			<input type="hidden" name="direction_history" id="direction_history" value="descend">
+			<!-- <input type="hidden" name="sort_history" id="sort_history" value="{{sort_history}}"> -->
 
 			<div class="hf_nav">
 				<a href="javascript: visibility(6, 'hide');"><i class="fa fa-window-close" aria-hidden="true"></i></a>
@@ -238,11 +238,11 @@
 
 							<td>
 								<div>
-									<select name="sort2" id="sort2" onChange="javascript: reload_mega_history();">
-										<option value="date">Transaction Date</option>
-										<option value="action">Transaction Type</option>
+									<select name="sort2" id="sort2" onChange="javascript: reload_mega_loans();">
 										<option value="b_balance">Starting Balance</option>
 										<option value="e_balance">Ending Balance</option>
+										<option value="date">Transaction Date</option>
+										<option value="description">Description</option>
 									</select>
 								</div>
 							</td>
@@ -255,16 +255,16 @@
 				</div>
 
 				<div class="hf_end">
-					<a href="javascript: toggle_carat_history(); reload_mega_history();">
+					<a href="javascript: toggle_carat_history(); reload_mega_loans();">
 						<div class="direction-holder">
-							<div class="carat-holder" id="icon_history"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i></div>
-							<div class="sorting_label" id="dir_text_history">Ascending</div>
+							<div class="carat-holder" id="icon_history"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></div>
+							<div class="sorting_label" id="dir_text_history">Descending</div>
 						</div>
 					</a>
 				</div>
 			</div>
 
-			<iframe src="/view_loan_history0/" class="frame2" id="frame2"></iframe>
+			<iframe src="" class="frame2" id="frame2"></iframe>
 
 			<div class="hf_buttons">
 				<button type="button" onClick="javascript: visibility(6, 'hide');">Close</button>

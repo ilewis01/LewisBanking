@@ -18,7 +18,7 @@
 <body onload="javascript: load_load_id();">
 	<form action="/view_loan_history/" method='post' id='bank_form'> {% csrf_token %}
 		<input type="hidden" name="account_number" id="account_number" value="">
-		<input type="hidden" name="sort" id="sort" value="date">
+		<input type="hidden" name="sort" id="sort" value="action">
 		<input type="hidden" name="direction" id="direction" value="descend">
 		Loading...
 	</form>

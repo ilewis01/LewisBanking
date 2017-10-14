@@ -1650,29 +1650,66 @@ def fetchDLoan(loan_id):
 			break
 	return loan
 
+def quick_grab_loan(request):
+	loan_id = str(request.POST.get('account_number'))
+	return fetchDLoan(loan_id)
+
+def quick_rate(current_rate):
+	current_rate = int(float(current_rate) * 100)
+	rates = []
+	random_index = random.randrange(0, 5)
+
+	rates.append(format(Decimal(0.01), '.2f'))
+	rates.append(format(Decimal(0.02), '.2f'))
+	rates.append(format(Decimal(0.03), '.2f'))
+	rates.append(format(Decimal(0.04), '.2f'))
+	rates.append(format(Decimal(0.05), '.2f'))
+
+	print "NEW RATE: " + str(rates[random_index])
+
+	return rates[random_index]
+
+def set_new_rate(loan, new_rate):
+	data = {}
+
+	prev_rate = int(float(loan.rate) * 100)
+	prev_rate = str(prev_rate) + "%"
+	data['rate'] = prev_rate
+	data['principal'] = format_currency(loan.loan_amount)
+	data['newRate'] = str(int(float(new_rate) * 100)) + "%" 
+	return data
+
 def init_refinance(request):
 	content = {}
-	loan_id = str(request.POST.get('account_number'))
-	loan = fetchDLoan(loan_id)
+	loan = quick_grab_loan(request)
+	rate = quick_rate(loan.rate)
+	data = set_new_rate(loan, rate)
+	new_loan = {}
 
-	new_rate = newInterestRate()
-	term = Decimal(loan.term)
 	principal = Decimal(loan.loan_amount)
-	monthly_payment = calculatePayments(new_rate, term, principal)
-	monthly_payment = Decimal(format(float(monthly_payment), '.2f'))
-	monthly_interest = Decimal(format(float(monthly_payment - (principal/term)), '.2f'))
-	total_interest = Decimal(format(float(monthly_interest * term), '.2f'))
+	term = Decimal(loan.term)
+	monthly_payment	= calculatePayments(rate, term, principal)
+	monthly_interest = monthly_payment - (principal/term)
+	total_interest = monthly_interest * term
 	total = principal + total_interest
 
-	content['account_number'] = loan_id
-	content['principal'] = format_currency(loan.loan_amount)
-	content['rate'] = str(int(loan.rate * 100)) + "%"
-	content['newRate'] = str(int(new_rate * 100)) + "%"
-	content['new_rate'] = new_rate
-	content['monthly_payments'] = format_currency(monthly_payment)
-	content['total_interest'] = format_currency(total_interest)
-	content['loan_total'] = format_currency(total)
+	new_loan['rate'] = Decimal(rate)
+	new_loan['payment'] = Decimal(monthly_payment)
+	new_loan['total_interest'] = Decimal(total_interest)
+	new_loan['balance'] = Decimal(total)
 
+	content['rate'] = data['rate']
+	content['monthly_payments'] = format_currency(format(monthly_payment, '.2f'))
+	content['total_interest'] = format_currency(format(total_interest, '.2f'))
+	content['loan_total'] = format_currency(format(total, '.2f'))
+	content['principal'] = format_currency(loan.loan_amount)
+	content['newRate'] = data['newRate']
+	content['new_loan'] = new_loan
+	content['new_rate'] = rate
+	content['uf_payments'] = monthly_payment
+	content['uf_interest'] = total_interest
+	content['uf_total'] = total
+	content['loan'] = loan
 	return content
 
 def refinance(request):
@@ -1684,15 +1721,12 @@ def refinance(request):
 	loan_total = request.POST.get('loan_total')
 	start_date = datetime.now().date()
 
-	monthly_payments = clear_format(monthly_payments)
-	loan_total = clear_format(loan_total)
-
 	loan = fetchDLoan(str(account_number))
-	b_balance = Decimal(loan.balance)
+	b_balance = loan.balance
 	loan.rate = Decimal(rate)
-	loan.balance = Decimal(loan_total)
-	loan.payment = Decimal(monthly_payments)
-	loan.total_interest = Decimal(total_interest)
+	loan.balance = format(Decimal(loan_total), '.2f')
+	loan.payment = format(Decimal(monthly_payments), '.2f')
+	loan.total_interest = format(Decimal(total_interest), '.2f')
 	term = int(loan.term)
 	end_date = start_date + relativedelta(months=+term)
 	loan.end_date = end_date
@@ -1701,7 +1735,7 @@ def refinance(request):
 	rate = float(str(rate)) * 100
 	rate = str(rate) + "%"
 
-	history = History(user_id=loan.user_id, date=start_date, account_number=loan.account_number)
+	history = History(user_id=loan.user_id, date=datetime.now().date(), account_number=loan.account_number)
 	history.b_balance = b_balance
 	history.e_balance = loan_total
 	history.action = get_action_from_index(7)
@@ -1709,7 +1743,9 @@ def refinance(request):
 	history.description = "New loan rate of " + rate + " was applied to account"
 	history.save()
 
-	content['loan'] = loan
+	content['ratef'] = int(float(loan.rate) * 100)
+	content['tif'] = format_currency(loan.total_interest)
+	content['bf'] = format_currency(loan.balance)
 	return content
 
 def make_payment(request):
@@ -1732,6 +1768,7 @@ def make_payment(request):
 	history.save()
 	content['payment'] = format_currency(payment)
 	content['loan'] = loan
+	content['balancef'] = format_currency(loan.balance)
 	return content
 
 def last4(account_number):
@@ -2210,132 +2247,6 @@ def search_algorithm(search, value):
 					last_char += 1
 	return match
 
-# def initiate_loan_search(request):
-# 	content = {}
-# 	searchType = str(request.POST.get('searchType'))
-# 	search = str(request.POST.get('search'))
-# 	size = int(request.POST.get('size'))
-# 	direction = str(request.POST.get('direction'))
-# 	sort = str(request.POST.get('sort'))
-# 	m_sort = sort
-# 	user_id = str(request.user.id)
-# 	loans = []
-# 	results = []
-# 	count = 0
-
-# 	if direction == 'descend':
-# 		m_sort = "-" + sort
-
-# 	l_list = Loan.objects.all().order_by(m_sort)
-
-# 	for l in l_list:
-# 		if str(l.user_id) == user_id:
-# 			loans.append(l)
-
-# 	if searchType == "normal":
-# 		for l in loans:
-# 			t_search = int(l.loan_type)
-# 			if t_search == 0:
-# 				t_search = "personal"
-# 			elif t_search == 1:
-# 				t_search = 'business'
-# 			else:
-# 				t_search = "student"
-
-# 			if search_algorithm(search, str(l.start_date)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(adv_lower(search), adv_lower(l.account_number)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(search, str(l.end_date)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(search, str(l.term)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(search, str(l.rate)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(search, str(l.balance)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(search, str(l.total_interest)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(search, str(l.loan_amount)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(search, str(l.account_number)) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-# 			elif search_algorithm(search.lower(), t_search) == True:
-# 				d = getLoanListData(l, count)
-# 				results.append(d)
-# 				count += 1
-
-# 	elif searchType == "advanced":
-# 		search2 = str(request.POST.get('search2'))
-# 		method = str(request.POST.get('searchMethod'))
-		
-# 		if method == 'date':
-# 			fm_date = convertPythonDate(search)
-# 			to_date = convertPythonDate(search2)
-# 			for l2 in loans:
-# 				if l2.start_date >= fm_date and l2.start_date <= to_date:
-# 					d = getLoanListData(l2, count)
-# 					results.append(d)
-# 					count += 1
-# 				elif l2.end_date >= fm_date and l2.end_date <= to_date:
-# 					d = getLoanListData(l2, count)
-# 					results.append(d)
-# 					count += 1
-# 		elif method == 'money':
-# 			fm_amt = Decimal(search)
-# 			to_amt = Decimal(search2)
-# 			for l3 in loans:
-# 				if Decimal(l3.payment) >= fm_amt and Decimal(l3.payment) <= to_amt:
-# 					d = getLoanListData(l3, count)
-# 					results.append(d)
-# 					count += 1
-# 				elif Decimal(l3.balance) >= fm_amt and Decimal(l3.balance) <= to_amt:
-# 					d = getLoanListData(l3, count)
-# 					results.append(d)
-# 					count += 1
-# 				elif Decimal(l3.loan_amount) >= fm_amt and Decimal(l3.loan_amount) <= to_amt:
-# 					d = getLoanListData(l3, count)
-# 					results.append(d)
-# 					count += 1
-# 				elif Decimal(l3.total_interest) >= fm_amt and Decimal(l3.total_interest) <= to_amt:
-# 					d = getLoanListData(l3, count)
-# 					results.append(d)
-# 					count += 1
-
-# 	content['load_type'] = 1
-
-# 	if len(results) == 0 or count == 0:
-# 		content['load_type'] = -1
-# 		for zl in loans:
-# 			d = getLoanListData(zl, count)
-# 			results.append(d)
-# 			count += 1
-
-# 	content['size'] = count
-# 	content['direction'] = direction
-# 	content['sort'] = sort
-# 	content['loans'] = results
-# 	content['title'] = "Lewis Bank | Manage Loans"
-# 	return content
-
 def convertPythonDate(date):
 	result = None
 	date = str(date)
@@ -2373,48 +2284,34 @@ def adv_lower(value):
 
 def fetch_loan_history(request):
 	content = {}
-	history = []
-	loan_id = str(request.POST.get("account_number"))
-	sort = str(request.POST.get("sort"))
-	direction = str(request.POST.get("direction"))
+	sort = str(request.POST.get('sort'))
+	direction = str(request.POST.get('direction'))
+	loan_id = str(request.POST.get('account_number'))
 	m_sort = sort
-	index = 0
-
-	loan = fetchDLoan(loan_id)
-	l_type = int(loan.loan_type)
-
-	if l_type == 0:
-		l_type = "Personal"
-	elif l_type == 1:
-		l_type = "Business"
-	else:
-		l_type = "Student"
+	h_list = []
+	count = 0
 
 	if direction == "descend":
 		m_sort = "-" + sort
 
-	h_list = getLoanHIstory(loan_id, m_sort)
+	history = History.objects.all().order_by(m_sort)
 
-	for h in h_list:
-		d = {}
-		d['index'] = index
-		d['starting_balance'] = format_currency(h.b_balance)
-		d['ending_balance'] = format_currency(h.e_balance)
-		d['history'] = h
+	for h in history:
+		if loan_id == str(h.account_number):
+			d = {}
 
-		if index % 2 == 0:
-			d['class'] = "mhi_clear"
-		else:
-			d['class'] = "mhi_shade"
-		history.append(d)
-		index += 1
+			if count % 2 == 0:
+				d['class'] = "hi_clear"
+			else:
+				d["class"] = "hi_shade"
 
-	content['sort'] = sort
-	content['size'] = index
-	content['direction'] = direction
-	content['loan_type'] = l_type
-	content['account_number'] = loan_id
-	content['history'] = history
+			d['history'] = h
+			d['starting_balance'] = format_currency(h.b_balance)
+			d['ending_balance'] = format_currency(h.e_balance)
+			h_list.append(d)
+			count += 1
+
+	content['history'] = h_list
 	return content
 
 def getLoanHIstory(loan_id, sort):

@@ -17,8 +17,8 @@
 
 <body class="frame2_body" onload="javascript: initialize_account_history('{{m_type}}', '{{account_number}}');">
     <form action="/view_history/" method="post" id="history_form"> {% csrf_token %}
-        <input type="hidden" name='sort' id='sort' value="{{sort}}">
-        <input type="hidden" name='direction' id='direction' value="{{direction}}">
+        <input type="hidden" name='sort' id='sort' value="">
+        <input type="hidden" name='direction' id='direction' value="">
         <input type="hidden" name="account_number" id="account_number" value="{{account_number}}">
 
         <div class="history_mega_class">

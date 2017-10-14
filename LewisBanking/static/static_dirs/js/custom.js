@@ -516,7 +516,8 @@ function initialize_acct_parent(isSearch, status, size)
 		}
 		else
 		{
-			clear_current_list('account');
+			parent.grab('x0_message').innerHTML = "<span style=\"font-size:12px;\">You currently have <em>0</em> accounts</span>";
+			parent.visibility(10, 'show');
 		}
 	}
 
@@ -561,6 +562,7 @@ function initialize_acct_parent(isSearch, status, size)
 		}
 		else
 		{
+			parent.grab('x0_message').innerHTML = "<em>0</em> &nbspMatches Found";
 			clear_current_list('/load_account_list/', 10);
 		}
 	}
@@ -577,7 +579,7 @@ function check_loan_results(isSearch, status, size, location)
 	{
 		if (isSearch === -1)
 		{
-			parent.grab('x0_message').innerHTML = "You currently have <em>0</em> loans";
+			parent.grab('x0_message').innerHTML = "<span style=\"font-size:12px;\">You currently have <em>0</em> loans</span>";
 			parent.visibility(10, 'show');
 		}
 		else
@@ -1061,19 +1063,15 @@ function init_delete_W()
 
 function init_payment()
 {
-	var balance = parent.grab('selected_balancef').value;
-	var payment = parent.grab('selected_payment').value;
-	var account_number = parent.grab('selected_account_number').value;
-
-	grab('loan_balance').innerHTML = balance;
-	grab('min_payment').innerHTML = payment;
-	grab('account_number').value = account_number;
-	grab('minimim_payment').value = payment;
+	set_selected_loan_items();
 }
 
 function load_refinance_data()
 {
-	var account_number = parent.grab('selected_account_number').value;
+	var win = parent.frame('iframe_list');
+	var si = String(parent.grab('selected_index').value);
+	var acct_name = "li" + si + "_account_number";
+	var account_number = win.grab(acct_name).value;
 	grab('account_number').value = account_number;
 	grab('bank_form').submit();
 }
@@ -1083,24 +1081,13 @@ function g_error(form)
 	proceed = true;
 	var dollars = String(grab('dollars').value);
 	var minimum = String(grab('minimim_payment').value);
-	var min = "";
 	var cents = grab('cents');
-
-	for (var i = 0; i < minimum.length; i++)
-	{
-		if (minimum.charAt(i) !== ",")
-		{
-			min += minimum.charAt(i);
-		}
-	}
-
-	grab('minimim_payment').value = min;
+	var e_win = parent.grab('messageWindow');;
 
 	if (dollars.length === 0 && String(cents.value).length === 0)
 	{
 		parent.grab('messageContent').innerHTML = "You must enter a valid dollar amount";
 		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
-		var e_win = parent.grab('messageWindow');
 		e_win.style.height = "260px";
 		win_visibility(2, "show");
 		proceed = false;
@@ -1110,14 +1097,22 @@ function g_error(form)
 	{
 		cents.value = "00";
 	}
+	else
+	{
+		if (dollars.length === 0)
+		{
+			dollars = "0";
+		}
+	}
 
 	dollars = dollars + "." + String(cents.value);
+	dollars = parseFloat(dollars);
+	minimum = parseFloat(minimum);
 
-	if (parseFloat(dollars) < parseFloat(min))
+	if (dollars < minimum)
 	{
-		parent.grab('messageContent').innerHTML = "Payment must be at least $" + String(min);
+		parent.grab('messageContent').innerHTML = "Payment must be at least $" + String(minimum);
 		parent.grab("messageHeader").innerHTML = "<span>Errors Detected</span>"
-		var e_win = parent.grab('messageWindow');
 		e_win.style.height = "260px";
 		win_visibility(2, "show");
 		proceed = false;
@@ -1604,6 +1599,11 @@ function reset_adv_win()
 	grab('amt_range').checked = true;
 	adv_visibility("money");
 	visibility(3, 'hide');
+
+	grab('dollars_to').value = "";
+	grab('dollars_fm').value = "";
+	grab('cents_to').value = "";
+	grab('cents_fm').value = "";
 }
 
 function adv_visibility(mode)
@@ -1924,18 +1924,52 @@ function init_user_loan_input(action, a_list)
 
 function load_payment_data()
 {
-	grab('account_number').value = parent.grab('selected_account_number').value;
+	var si = String(parent.grab('selected_index').value);
+	var name = "li" + si + "_account_number";
+	var account_number = parent.frame('iframe_list').grab(name).value;
+	grab('account_number').value = account_number;
 	grab('bank_form').submit();
 }
 
 function load_loan_history()
 {
-	grab('direction_history').value = "descend";
-	grab('sort_history').value = "date";
-	grab('dir_text_history').innerHTML = "Descending";
-	grab('icon_history').innerHTML = "<i class=\"fa fa-chevron-circle-down\" aria-hidden=\"true\"></i>";
-	grab('frame2').src = '/view_loan_history0/';
-	visibility(6, 'show');
+	var selected_index = String(grab('selected_index').value);
+	var acct_name = "li" + selected_index + "_account_number";
+	var win = frame('iframe_list');
+	var account_number = win.grab(acct_name).value;
+	// win.grab('account_number').value = account_number;
+	// win.grab('bank_form').submit()
+	// visibility(6, 'show');
+}
+
+function set_selected_loan_items()
+{
+	var si = String(parent.grab('selected_index').value);
+	var prefix = "li" + si + "_";
+	var source = parent.frame('iframe_list');
+	var acct_name = prefix + "account_number";
+	var baln_name = prefix + "balancef";
+	var minp_name = prefix + "payment";
+	var balancef = source.grab(baln_name).value;
+	var minimim_payment = source.grab(minp_name).value;
+	var account_number = source.grab(acct_name).value;
+	grab('loan_balance').innerHTML = "$" + String(balancef);
+	grab('min_payment').innerHTML = "$" + String(minimim_payment);
+	grab('w_acct').innerHTML = account_number;
+	grab('account_number').value = account_number;
+	minimim_payment = minimim_payment.replace(/,/g, '');
+	grab('minimim_payment').value = minimim_payment;
+}
+
+function loan_loader()
+{
+	load_frame('iframe_list', 'frame1');
+	// frame('frame1').grab('bank_form').submit();
+}
+
+function lets_get_loan_history()
+{
+
 }
 
 function load_load_id()
@@ -1976,16 +2010,39 @@ function reload_mega_history()
 	win.grab('history_form').submit();
 }
 
+function reload_mega_loans()
+{
+	var sort = grab('sort2').value;
+	var direction = grab('direction_history').value;
+	var win = frame('frame2');
+	var win2  = frame('iframe_list');
+	var selected_index = String(grab('selected_index').value);
+	var sn = "li" + selected_index + "_account_number";
+	var account_number = win2.grab(sn).value;
+
+	alert(direction)
+
+	// win.grab('sort').value = sort;
+	// win.grab('direction').value = direction;
+	// win.grab('account_number') = account_Number;
+	// win.grab('history_form').submit();
+}
+
 function load_history_val()
 {
-	var tp = String(parent.grab('selected_type').value);
+	var si = String(parent.grab('selected_index').value);
+	var tp = "li" + si + "_type";
+	var ta = "li" + si + "_account_number";
+	var win = parent.frame('iframe_list');
+	var m_type =  String(win.grab(tp).value);
+	var account_number =  String(win.grab(ta).value);
+	
+	if (m_type === "BUSINESS") {m_type = "Business";}
+	else if (m_type === "PERSONAL") {m_type = "Personal";}
+	else {m_type = "Student";}
 
-	if (tp === "0") {tp = "Personal Loan"; }
-	else if (tp === "1") {tp = "Business Loan"; }
-	else if (tp === "2") {tp = "Student Loan"; }
-
-	parent.grab('history_type').innerHTML = tp;
-	parent.grab('history_acct').innerHTML = parent.grab('selected_account_number').value;
+	parent.grab("history_type").innerHTML = m_type + " Loan ";
+	parent.grab("history_acct").innerHTML = account_number;
 }
 
 function clear_d_search()
