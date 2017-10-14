@@ -2475,9 +2475,11 @@ def mega_transaction_search(request):
 	content['isSearch'] = 1
 	content['sort'] = sort
 	content['search'] = search
-	content['search2'] = search
+	content['search2'] = search2
 	content['searchType'] = search_type
 	content['direction'] = direction
+	content['method'] = method;
+	content['user_id'] = user_id
 	content['history'] = sorted_list
 	content['size'] = len(sorted_list)
 	return content

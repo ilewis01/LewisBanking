@@ -2355,8 +2355,7 @@ function fetch_tsearch_errors()
 	{
 		grab('search_phrase').value = search_phrase;
 		var win = frame('tFrame');
-		win.grab('sort').value
-
+		win.grab('isSearch').value = 1;
 		win.grab('searchMethod').value = method;
 		win.grab('searchType').value = search_type;
 		win.grab('search').value = fm_search;
@@ -2404,6 +2403,7 @@ function initialize_transaction_search(isSearch, size)
 
 function clear_transaction_search()
 {
+	parent.frame('tFrame').grab('isSearch').value = 0;
 	grab('normal').checked = true;
 	init_history_radio();
 	grab('tFrame').src = "/t_history_list/";
